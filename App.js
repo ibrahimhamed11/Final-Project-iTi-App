@@ -21,6 +21,7 @@ import OnboardingScreen from './screens/OnboardingScreen';
 import NotficationsScreen from './screens/NotficationsScreen';
 import joinUsScreen from './screens/joinUsScreen'
 import SellerProfileScreen from './screens/SellerProfile'
+import AllProductsScreen from './screens/AllProductsScreen'
 // import Home from './screens/Homescreen'
 
 import EachProduct from './Components/EachProduct';
@@ -172,10 +173,10 @@ export default function App() {
 
         <Drawer.Screen
           name="البائع"
-          component={SellerProfileScreen}
+          component={AllProductsScreen}
           options={({ navigation }) => ({
             drawerIcon: ({ color, size }) => (
-              <TouchableOpacity onPress={() => DrawerNavigator.navigate('SellerProfile')}>
+              <TouchableOpacity onPress={() => DrawerNavigator.navigate('AllProductsScreen')}>
                 <FontAwesome name="sign-out" color={color} size={size} style={{ fontFamily: 'Droid', marginRight: 10 }} />
               </TouchableOpacity>
             ),

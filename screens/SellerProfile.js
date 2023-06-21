@@ -16,6 +16,73 @@ const SellerProfileScreen = () => {
     const [isOrdersVisible, setOrdersVisible] = useState(false);
     const [isProductsVisible, setProductsVisible] = useState(false);
     const [searchText, setSearchText] = useState('');
+
+    const [isAddProductModalVisible, setAddProductModalVisible] = useState(false);
+
+    const toggleAddProductModal = () => {
+        setAddProductModalVisible(!isAddProductModalVisible);
+    };
+    const AddProductModal = ({ isVisible, onClose }) => {
+        const [productName, setProductName] = useState('');
+        const [productDescription, setProductDescription] = useState('');
+        const [productPrice, setProductPrice] = useState('');
+        const [productCategory, setProductCategory] = useState('');
+        const [productStockNumber, setProductStockNumber] = useState('');
+
+        const handleAddProduct = () => {
+            // Logic to add the product
+            // You can access the product details from the state variables here
+            // and perform any necessary actions, such as making an API request to add the product
+            // After adding the product, you can close the modal using the onClose function
+            onClose();
+        };
+
+        return (
+            <Modal visible={isVisible} onDismiss={onClose} contentContainerStyle={styles.modalContainer}>
+                <View style={styles.modalContent}>
+                    <Text style={styles.modalTitle}>Add Product</Text>
+                    <TextInput
+                        label="Product Name"
+                        value={productName}
+                        onChangeText={setProductName}
+                        style={styles.input}
+                    />
+                    <TextInput
+                        label="Description"
+                        value={productDescription}
+                        onChangeText={setProductDescription}
+                        style={styles.input}
+                        multiline
+                        numberOfLines={3}
+                    />
+                    <TextInput
+                        label="Price"
+                        value={productPrice}
+                        onChangeText={setProductPrice}
+                        style={styles.input}
+                        keyboardType="numeric"
+                    />
+                    <TextInput
+                        label="Category"
+                        value={productCategory}
+                        onChangeText={setProductCategory}
+                        style={styles.input}
+                    />
+                    <TextInput
+                        label="Stock Number"
+                        value={productStockNumber}
+                        onChangeText={setProductStockNumber}
+                        style={styles.input}
+                        keyboardType="numeric"
+                    />
+                    <Button mode="contained" onPress={handleAddProduct} style={styles.addButton}>
+                        Add Product
+                    </Button>
+                </View>
+            </Modal>
+        );
+    };
+
     const [products, setProducts] = useState([
         { id: '1', name: 'Product 1', price: 10, image: null },
         { id: '2', name: 'Product 2', price: 20, image: null },
@@ -55,28 +122,6 @@ const SellerProfileScreen = () => {
     };
 
 
-    const [isAddProductModalVisible, setAddProductModalVisible] = useState(false);
-
-    const toggleAddProductModal = () => {
-        setAddProductModalVisible(!isAddProductModalVisible);
-    };
-
-
-    // const AddProductModal = ({ isVisible, onClose }) => {
-    //     const [productName, setProductName] = useState('');
-    //     const [productDescription, setProductDescription] = useState('');
-    //     const [productImage, setProductImage] = useState(null);
-    //     const [productPrice, setProductPrice] = useState('');
-    //     const [productCategory, setProductCategory] = useState('');
-    //     const [productStockNumber, setProductStockNumber] = useState('');
-
-    //     const handleAddProduct = () => {
-    //         // Logic to add the product
-    //         // You can access the product details from the state variables here
-    //         // and perform any necessary actions, such as making an API request to add the product
-    //         // After adding the product, you can close the modal using the onClose function
-    //         onClose();
-    //     };
 
 
     const renderProductItem = ({ item }) => (
@@ -203,6 +248,10 @@ const SellerProfileScreen = () => {
                     >
                         Add Product
                     </Button>
+                    <AddProductModal
+                        isVisible={isAddProductModalVisible}
+                        onClose={toggleAddProductModal}
+                    />
 
 
 
@@ -399,12 +448,23 @@ const styles = StyleSheet.create({
     modalContainer: {
         backgroundColor: 'white',
         padding: 20,
+        borderRadius: 10,
     },
     modalContent: {
         alignItems: 'center',
     },
-    modalText: {
+    modalTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
         marginBottom: 10,
+    },
+    input: {
+        marginBottom: 10,
+        width: '100%',
+    },
+    addButton: {
+        width: '100%',
+        marginTop: 20,
     },
 });
 
