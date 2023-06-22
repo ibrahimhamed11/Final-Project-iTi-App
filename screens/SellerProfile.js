@@ -299,11 +299,13 @@ const SellerProfileScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20,
+        // padding: 20,
         width: '100%'
     },
     scrollContent: {
         flexGrow: 1, // Allow content to grow vertically
+        width: '100%',
+        height: '100%'
     },
 
     imageContainer: {
