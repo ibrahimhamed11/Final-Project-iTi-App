@@ -17,8 +17,8 @@ import * as Notifications from 'expo-notifications';
 
 
 // Socket.IO server URL
-const API_URL = 'http://10.171.240.100:4000';
-const NodeUrl = 'http://10.171.240.100:4000/notification/getAll'
+const API_URL = 'http://192.168.1.162:4000';
+const NodeUrl = 'http://192.168.1.162:4000/notification/getAll'
 
 
 

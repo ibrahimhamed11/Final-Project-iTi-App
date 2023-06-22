@@ -6,7 +6,7 @@ import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
 
-const api = 'http://10.171.240.100:4000';
+const api = 'http://192.168.1.162:4000';
 
 const ProductList = () => {
     const [searchQuery, setSearchQuery] = useState('');
