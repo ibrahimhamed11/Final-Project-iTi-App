@@ -12,6 +12,8 @@ import { emailValidator } from '../helpers/emailValidator';
 import { passwordValidator } from '../helpers/passwordValidator';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFonts } from 'expo-font';
+import jwtDecode from 'jwt-decode';
+import axios from 'axios';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState({ value: '', error: '' });
@@ -20,6 +22,7 @@ export default function LoginScreen({ navigation }) {
   const [loaded] = useFonts({
     Droid: require('../assets/fonts/Droid.ttf'),
   });
+
 
   const onLoginPressed = async () => {
     const emailError = emailValidator(email.value);
@@ -30,18 +33,40 @@ export default function LoginScreen({ navigation }) {
       return;
     }
 
-    // Save the password in AsyncStorage
-    await AsyncStorage.setItem('password', password.value);
+    try {
+      const response = await axios.post('http://10.171.240.54:4000/user/login', {
+        email: email.value,
+        password: password.value,
+      });
 
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Home' }],
-    });
+      const { data, status } = response.data;
+
+      if (status === 200) {
+        const { token, user } = data;
+
+        // Save the token and ID in AsyncStorage
+        await AsyncStorage.setItem('token', token);
+        await AsyncStorage.setItem('userId', user._id);
+
+        const storedToken = await AsyncStorage.getItem('token');
+
+        // Decode the token to retrieve its data
+        const decodedToken = jwtDecode(storedToken);
+
+        console.log('Decoded Token:', decodedToken);
+
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'Home' }],
+        });
+      } else {
+        throw new Error('Invalid email or password');
+      }
+    } catch (error) {
+      console.error('Error logging in:', error);
+      Alert.alert('Login Error', 'An error occurred during login.');
+    }
   };
-
-  if (!loaded) {
-    return null;
-  }
 
   const dismissKeyboard = () => {
     Keyboard.dismiss();
@@ -54,36 +79,36 @@ export default function LoginScreen({ navigation }) {
           <BackButton goBack={navigation.goBack} />
           <Logo />
           <Header style={[styles.arabicText, { fontFamily: 'Droid', fontSize: 20 }]}>
-  مرحبا بك مجدداً.
-</Header>
+            مرحبا بك مجدداً.
+          </Header>
           <TextInput
-  label="البريد الإلكتروني"
-  returnKeyType="next"
-  value={email.value}
-  onChangeText={(text) => setEmail({ value: text, error: '' })}
-  error={!!email.error}
-  errorText={
-    <Text style={{ fontFamily: 'Droid', color: 'red' }}>{email.error}</Text>
-  }
-  autoCapitalize="none"
-  autoCompleteType="email"
-  textContentType="emailAddress"
-  keyboardType="email-address"
-  style={{ fontFamily: 'Droid' }}
-/>
+            label="البريد الإلكتروني"
+            returnKeyType="next"
+            value={email.value}
+            onChangeText={(text) => setEmail({ value: text, error: '' })}
+            error={!!email.error}
+            errorText={
+              <Text style={{ fontFamily: 'Droid', color: 'red' }}>{email.error}</Text>
+            }
+            autoCapitalize="none"
+            autoCompleteType="email"
+            textContentType="emailAddress"
+            keyboardType="email-address"
+            style={{ fontFamily: 'Droid' }}
+          />
 
-<TextInput
-  label="كلمة المرور"
-  returnKeyType="done"
-  value={password.value}
-  onChangeText={(text) => setPassword({ value: text, error: '' })}
-  error={!!password.error}
-  errorText={
-    <Text style={{ fontFamily: 'Droid', color: 'red' }}>{password.error}</Text>
-  }
-  secureTextEntry
-  style={{ fontFamily: 'Droid' }}
-/>
+          <TextInput
+            label="كلمة المرور"
+            returnKeyType="done"
+            value={password.value}
+            onChangeText={(text) => setPassword({ value: text, error: '' })}
+            error={!!password.error}
+            errorText={
+              <Text style={{ fontFamily: 'Droid', color: 'red' }}>{password.error}</Text>
+            }
+            secureTextEntry
+            style={{ fontFamily: 'Droid' }}
+          />
 
 
 

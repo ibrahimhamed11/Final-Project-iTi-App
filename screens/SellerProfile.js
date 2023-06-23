@@ -5,8 +5,9 @@ import { FontAwesome } from '@expo/vector-icons';
 import { FlatList } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const api = 'http://192.168.1.162:4000';
+const api = 'http://10.171.240.54:4000';
 
 const SellerProfileScreen = () => {
     const [image, setImage] = useState(null);
@@ -19,6 +20,19 @@ const SellerProfileScreen = () => {
         phone: '',
         image: '',
     });
+
+    // Function to retrieve the ID from AsyncStorage
+    const getUserId = async () => {
+        try {
+            const sellerId = await AsyncStorage.getItem('userId');
+            return sellerId;
+        } catch (error) {
+            console.log('Error retrieving ID:', error);
+            return null;
+        }
+    };
+
+
 
     const toggleModal = () => {
         setModalVisible(!isModalVisible);
@@ -50,9 +64,10 @@ const SellerProfileScreen = () => {
 
     const fetchOrders = async () => {
         try {
-            const response = await axios.get(`http://192.168.1.162:4000/orders/getAll`).then((res) => {
+            const response = await axios.get(`http://10.171.240.37:4000/orders/getAll`).then((res) => {
                 console.log(res.data.data)
                 setOrders(res.data.data)
+                printUserId();
             });
             // setOrders(response.data);
             // console.log(response.data);
@@ -78,7 +93,9 @@ const SellerProfileScreen = () => {
 
     const fetchSellerDetails = async () => {
         try {
-            const response = await fetch('http://192.168.1.162:4000/user/649311a8c03599ee3ce6e5e6');
+
+            const sellerId = await getUserId();
+            const response = await fetch(`http://10.171.240.54:4000/user/${sellerId}`);
             if (response.ok) {
 
                 const data = await response.json();

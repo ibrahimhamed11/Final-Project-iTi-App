@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const checkSavedPassword = async (navigation) => {
-  const savedPassword = await AsyncStorage.getItem('password');
+  const savedPassword = await AsyncStorage.getItem('token');
   if (savedPassword) {
     navigation.reset({
       index: 0,
