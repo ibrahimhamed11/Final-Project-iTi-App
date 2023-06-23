@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, I18nManager, FlatList, TextInput ,TouchableOpacity} from 'react-native';
+import { View, Text, StyleSheet, Image, I18nManager, FlatList, TextInput, TouchableOpacity } from 'react-native';
 import { DataTable, Button as PaperButton } from 'react-native-paper';
 
 import Background from '../Components/Background';
@@ -14,87 +14,87 @@ export default function Blogs({ navigation }) {
 
   const [blogs, setBlogs] = useState([
 
-      {
-        id: 1,
-        title: 'عنوان المدونة 1',
-        content: 'هذا هو محتوى المدونة 1.',
-        image: require('../assets/log.png'), // Replace with the actual path to the blog image
-        owner: {
-          photo: require('../assets/log.png'),
-          name: 'Ibrahim Hamed',
-        },
-        comments: [
-          {
-            id: 2,
-            user: 'جين سميث',
-            photo: require('../assets/log.png'), // Replace with the actual path to the owner's photo
-            comment: 'مدونة رائعة!',
-          },
-          {
-            id: 3,
-            user: 'مايكل جونسون',
-            photo: require('../assets/log.png'), // Replace with the actual path to the owner's photo
-            comment: 'استمتعت بقراءة هذا.',
-          },
-        ],
+    {
+      id: 1,
+      title: 'عنوان المدونة 1',
+      content: 'هذا هو محتوى المدونة 1.',
+      image: require('../assets/log.png'), // Replace with the actual path to the blog image
+      owner: {
+        photo: require('../assets/log.png'),
+        name: 'Ibrahim Hamed',
       },
-      {
-        id: 4,
-        title: 'عنوان المدونة 2',
-        content: 'هذا هو محتوى المدونة 2.',
-        image: require('../assets/log.png'), // Replace with the actual path to the blog image
-        owner: {
-          name: 'جين سميث',
+      comments: [
+        {
+          id: 2,
+          user: 'جين سميث',
           photo: require('../assets/log.png'), // Replace with the actual path to the owner's photo
+          comment: 'مدونة رائعة!',
         },
-        comments: [
-          {
-            id: 1,
-            user: 'جون دو',
-            photo: require('../assets/log.png'), // Replace with the actual path to the owner's photo
-            comment: 'مكتوب بشكل جيد!',
-          },
-        ],
-      },
-      // Add more blog objects as needed
-      {
-        id: 5,
-        title: 'عنوان المدونة 2',
-        content: 'هذا هو محتوى المدونة 2.',
-        image: require('../assets/log.png'), // Replace with the actual path to the blog image
-        owner: {
-          name: 'جين سميث',
+        {
+          id: 3,
+          user: 'مايكل جونسون',
           photo: require('../assets/log.png'), // Replace with the actual path to the owner's photo
+          comment: 'استمتعت بقراءة هذا.',
         },
-        comments: [
-          {
-            id: 1,
-            user: 'جون دو',
-            photo: require('../assets/log.png'), // Replace with the actual path to the owner's photo
-            comment: 'مكتوب بشكل جيد!',
-          },
-        ],
+      ],
+    },
+    {
+      id: 4,
+      title: 'عنوان المدونة 2',
+      content: 'هذا هو محتوى المدونة 2.',
+      image: require('../assets/log.png'), // Replace with the actual path to the blog image
+      owner: {
+        name: 'جين سميث',
+        photo: require('../assets/log.png'), // Replace with the actual path to the owner's photo
       },
+      comments: [
+        {
+          id: 1,
+          user: 'جون دو',
+          photo: require('../assets/log.png'), // Replace with the actual path to the owner's photo
+          comment: 'مكتوب بشكل جيد!',
+        },
+      ],
+    },
+    // Add more blog objects as needed
+    {
+      id: 5,
+      title: 'عنوان المدونة 2',
+      content: 'هذا هو محتوى المدونة 2.',
+      image: require('../assets/log.png'), // Replace with the actual path to the blog image
+      owner: {
+        name: 'جين سميث',
+        photo: require('../assets/log.png'), // Replace with the actual path to the owner's photo
+      },
+      comments: [
+        {
+          id: 1,
+          user: 'جون دو',
+          photo: require('../assets/log.png'), // Replace with the actual path to the owner's photo
+          comment: 'مكتوب بشكل جيد!',
+        },
+      ],
+    },
 
-      {
-        id: 6,
-        title: 'عنوان المدونة 2',
-        content: 'هذا هو محتوى المدونة 2.',
-        image: require('../assets/log.png'), // Replace with the actual path to the blog image
-        owner: {
-          name: 'جين سميث',
-          photo: require('../assets/log.png'), // Replace with the actual path to the owner's photo
-        },
-        comments: [
-          {
-            id: 1,
-            user: 'جون دو',
-            photo: require('../assets/log.png'), // Replace with the actual path to the owner's photo
-            comment: 'مكتوب بشكل جيد!',
-          },
-        ],
+    {
+      id: 6,
+      title: 'عنوان المدونة 2',
+      content: 'هذا هو محتوى المدونة 2.',
+      image: require('../assets/log.png'), // Replace with the actual path to the blog image
+      owner: {
+        name: 'جين سميث',
+        photo: require('../assets/log.png'), // Replace with the actual path to the owner's photo
       },
-    
+      comments: [
+        {
+          id: 1,
+          user: 'جون دو',
+          photo: require('../assets/log.png'), // Replace with the actual path to the owner's photo
+          comment: 'مكتوب بشكل جيد!',
+        },
+      ],
+    },
+
   ]);
 
   const handleCommentChange = (text, blogId) => {
@@ -115,7 +115,7 @@ export default function Blogs({ navigation }) {
           const newComment = {
             id: blog.comments.length + 1,
             user: 'مستخدم جديد',
-            photo: require('../assets/log.png'), 
+            photo: require('../assets/log.png'),
             comment: blog.commentInput,
           };
           const updatedComments = [...blog.comments, newComment];
@@ -138,21 +138,21 @@ export default function Blogs({ navigation }) {
         <Image source={image} style={styles.blogImage} />
         <Header>{title}</Header>
         <Paragraph>{content}</Paragraph>
- 
+
 
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Button
-        mode="contained"
-        onPress={() => console.log('Read More')}
-        style={{
-          width: 250,
-          justifyContent: 'center',
-          borderRadius: 7,
-        }}
-      >
-        قراءة المزيد
-      </Button>
-    </View>
+          <Button
+            mode="contained"
+            onPress={() => console.log('Read More')}
+            style={{
+              width: 250,
+              justifyContent: 'center',
+              borderRadius: 7,
+            }}
+          >
+            قراءة المزيد
+          </Button>
+        </View>
         <View style={styles.commentsContainer}>
           <Header>التعليقات</Header>
           <FlatList
@@ -168,26 +168,26 @@ export default function Blogs({ navigation }) {
             )}
             keyExtractor={(item) => item.id.toString()}
           />
-        
-        <View style={styles.addCommentContainer}>
-  <View style={styles.commentContainer}>
-    <TextInput
-      style={styles.commentInput}
-      placeholder="أضف تعليقًا"
-      value={commentInput}
-      onChangeText={(text) => handleCommentChange(text, id)}
-    />
-    <TouchableOpacity onPress={() => handleAddComment(id)} style={styles.addButton}>
-      <FontAwesomeIcon name="comment" size={22} style={{ marginRight: 5 }} />
-    </TouchableOpacity>
-    <TouchableOpacity onPress={() => handleAddComment(id)} style={styles.deleteButton}>
-      <FontAwesomeIcon name="recycle" size={22} style={{ marginRight: 5 }} />
-    </TouchableOpacity>
-  </View>
-</View>
 
+          <View style={styles.addCommentContainer}>
+            <View style={styles.commentContainer}>
+              <TextInput
+                style={styles.commentInput}
+                placeholder="أضف تعليقًا"
+                value={commentInput}
+                onChangeText={(text) => handleCommentChange(text, id)}
+              />
+              <TouchableOpacity onPress={() => handleAddComment(id)} style={styles.addButton}>
+                <FontAwesomeIcon name="comment" size={22} style={{ marginRight: 5 }} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handleAddComment(id)} style={styles.deleteButton}>
+                <FontAwesomeIcon name="recycle" size={22} style={{ marginRight: 5 }} />
+              </TouchableOpacity>
+            </View>
           </View>
+
         </View>
+      </View>
     );
   };
 
@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 0,
-    marginHorizontal:0,
+    marginHorizontal: 0,
     marginVertical: 0,
   },
   blogCard: {
@@ -275,17 +275,17 @@ const styles = StyleSheet.create({
   commentContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    
-    
-    
+
+
+
   },
   commentInput: {
     flex: 3,
     textAlign: 'right',
     borderWidth: 0.5, borderColor: 'gray',
     borderRadius: 10,
-    height:40,
-  color:"red"
+    height: 40,
+    color: "red"
   },
   addButton: {
     backgroundColor: '#007AFF',

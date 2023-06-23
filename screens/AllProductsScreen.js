@@ -4,8 +4,9 @@ import { Button, Card, Searchbar, TextInput } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
 
-const api = 'http://192.168.1.9:4000';
+const api = 'http://192.168.1.162:4000';
 
 const ProductList = () => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -156,7 +157,7 @@ const ProductList = () => {
         if (filteredProducts.length === 0) {
             return (
                 <View style={styles.noProductsContainer}>
-                    <Text>No products found</Text>
+                    <Text>مفيش منتجات ياغالي</Text>
                 </View>
             );
         }
@@ -165,25 +166,39 @@ const ProductList = () => {
             <Card key={product._id} style={styles.card}>
                 <Card.Cover source={{ uri: `${api}/${product.image}` }} />
                 <Card.Content>
-                    <Text style={styles.productName}>{product.name}</Text>
-                    <Text>Price: {product.price}</Text>
-                    <Text>Stock: {product.stock}</Text>
-                    <Text>Seller: {product.seller}</Text>
-                    <Text>Description: {product.description}</Text>
-                    <View style={styles.buttonContainer}>
-                        <Button mode="outlined" style={styles.editButton} onPress={() => handleEdit(product)}>
-                            Edit
+                    <Text style={[styles.productName, { fontFamily: 'Droid', textAlign: 'right' }]}>
+                        {product.name}
+                    </Text>
+                    <Text style={{ fontFamily: 'Droid', textAlign: 'right' }}>
+                        سعر المنتج: {product.price}
+                    </Text>
+                    <Text style={{ fontFamily: 'Droid', textAlign: 'right' }}>
+                        الكمية: {product.stock}
+                    </Text>
+                    {/* <Text>Seller: {product.seller}</Text> */}
+                    <Text style={{ fontFamily: 'Droid', textAlign: 'right' }}>
+                        وصف المنتج: {product.description}
+                    </Text>
+                    <View style={[styles.buttonContainer, { flexDirection: 'row-reverse' }]}>
+                        <Button
+                            mode="outlined"
+                            style={styles.editButton}
+                            onPress={() => handleEdit(product)}
+                        >
+                            <Text style={[styles.buttonText, { fontFamily: 'Droid' }]}>تعديل</Text>
                         </Button>
                         <Button
                             mode="contained"
                             style={styles.deleteButton}
                             onPress={() => handleDelete(product._id)}
                         >
-                            Delete
+                            <Text style={[styles.buttonText, { fontFamily: 'Droid' }]}>حذف</Text>
                         </Button>
+
                     </View>
                 </Card.Content>
             </Card>
+
         ));
     };
 
@@ -191,16 +206,16 @@ const ProductList = () => {
         <ScrollView>
             <View style={styles.container}>
                 <Searchbar
-                    placeholder="Search"
+                    placeholder="البحث"
                     onChangeText={(query) => setSearchQuery(query)}
                     value={searchQuery}
                     style={styles.searchBar}
                 />
 
                 <View style={styles.header}>
-                    <Text style={styles.headerText}>Product List</Text>
+                    <Text style={styles.headerText}>قائمة منتجاتك</Text>
                     <TouchableOpacity onPress={() => setModalVisible(true)}>
-                        <Icon name="plus-circle" size={30} color="green" />
+                        <Icon name="plus-circle" size={50} color="green" />
                     </TouchableOpacity>
                 </View>
 
@@ -208,72 +223,80 @@ const ProductList = () => {
             </View>
 
             <Modal visible={modalVisible} onRequestClose={() => setModalVisible(false)}>
-                <ScrollView>
-                    <View style={styles.modalContainer}>
-                        <View style={styles.modalContent}>
-                            <TextInput
-                                placeholder="Name"
-                                value={name}
-                                onChangeText={setName}
-                                style={styles.input}
-                            />
-                            <TextInput
-                                placeholder="Price"
-                                value={price}
-                                onChangeText={setPrice}
-                                keyboardType="numeric"
-                                style={styles.input}
-                            />
-                            <TextInput
-                                placeholder="Description"
-                                value={description}
-                                onChangeText={setDescription}
-                                style={styles.input}
-                            />
-                            <TextInput
-                                placeholder="Category"
-                                value={category}
-                                onChangeText={setCategory}
-                                style={styles.input}
-                            />
-                            <TextInput
-                                placeholder="Stock"
-                                value={stock}
-                                onChangeText={setStock}
-                                keyboardType="numeric"
-                                style={styles.input}
-                            />
-                            <TextInput
-                                placeholder="Seller"
-                                value={seller}
-                                onChangeText={setSeller}
-                                style={styles.input}
-                            />
-                            <View style={styles.imageContainer}>
-                                {selectedImage ? (
-                                    <Image source={{ uri: selectedImage }} style={styles.image} />
-                                ) : (
-                                    <TouchableOpacity style={styles.uploadButton} onPress={handleImageUpload}>
-                                        <Text style={styles.uploadButtonText}>Upload Image</Text>
-                                    </TouchableOpacity>
-                                )}
-                            </View>
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <TextInput
+                            placeholder="اسم المنتج"
+                            value={name}
+                            onChangeText={setName}
+                            style={styles.input}
+                        />
+                        <TextInput
+                            placeholder="سعر المنتج"
+                            value={price}
+                            onChangeText={setPrice}
+                            keyboardType="numeric"
+                            style={styles.input}
+                        />
+                        <TextInput
+                            placeholder="وصف للمنتج"
+                            value={description}
+                            onChangeText={setDescription}
+                            style={styles.input}
+                        />
+                        <TextInput
+                            placeholder="النوع"
+                            value={category}
+                            onChangeText={setCategory}
+                            style={styles.input}
+                        />
+                        <TextInput
+                            placeholder="الكمية"
+                            value={stock}
+                            onChangeText={setStock}
+                            keyboardType="numeric"
+                            style={styles.input}
+                        />
+                        {/* <TextInput
+                            placeholder="Seller"
+                            value={seller}
+                            onChangeText={setSeller}
+                            style={styles.input}
+                        /> */}
+                        <View style={styles.imageContainer}>
+                            {selectedImage ? (
+                                <Image source={{ uri: selectedImage }} style={styles.image} />
+                            ) : (
+                                <TouchableOpacity style={styles.uploadButton} onPress={handleImageUpload}>
+                                    <Text style={styles.uploadButtonText}>رفع صورة</Text>
+                                </TouchableOpacity>
+                            )}
+                        </View>
 
-                            <View style={styles.modalButtons}>
-                                <Button
-                                    mode="contained"
-                                    style={styles.addButton}
-                                    onPress={editingProduct ? handleSave : handleAddProduct}
-                                >
-                                    {editingProduct ? 'Save Product' : 'Add Product'}
-                                </Button>
-                                <Button mode="outlined" style={styles.cancelButton} onPress={handleCancel}>
-                                    Cancel
-                                </Button>
-                            </View>
+                        <View style={styles.modalButtons}>
+                            <Button
+                                mode="contained"
+                                style={styles.addButton}
+                                onPress={editingProduct ? handleSave : handleAddProduct}
+                                icon={({ color, size }) => <FontAwesomeIcon name="save" size={size} color={color} />}
+                            >
+                                <Text style={styles.uploadButtonText}>
+                                    {editingProduct ? 'حفظ المنتج' : 'اضافة المنتج'}
+                                </Text>
+                            </Button>
+
+                            <Button
+                                // mode="outlined"
+                                style={styles.deleteButton}
+                                onPress={handleCancel}
+                                icon={({ color, size }) => <FontAwesomeIcon name="times" size={size} color={'white'} />}
+                            >
+                                <Text style={styles.uploadButtonText}> الغاء</Text>
+                            </Button>
                         </View>
                     </View>
-                </ScrollView>
+
+                </View>
             </Modal>
         </ScrollView>
     );
@@ -295,9 +318,12 @@ const styles = StyleSheet.create({
     headerText: {
         fontSize: 24,
         fontWeight: 'bold',
+        fontFamily: 'Droid',
+
     },
     card: {
         marginBottom: 20,
+        direction: 'ltr'
     },
     productName: {
         fontSize: 20,
@@ -312,64 +338,83 @@ const styles = StyleSheet.create({
     editButton: {
         flex: 1,
         marginRight: 10,
+        marginLeft: 10,
+        fontFamily: 'Droid',
+
     },
     deleteButton: {
         flex: 1,
         marginLeft: 10,
         backgroundColor: 'red',
+        fontFamily: 'Droid',
+
     },
     noProductsContainer: {
         alignItems: 'center',
         marginTop: 50,
     },
+
     modalContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 20,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modalContent: {
-        backgroundColor: 'white',
+        backgroundColor: '#fff',
         padding: 20,
         borderRadius: 10,
-        elevation: 5,
+        width: '80%',
+        maxHeight: '80%',
     },
     input: {
-        marginBottom: 10,
+        fontFamily: 'Droid',
+        fontSize: 15,
+        paddingVertical: 2,
+        paddingHorizontal: 15,
+        marginBottom: 6,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 5,
     },
     imageContainer: {
         alignItems: 'center',
-        marginVertical: 20,
+        marginBottom: 10,
     },
     image: {
-        width: 200,
-        height: 200,
-        borderRadius: 10,
+        width: 100,
+        height: 100,
+        marginBottom: 5,
         resizeMode: 'cover',
+        borderRadius: 100,
     },
     uploadButton: {
-        backgroundColor: 'lightgray',
         padding: 10,
-        borderRadius: 10,
+        backgroundColor: '#ccc',
+        borderRadius: 5,
     },
     uploadButtonText: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: 'gray',
+        fontFamily: 'Droid',
+        fontSize: 13,
+        color: '#fff',
+        textAlign: 'center',
     },
     modalButtons: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-end',
         marginTop: 20,
     },
     addButton: {
-        flex: 1,
         marginRight: 10,
         backgroundColor: 'green',
+
     },
     cancelButton: {
+        marginRight: 10,
         flex: 1,
         marginLeft: 10,
+        backgroundColor: 'red',
     },
+
 });
 export default ProductList;

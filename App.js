@@ -173,7 +173,7 @@ export default function App() {
 
         <Drawer.Screen
           name="البائع"
-          component={AllProductsScreen}
+          component={SellerProfileScreen}
           options={({ navigation }) => ({
             drawerIcon: ({ color, size }) => (
               <TouchableOpacity onPress={() => DrawerNavigator.navigate('AllProductsScreen')}>
@@ -220,6 +220,7 @@ export default function App() {
 
           <Stack.Screen name='Vaccinations' component={Vaccination} options={{ headerShown: false }} />
           <Stack.Screen name='SellerProfile' component={SellerProfileScreen} options={{ headerShown: false }} />
+          <Stack.Screen name='AllProductsScreen' component={AllProductsScreen} options={{ headerShown: true }} />
 
 
           <Stack.Screen name='ProductDetails'
