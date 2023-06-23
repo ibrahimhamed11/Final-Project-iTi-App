@@ -60,7 +60,7 @@ const TabBar = () => {
         },
       })}
       tabBarOptions={{
-        activeTintColor: '#e544b5',
+        activeTintColor: '#76005e7d',
         inactiveTintColor: '#463440af',
         style: {
           backgroundColor: '#000000', // Dark background color
@@ -76,8 +76,8 @@ const TabBar = () => {
       }}
     >
       <Tab.Screen name='الرئيسيه' component={Home} options={{ headerShown: false }} />
-      <Tab.Screen name='الملف الشخصي' component={ProfileScreen} options={{ headerShown: false }} />
       <Tab.Screen name='المدونات' component={Blogs} options={{ headerShown: false }} />
+      <Tab.Screen name='الملف الشخصي' component={ProfileScreen} options={{ headerShown: false }} />
       <Tab.Screen name='المتجر' component={Products} options={{ headerShown: false }} />
       <Tab.Screen name='السله' component={Cart} options={{ tabBarBadge: data.cart.length > 0 ? data.cart.length : null, headerShown: false }} />
     </Tab.Navigator>

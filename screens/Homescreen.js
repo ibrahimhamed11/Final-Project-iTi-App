@@ -60,6 +60,8 @@ export default function StartScreen({ navigation }) {
             flexDirection: "row",
             width: Dimensions.get("screen").width,
             paddingRight: 10,
+            justifyContent:'flex-end'
+
           }}
         >
           <Text
@@ -93,6 +95,7 @@ export default function StartScreen({ navigation }) {
           flexDirection: "row",
           width: Dimensions.get("screen").width,
           paddingRight: 10,
+          justifyContent:'flex-end'
         }}
       >
         <Text
