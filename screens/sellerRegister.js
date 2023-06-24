@@ -158,7 +158,7 @@ export default function SellerRegister({ navigation }) {
             setPhone({ ...phone, error: phoneError });
             setAddress({ ...address, error: addressError });
             setUsername({ ...username, error: usernameError });
-            // sendDataToBackend();
+            sendDataToBackend();
             return;
         }
 
