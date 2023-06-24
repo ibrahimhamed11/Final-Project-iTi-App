@@ -41,13 +41,13 @@ const styles = StyleSheet.create({
     },
     starFilled: {
         color: '#EDB016',
-        fontSize: 18,
+        fontSize: 14,
         marginLeft: 5,
         // You can customize the filled star style here
     },
     starEmpty: {
         color: 'gray',
-        fontSize: 18,
+        fontSize: 14,
         marginLeft: 5,
         // You can customize the empty star style here
 

@@ -264,9 +264,9 @@ export default function Blogs({ navigation }) {
           left: 0,
           backgroundColor: '#76005e45',
           width: Dimensions.get('screen').width,
-          height: 200,
+          height: Dimensions.get('screen').height * 0.26,
           zIndex: 9999,
-          borderBottomLeftRadius: 50,
+          borderBottomLeftRadius: 90,
           borderBottomRightRadius: 0,
         }} ></View>
         <Image source={require('../assets/images/lucas-margoni-nWbJlwIrmT8-unsplash.jpg')} style={styles.header_Image}></Image>
@@ -345,8 +345,8 @@ const styles = StyleSheet.create({
   },
   header_Image: {
     width: Dimensions.get('screen').width,
-    height: 200,
-    borderBottomLeftRadius: 50,
+    height: Dimensions.get('screen').height * 0.26,
+    borderBottomLeftRadius: 90,
     borderBottomRightRadius: 0,
   },
   header_text: {

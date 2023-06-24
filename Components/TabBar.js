@@ -56,23 +56,41 @@ const TabBar = () => {
             iconName = focused ? 'user' : 'user';
           }
 
-          return <Icon name={iconName} color={color} size={size} style={styles.customText} />;
+          return <Icon name={iconName} color={color} size={size*0.8} style={styles.customText} />;
         },
-      })}
-      tabBarOptions={{
-        activeTintColor: '#76005e7d',
-        inactiveTintColor: '#463440af',
-        style: {
-          backgroundColor: '#000000', // Dark background color
-          borderTopColor: theme.colors.background,
-          borderTopWidth: 1,
-          height: 70, // Adjust the height as per your preference
-          
+        tabBarActiveTintColor: '#76005ee5',
+        tabBarInactiveTintColor: '#76005e59',
+       tabBarStyle: {
+            borderTopWidth: 1,
+            height: 50,
+          // borderTopLeftRadius: 20,
+          // borderTopRightRadius: 0,
+          // borderBottomLeftRadius:0,
+          // borderBottomRightRadius:20,
+          position: 'absolute',
+          bottom: 5,
+          left: 10,
+          right: 10,
+          borderRadius: 25,
+          paddingBottom: 5,
+          shadowColor: '#0b0323',
+          shadowOffset: {
+            width: 10,
+            height: 10
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.5,
+          elevation: 5,
+
         },
-        labelStyle: [styles.customText, { fontSize: 10, marginTop: 5 }],
-        iconStyle: {
+        tabBarLabelStyle: [styles.customText, { fontSize: 10}],
+        tabBarIconStyle: {
           marginTop: 5, // Adjust the margin as per your preference
         },
+        tabBarActiveBackgroundColor:{}
+      })}
+      tabBarOptions={{
+       
       }}
     >
       <Tab.Screen name='الرئيسيه' component={Home} options={{ headerShown: false }} />

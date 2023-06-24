@@ -76,18 +76,17 @@ export default function App() {
   const Drawer = createDrawerNavigator();
 
   // const  notification  = useSelector(state => state);
-  console.log("ddwdwdwdw")
 
   function DrawerNavigator() {
     const nav = useNavigation()
     const NotificationIcon = ({ notification }) => (
       <View style={{ marginRight: 30 }}>
         <TouchableOpacity onPress={() => nav.navigate("الاشعارات")}>
-          <FontAwesome name="bell" size={24} color="#463440F3" />
+          <FontAwesome name="bell" size={20} color="#f7f6f1f3" />
           {notification > 0 && (
             <View
               style={{
-                position: 'absolute',
+                position: 'absolute', 
                 top: -8,
                 right: 10,
                 backgroundColor: 'red',
@@ -130,9 +129,12 @@ export default function App() {
               </View>
             ),
             headerStyle: {
-              backgroundColor: '#f066c7c7',
-            },
-            headerTintColor: 'white',
+              backgroundColor: '#76005f', 
+              height:60 ,
+              elevation:5
+               
+            },  
+            headerTintColor: '#ffffff',
           }}
         />
 
@@ -147,7 +149,7 @@ export default function App() {
             ),
             headerShown: true,
             headerStyle: {
-              backgroundColor: 'green',
+              backgroundColor: '#76005f',
             },
             headerTintColor: 'white',
           }}
@@ -165,7 +167,7 @@ export default function App() {
             ),
             headerShown: true,
             headerStyle: {
-              backgroundColor: 'green',
+              backgroundColor: '#76005f',
             },
             headerTintColor: 'white',
           })}
@@ -183,7 +185,7 @@ export default function App() {
             ),
             headerShown: true,
             headerStyle: {
-              backgroundColor: 'green',
+              backgroundColor: '#76005f',
             },
             headerTintColor: 'white',
           })}
@@ -202,7 +204,7 @@ export default function App() {
       {/* <SafeAreaView style={[styles.container, { backgroundColor: 'blue' }]}> */}
 
       <NavigationContainer>
-        <Stack.Navigator>
+        <Stack.Navigator >
           <Stack.Screen name='Splash' component={Splash} options={{ headerShown: false }} />
           <Stack.Screen name='Home' component={DrawerNavigator} options={{ headerShown: false }} />
           <Stack.Screen name='OnboardingScreen' component={OnboardingScreen} options={{ headerShown: false }} />
@@ -230,7 +232,7 @@ export default function App() {
             options={({ navigation }) => ({
               headerShown: true,
               headerStyle: {
-                backgroundColor: 'green',
+                backgroundColor: '#76005f',
               },
               headerTitle: '',
               headerLeft: () => (
@@ -253,7 +255,7 @@ export default function App() {
             })}
           />
         </Stack.Navigator>
-        <StatusBar style='light' />
+        <StatusBar style='auto' />
       </NavigationContainer>
       {/* </SafeAreaView> */}
 
@@ -269,5 +271,5 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: StatusBar.currentHeight,
   },
-  // Your existing styles
+  // Your existing styles 
 });

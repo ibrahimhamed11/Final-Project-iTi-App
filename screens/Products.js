@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, Dimensions, FlatList } from 'react-native';
-import { Card, IconButton, Searchbar } from 'react-native-paper';
+import { View, Text, StyleSheet, Image, Dimensions, FlatList, ScrollView } from 'react-native';
+import { Card, IconButton, Searchbar, Chip } from 'react-native-paper';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import { TouchableOpacity } from 'react-native';
@@ -37,14 +37,11 @@ const ProductCard = ({ product }) => {
           setModalVisible(!modalVisible);
         }}
       >
+        {/* <Image source={{uri:'https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80'}} style={{width:60, height:60, borderRadius:20,}}/> */}
         <View style={styles.centeredView}>
-
-
           <View style={styles.modalView}>
             <FontAwesomeIcon name="check" size={30} style={{ marginRight: 5, color: 'green' }} />
-
             <Text style={[styles.modalText, { fontFamily: 'Droid' }]}>تمت الاضافة الى السلة</Text>
-
             <Pressable
               style={[styles.button, styles.buttonClose]}
               onPress={() => setModalVisible(!modalVisible)}
@@ -58,29 +55,22 @@ const ProductCard = ({ product }) => {
       <Card style={styles.card} onPress={() => navigation.navigate('ProductDetails', { product })}>
         <Card.Cover style={styles.image} source={{ uri: product.images[0] }} />
         <Card.Content style={styles.content}>
-          <Text style={styles.title}>{product.title}</Text>
-          <View>
-            <Text style={styles.price}> {product.price}</Text>
-          </View>
-          <Text style={styles.description}>{product.description}</Text>
           <View style={styles.bottomContainer}>
+            <Text style={styles.title}>{product.title}</Text>
             <View style={styles.ratingContainer}>
-
-
-
-
               <StarRating rating={product.rating} />
-
-              {/* <FontAwesomeIcon name="star" size={30} style={{ marginRight: 5, color:'#EDB016' }} /> */}
-              {/* <Text style={styles.rating}>{product.rating}</Text> */}
             </View>
           </View>
-          <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
-            <View style={styles.buttonContent}>
-              <FontAwesomeIcon name="shopping-cart" size={30} style={{ marginRight: 5, color: 'white' }} />
-              <Text style={[styles.addToCartButtonText, { fontFamily: 'Droid' }]}>اضف الي السله</Text>
-            </View>
-          </TouchableOpacity>
+          <Text style={styles.description}>{product.brand}</Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={styles.price}>{product.price}L.E</Text>
+            <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
+              <View style={styles.buttonContent}>
+                <FontAwesomeIcon name="shopping-cart" size={16} style={{ marginRight: 5, color: 'white' }} />
+                <Text style={[styles.addToCartButtonText, { fontFamily: 'Droid' }]}>اضف الي السله</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
         </Card.Content>
       </Card>
     </>
@@ -158,52 +148,48 @@ const CardScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Searchbar
-        style={[styles.searchBar, { fontFamily: 'Droid' }]}
-        placeholder="ابحث عن المنتج"
-        value={searchQuery}
-        onChangeText={handleSearch}
-        iconColor={styles.searchIcon.color}
-      />
-
-      <View style={styles.categoryContainer}>
-        <TouchableOpacity
-          style={[styles.categoryButton, selectedCategory === 'all' && styles.selectedCategoryButton]}
-          onPress={() => handleCategoryFilter('all')}
-        >
-          <Text style={styles.categoryButtonText}>All</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.categoryButton, selectedCategory === 'laptops' && styles.selectedCategoryButton]}
-          onPress={() => handleCategoryFilter('laptops')}
-        >
-          <Text style={styles.categoryButtonText}>laptops</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.categoryButton, selectedCategory === 'smartphones' && styles.selectedCategoryButton]}
-          onPress={() => handleCategoryFilter('smartphones')}
-        >
-          <Text style={styles.categoryButtonText}>smartphones</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.categoryButton, selectedCategory === 'fragrances' && styles.selectedCategoryButton]}
-          onPress={() => handleCategoryFilter('fragrances')}
-        >
-          <Text style={styles.categoryButtonText}>fragrances</Text>
-        </TouchableOpacity>
-
-        {/* Add more category buttons as needed */}
+      <View style={{marginBottom:25}}>
+        <Image
+          source={require('../assets/images/nav.jpg')}
+          style={styles.mainImage} />
+        <View style={{ position: 'absolute', top: 0, right: 0, paddingTop: 20, paddingRight: 10 }}>
+          <Text style={{ fontSize: 24, fontWeight: 600, color: '#f8e7f4' }}>
+            اهلا بكم فى متجرنا للتسوق
+          </Text>
+          <Text style={{ fontSize: 18, fontWeight: 600, color: '#e0e0e0', marginVertical: 10 }}>
+            سارة محمد احمد
+          </Text>
+          <Searchbar
+            placeholder="ابحث عن المنتج"
+            onChangeText={handleSearch}
+            value={searchQuery}
+            style={{ backgroundColor: '#f8e7f4', marginVertical: 20, width: Dimensions.get('screen').width * 0.88, height:50 }}
+          />
+        </View>
+        <View style={{marginTop:20, justifyContent:'center'}} >
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+          >
+          <Chip style={styles.chips} selectedColor='grey' textStyle={{fontSize:18, padding:1, color:'#76005f'}} onPress={() => handleCategoryFilter('all')}>all</Chip>
+          <Chip style={styles.chips} textStyle={{fontSize:14, padding:1, color:'#76005f'}}  onPress={() => handleCategoryFilter('smartphones')}>smartphones</Chip>
+          <Chip style={styles.chips} textStyle={{fontSize:14, padding:1, color:'#76005f'}}  onPress={() => handleCategoryFilter('laptops')}>laptops</Chip>
+          <Chip style={styles.chips} textStyle={{fontSize:14, padding:1, color:'#76005f'}}  onPress={() => handleCategoryFilter('fragrances')}>fragrances</Chip>
+          <Chip style={styles.chips} textStyle={{fontSize:14, padding:1, color:'#76005f'}}  onPress={() => handleCategoryFilter('fragrances')}>fragrances</Chip>
+          </ScrollView>
+        </View>
       </View>
-
-      <FlatList
-        contentContainerStyle={styles.scrollViewContainer}
-        data={filteredProducts.length > 0 ? filteredProducts : products}
-        renderItem={renderCard}
-        keyExtractor={(item) => item.id.toString()}
-        numColumns={2}
-      />
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+      >
+        <FlatList
+          contentContainerStyle={styles.scrollViewContainer}
+          data={filteredProducts.length > 0 ? filteredProducts : products}
+          renderItem={renderCard}
+          keyExtractor={(item) => item.id.toString()}
+          numColumns={2}
+        />
+      </ScrollView>
     </View>
   );
 };
@@ -211,66 +197,67 @@ const CardScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 20,
+    backgroundColor:'white'
   },
   scrollViewContainer: {
     flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 10,
+    marginVertical: 5,
   },
   searchBar: {
     width: Dimensions.get('screen').width - 16,
     marginBottom: 10,
   },
   card: {
-    width: Dimensions.get('screen').width / 2.3,
-    marginBottom: 20,
+    width: Dimensions.get('screen').width * 0.44,
+    marginHorizontal: 12,
+    marginVertical: 18,
     elevation: 2,
     borderRadius: 10,
-    marginHorizontal: 8,
-    height: 420,
   },
   image: {
-    height: 150,
+    height: 220,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
+    resizeMode: 'contain'
   },
   content: {
     paddingHorizontal: 10,
+    paddingVertical: 10,
     paddingBottom: 10,
   },
   title: {
-    fontSize: 16,
+    width: '50%',
+    fontSize: 20,
     marginTop: 10,
     fontWeight: 'bold',
-    marginBottom: 10,
-    alignSelf: 'center',
-    height: 30,
+    color: '#76005f',
+    paddingVertical: 10,
+    height:70,
+    textAlign:'center'
   },
   description: {
     fontSize: 14,
     marginBottom: 10,
-    height: 60,
   },
   bottomContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems:'center'
   },
   ratingContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems:'center',
+    width:'50%',
   },
   ratingIcon: {
     color: 'gold',
   },
   rating: {
-    fontSize: 18,
+    fontSize: 14,
     color: '#888',
-    marginLeft: 20,
     backgroundColor: 'red'
   },
   cartIcon: {
@@ -282,16 +269,12 @@ const styles = StyleSheet.create({
   price: {
     marginTop: 15,
     marginBottom: 10,
-    height: 30,
     fontWeight: 'bold',
-    fontSize: 25,
-    alignItems: 'center',
-    justifyContent: 'center',
-    textAlign: 'center',
-    color: 'green',
+    fontSize: 16,
+    color: '#76005f',
   },
   addToCartButton: {
-    backgroundColor: 'green',
+    backgroundColor: '#76005f',
     borderRadius: 5,
     marginTop: 10,
     alignItems: 'center',
@@ -302,13 +285,14 @@ const styles = StyleSheet.create({
   buttonContent: {
     flexDirection: 'row',
     alignItems: 'center',
+    paddingHorizontal: 8,
     height: 40,
   },
   addToCartButtonText: {
     marginLeft: 8,
     color: 'white',
     fontWeight: 'bold',
-    fontSize: 14,
+    fontSize: 10,
   },
   categoryContainer: {
     flexDirection: 'row',
@@ -367,6 +351,19 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  chips: {
+    marginHorizontal: 3,
+    backgroundColor: '#f8e7f4',
+    flexDirection:'column'
+  },
+  // nav style
+  mainImage: {
+    width: Dimensions.get('screen').width,
+    height: Dimensions.get('screen').height * 0.26,
+    position: 'relative',
+    borderBottomLeftRadius: 90,
+    paddingBottom:10,
+  }
 });
 
 export default CardScreen;
