@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
   },
   title: {
     width: '50%',
-    fontSize: 20,
+    fontSize: 18,
     marginTop: 10,
     fontWeight: 'bold',
     color: '#76005f',

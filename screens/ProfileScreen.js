@@ -108,8 +108,8 @@ const ProfileScreen = () => {
   return (
     <ScrollView style={{ flex: 1 }}>
       {/* Start Begain First Section */}
-      <View style={{ flex: 1, padding: 20 }}>
-        <View style={{ marginBottom: 20, alignItems: 'center' }}>
+      <View style={{ flex: 1, paddingHorizontal:20,paddingBottom:50 }}>
+        <View style={{ marginBottom:20, alignItems: 'center' }}>
           <View>
             <Image
               source={require('../assets/homeimages/6478906.jpg')}
@@ -222,7 +222,7 @@ const ProfileScreen = () => {
         </View>
         {/* End Begain Babies's Sections */}
 
-        <View style={{ marginBottom: 20 }}>
+        {/* <View style={{ marginBottom: 20 }}>
           <PaperButton
             mode="contained"
             onPress={() => setShowVaccinations(!showVaccinations)}
@@ -271,7 +271,7 @@ const ProfileScreen = () => {
             </DataTable>
 
           )}
-        </View>
+        </View> */}
       </View>
     </ScrollView>
 

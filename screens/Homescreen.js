@@ -50,7 +50,7 @@ export default function StartScreen({ navigation }) {
           data={card}
           renderItem={({ item }) => <HomeSlider item={item} />}
           horizontal
-          showsHorizontalScrollIndicator
+          showsHorizontalScrollIndicator={false}
           keyExtractor={(item) => item.id}
         />
       </View>
