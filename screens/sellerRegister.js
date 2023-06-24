@@ -12,8 +12,8 @@ import { emailValidator } from '../helpers/emailValidator';
 import { passwordValidator } from '../helpers/passwordValidator';
 import { phoneValidator, nameValidator, addressValidator, usernameValidator } from '../helpers/dataValidator';
 
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faCircle, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
+// import { faCircle, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import * as Font from 'expo-font';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import * as ImagePicker from 'expo-image-picker';
@@ -175,8 +175,8 @@ export default function SellerRegister({ navigation }) {
         return (
             <View style={styles.progressBar}>
                 <View style={styles.progressStep}>
-                    <FontAwesomeIcon
-                        icon={step >= 1 ? faCheckCircle : faCircle}
+                    <FontAwesome5Icon
+                        name={step >= 1 ? 'check-circle' : 'circle'}
                         size={30}
                         style={styles.progressIcon}
                     />
@@ -184,8 +184,8 @@ export default function SellerRegister({ navigation }) {
                 </View>
                 <View style={styles.progressLine} />
                 <View style={styles.progressStep}>
-                    <FontAwesomeIcon
-                        icon={step >= 2 ? faCheckCircle : faCircle}
+                    <FontAwesome5Icon
+                        name={step >= 2 ? 'check-circle' : 'circle'}
                         size={30}
                         style={styles.progressIcon}
                     />
@@ -193,10 +193,9 @@ export default function SellerRegister({ navigation }) {
                 </View>
                 <View style={styles.progressLine} />
                 <View style={styles.progressStep}>
-                    <FontAwesomeIcon
-                        icon={step >= 3 ? faCheckCircle : faCircle}
+                    <FontAwesome5Icon
+                        name={step >= 3 ? 'check-circle' : 'circle'}
                         size={30}
-
                         style={styles.progressIcon}
                     />
                     {/* <Text style={styles.stepNumber}>3</Text> */}
