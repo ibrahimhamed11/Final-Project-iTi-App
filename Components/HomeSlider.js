@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
         shadowRadius: 10,
     },
     img: {
-        width: 280,
+        width: Dimensions.get('screen').width*0.9,
         position: 'relative'
     },
     chip: {
