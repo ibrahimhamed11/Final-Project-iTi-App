@@ -28,6 +28,8 @@ import EachProduct from './Components/EachProduct';
 import MoreDetails from './Components/MoreDetails';
 import ToDo from './Components/ToDo';
 import Vaccination from './screens/VaccinationScreen'
+import sellerRegister from './screens/sellerRegister';
+import motherRegister from './screens/motherRegister'
 
 //redux
 import { Provider, useDispatch, useSelector } from 'react-redux';
@@ -39,7 +41,6 @@ import { Store } from './Redux/Store';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { FontAwesome } from '@expo/vector-icons';
 import * as Font from 'expo-font';
-
 
 export default function App() {
 
@@ -221,7 +222,8 @@ export default function App() {
           <Stack.Screen name='Vaccinations' component={Vaccination} options={{ headerShown: false }} />
           <Stack.Screen name='SellerProfile' component={SellerProfileScreen} options={{ headerShown: false }} />
           <Stack.Screen name='AllProductsScreen' component={AllProductsScreen} options={{ headerShown: true }} />
-
+          <Stack.Screen name='sellerRegister' component={sellerRegister} options={{ headerShown: false }} />
+          <Stack.Screen name='motherRegister' component={motherRegister} options={{ headerShown: false }} />
 
           <Stack.Screen name='ProductDetails'
             component={ProductDetails}

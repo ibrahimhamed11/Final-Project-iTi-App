@@ -45,7 +45,7 @@ const HomeScreen = () => {
                 هل تود الرغبه في الانضمام             </Header>
             <TouchableOpacity
                 activeOpacity={0.8}
-                onPress={() => navigation.navigate('LoginScreen')}
+                onPress={() => navigation.navigate('sellerRegister')}
                 style={styles.cardContainer}
             >
                 <Card style={[styles.card, styles.sellerCard]}>
@@ -56,9 +56,12 @@ const HomeScreen = () => {
                 </Card>
             </TouchableOpacity>
 
+
+
+
             <TouchableOpacity
                 activeOpacity={0.8}
-                onPress={() => navigation.navigate('RegisterScreen')} style={styles.cardContainer}
+                onPress={() => navigation.navigate('motherRegister')} style={styles.cardContainer}
             >
                 <Card style={[styles.card, styles.motherCard]}>
                     <Animated.View style={[styles.cardContent, { transform: [{ scale: animatedScale }] }]}>

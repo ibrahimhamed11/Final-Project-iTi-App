@@ -6,7 +6,7 @@ import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
 
-const api = 'http://192.168.1.162:4000';
+import ip from '../ipConfig';
 
 const ProductList = () => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -49,7 +49,7 @@ const ProductList = () => {
                 name: 'product.jpg',
             });
 
-            const response = await axios.post(`${api}/products/add`, formData, {
+            const response = await axios.post(`${ip}/products/add`, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
 
@@ -77,7 +77,7 @@ const ProductList = () => {
 
     const fetchProducts = async () => {
         try {
-            const response = await axios.get(`${api}/products/getAll`);
+            const response = await axios.get(`${ip}/products/getAll`);
             setProducts(response.data);
             console.log(response.data);
         } catch (error) {
@@ -120,7 +120,7 @@ const ProductList = () => {
                 image: selectedImage,
             };
 
-            const response = await axios.patch(`${api}/products/${productId}`, updatedProduct);
+            const response = await axios.patch(`${ip}/products/${productId}`, updatedProduct);
             console.log('Product updated:', response.data);
 
             setModalVisible(false);
@@ -146,7 +146,7 @@ const ProductList = () => {
 
     const handleDelete = async (productId) => {
         try {
-            await axios.delete(`${api}/products/${productId}`);
+            await axios.delete(`${ip}/products/${productId}`);
             fetchProducts(); // Fetch updated list of products after deleting
         } catch (error) {
             console.error('Error deleting product:', error);
@@ -164,7 +164,7 @@ const ProductList = () => {
 
         return filteredProducts.map((product) => (
             <Card key={product._id} style={styles.card}>
-                <Card.Cover source={{ uri: `${api}/${product.image}` }} />
+                <Card.Cover source={{ uri: `${ip}/${product.image}` }} />
                 <Card.Content>
                     <Text style={[styles.productName, { fontFamily: 'Droid', textAlign: 'right' }]}>
                         {product.name}

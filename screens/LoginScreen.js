@@ -15,6 +15,10 @@ import { useFonts } from 'expo-font';
 import jwtDecode from 'jwt-decode';
 import axios from 'axios';
 
+//ip 
+import ip from '../ipConfig';
+
+
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState({ value: '', error: '' });
   const [password, setPassword] = useState({ value: '', error: '' });
@@ -34,7 +38,7 @@ export default function LoginScreen({ navigation }) {
     }
 
     try {
-      const response = await axios.post('http://10.171.240.54:4000/user/login', {
+      const response = await axios.post(`${ip}/user/login`, {
         email: email.value,
         password: password.value,
       });
@@ -80,6 +84,7 @@ export default function LoginScreen({ navigation }) {
           <Logo />
           <Header style={[styles.arabicText, { fontFamily: 'Droid', fontSize: 20 }]}>
             مرحبا بك مجدداً.
+            <Text>{ip}</Text>
           </Header>
           <TextInput
             label="البريد الإلكتروني"
@@ -113,7 +118,7 @@ export default function LoginScreen({ navigation }) {
 
 
           <View style={styles.forgotPassword}>
-            <TouchableOpacity onPress={() => navigation.navigate('ResetPasswordScreen')}>
+            <TouchableOpacity onPress={() => navigation.navigate('joinus')}>
               <Text style={[styles.arabicText, { fontFamily: 'Droid' }]}>هل نسيت كلمة المرور؟</Text>
             </TouchableOpacity>
           </View>
@@ -124,7 +129,7 @@ export default function LoginScreen({ navigation }) {
 
           <View style={[styles.row, styles.arabicText]}>
             <Text style={{ fontFamily: 'Droid' }}>ليس لديك حساب؟ </Text>
-            <TouchableOpacity onPress={() => navigation.replace('RegisterScreen')}>
+            <TouchableOpacity onPress={() => navigation.replace('joinus')}>
               <Text style={[styles.link, { fontFamily: 'Droid' }]}>التسجيل</Text>
             </TouchableOpacity>
           </View>

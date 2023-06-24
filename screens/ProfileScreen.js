@@ -10,6 +10,11 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
 import TabBar from '../Components/TabBar';
 import babysData from '../babysData';
 import BabyComponent from '../Components/BabyComponent';
+
+
+//ip 
+import ip from '../ipConfig';
+
 const ProfileScreen = () => {
   const [fontLoaded, setFontLoaded] = useState(false);
   const [name, setName] = useState('Test Name');

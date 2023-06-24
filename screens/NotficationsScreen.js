@@ -15,10 +15,14 @@ import { Alert } from 'react-native';
 import * as Notifications from 'expo-notifications';
 
 
+//ip config
+import ip from '../ipConfig';
+
+
 
 // Socket.IO server URL
-const API_URL = 'http://192.168.1.162:4000';
-const NodeUrl = 'http://192.168.1.162:4000/notification/getAll'
+const API_URL = `${ip}`;
+const NodeUrl = `${ip}/notification/getAll`
 
 
 

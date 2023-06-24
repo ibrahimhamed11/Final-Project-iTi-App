@@ -7,7 +7,10 @@ import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const api = 'http://10.171.240.54:4000';
+
+//ip 
+import ip from '../ipConfig';
+
 
 const SellerProfileScreen = () => {
     const [image, setImage] = useState(null);
@@ -54,7 +57,7 @@ const SellerProfileScreen = () => {
 
     const handleStatusChange = async (orderId, newStatus) => {
         try {
-            await axios.put(`${api}/orders/${orderId}`, { delStatus: newStatus });
+            await axios.put(`${ip}/orders/${orderId}`, { delStatus: newStatus });
             fetchOrders();
         } catch (error) {
             console.log('Error updating status:', error);
@@ -64,10 +67,10 @@ const SellerProfileScreen = () => {
 
     const fetchOrders = async () => {
         try {
-            const response = await axios.get(`http://10.171.240.37:4000/orders/getAll`).then((res) => {
+            const response = await axios.get(`${ip}/orders/getAll`).then((res) => {
                 console.log(res.data.data)
                 setOrders(res.data.data)
-                printUserId();
+                // printUserId();
             });
             // setOrders(response.data);
             // console.log(response.data);
@@ -95,7 +98,7 @@ const SellerProfileScreen = () => {
         try {
 
             const sellerId = await getUserId();
-            const response = await fetch(`http://10.171.240.54:4000/user/${sellerId}`);
+            const response = await fetch(`${ip}/user/${sellerId}`);
             if (response.ok) {
 
                 const data = await response.json();
@@ -213,7 +216,7 @@ const SellerProfileScreen = () => {
                     {sellerData.image ? (
                         <Image
                             source={{
-                                uri: `${api}/${sellerData.image}`,
+                                uri: `${ip}/${sellerData.image}`,
                             }}
                             style={styles.image}
                         />
