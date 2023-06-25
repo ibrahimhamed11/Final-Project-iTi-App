@@ -10,6 +10,10 @@ import Products from '../screens/Products';
 import Cart from '../Components/cart';
 import Home from '../screens/Homescreen';
 import * as Font from 'expo-font';
+import MotherProfile from '../screens/ProfileScreen'
+import Sellerprofile from '../screens/SellerProfile'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const TabBar = () => {
   const data = useSelector((state) => state.ProductSlice);
@@ -34,6 +38,20 @@ const TabBar = () => {
     },
   });
 
+
+  const getRole = async () => {
+    try {
+      const role = await AsyncStorage.getItem('Role');
+      console.log('The rOLE ', role)
+
+      return role;
+    } catch (error) {
+      console.log('Error retrieving role:', error);
+      return null;
+    }
+  };
+
+
   if (!fontLoaded) {
     return null; // Render null or a loading indicator while the font is loading
   }
@@ -56,13 +74,13 @@ const TabBar = () => {
             iconName = focused ? 'user' : 'user';
           }
 
-          return <Icon name={iconName} color={color} size={size*0.8} style={styles.customText} />;
+          return <Icon name={iconName} color={color} size={size * 0.8} style={styles.customText} />;
         },
         tabBarActiveTintColor: '#76005ee5',
         tabBarInactiveTintColor: '#76005e59',
-       tabBarStyle: {
-            borderTopWidth: 1,
-            height: 60,
+        tabBarStyle: {
+          borderTopWidth: 1,
+          height: 60,
           // borderTopLeftRadius: 20,
           // borderTopRightRadius: 0,
           // borderBottomLeftRadius:0,
@@ -83,19 +101,26 @@ const TabBar = () => {
           elevation: 5,
 
         },
-        tabBarLabelStyle: [styles.customText, { fontSize: 11}],
+        tabBarLabelStyle: [styles.customText, { fontSize: 11 }],
         tabBarIconStyle: {
           marginTop: 5, // Adjust the margin as per your preference
         },
-        tabBarActiveBackgroundColor:{}
+        tabBarActiveBackgroundColor: {}
       })}
       tabBarOptions={{
-       
+
       }}
     >
       <Tab.Screen name='الرئيسيه' component={Home} options={{ headerShown: false }} />
       <Tab.Screen name='المدونات' component={Blogs} options={{ headerShown: false }} />
-      <Tab.Screen name='الملف الشخصي' component={ProfileScreen} options={{ headerShown: false }} />
+      {/* <Tab.Screen name='الملف الشخصي' component={ProfileScreen} options={{ headerShown: false }} /> */}
+      <Tab.Screen
+        name='الملف الشخصي'
+        component={role === 'mother' ? MotherProfile : Sellerprofile}
+        options={{ headerShown: false }}
+      />
+
+
       <Tab.Screen name='المتجر' component={Products} options={{ headerShown: false }} />
       <Tab.Screen name='السله' component={Cart} options={{ tabBarBadge: data.cart.length > 0 ? data.cart.length : null, headerShown: false }} />
     </Tab.Navigator>
