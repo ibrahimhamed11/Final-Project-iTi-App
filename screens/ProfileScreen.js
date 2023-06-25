@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, FlatList, Image, Modal, StyleSheet, Alert, ScrollView, Dimensions } from 'react-native';
+import { View, Text, TextInput, FlatList, Image, Modal, StyleSheet, Alert, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
 import { DataTable, Button as PaperButton } from 'react-native-paper';
 import * as Font from 'expo-font';
 import { IconButton, Card, TouchableRipple } from 'react-native-paper';
@@ -106,10 +106,10 @@ const ProfileScreen = () => {
   }
 
   return (
-    <ScrollView style={{ flex: 1,backgroundColor:'#ffffff' }}>
+    <ScrollView style={{ flex: 1, backgroundColor: '#ffffff' }}>
       {/* Start Begain First Section */}
-      <View style={{ flex: 1, paddingHorizontal:20,paddingBottom:50 }}>
-        <View style={{ marginBottom:20, alignItems: 'center' }}>
+      <View style={{ flex: 1, paddingHorizontal: 20, paddingBottom: 50 }}>
+        <View style={{ marginBottom: 20, alignItems: 'center' }}>
           <View>
             <Image
               source={require('../assets/homeimages/6478906.jpg')}
@@ -117,9 +117,11 @@ const ProfileScreen = () => {
             />
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', position: 'absolute', bottom: -50 }}>
+            {/* <IconButton icon="logout" onPress={handleLogout} style={{ color: '#7600gf', backgroundColor: 'white' ,visibility:'hidden'}} /> */}
+
             <Image
               source={profilePhoto}
-              style={{ width: 100, height: 100, borderRadius: 50, marginHorizontal: 20, borderColor: 'white', borderWidth: 4 }}
+              style={{ width: 100, height: 100, borderRadius: 50, marginHorizontal: 20, borderColor: 'white', borderWidth: 4, marginLeft: 70 }}
             />
             <IconButton icon="logout" onPress={handleLogout} style={{ color: '#7600gf', backgroundColor: 'white' }} />
           </View>
@@ -161,13 +163,20 @@ const ProfileScreen = () => {
         </View>
         <View style={{ marginVertical: 10 }}>
           <Text style={{ color: '#76005f', fontSize: 24 }}>أطفالى</Text>
-          <FlatList
-            data={babysData}
-            renderItem={({ item }) => <BabyComponent item={item} />}
-            pagingEnabled
-            horizontal
-            showsHorizontalScrollIndicator={false}
-          />
+          <View style={{flexDirection:'row'}}>
+            <TouchableOpacity onPress={() => console.log('first')} >
+              <View style={styles.floating_Button}>
+                <FontAwesomeIcon name="plus" size={26} color={'#fff'} />
+              </View>
+            </TouchableOpacity>
+            <FlatList
+              data={babysData}
+              renderItem={({ item }) => <BabyComponent item={item} />}
+              pagingEnabled
+              horizontal
+              showsHorizontalScrollIndicator={false}
+            />
+          </View>
         </View>
         {/* End Begain Mother's baby Section */}
 
@@ -345,7 +354,20 @@ const styles = StyleSheet.create({
   type: {
     fontWeight: 600,
     color: '#ca9ccd'
-  }
+  },
+  floating_Button: {
+    position: 'relative',
+    top: 25,
+    left: -10,
+    borderRadius: 100,
+    backgroundColor: '#76005ee5',
+    justifyContent:'center',
+     width: 80, 
+     height: 80,
+      borderRadius: 20 ,
+    alignItems: 'center',
+    elevation: 5
+  },
 });
 
 export default ProfileScreen;

@@ -7,9 +7,11 @@ import { TouchableOpacity } from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'; // Import the FontAwesome icon
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../Redux/Slices/ProductSlice';
-import { Rating } from 'react-native-ratings';
 import { Alert, Modal, Pressable } from 'react-native';
 import StarRating from '../Components/Rate';
+import ip from '../ipConfig'
+
+
 
 const ProductCard = ({ product }) => {
 
@@ -58,7 +60,7 @@ const ProductCard = ({ product }) => {
 
 
       <Card style={styles.card} onPress={() => navigation.navigate('ProductDetails', { product })}>
-        <Card.Cover style={styles.image} source={{ uri: `http://10.171.240.70:4000/${product?.image}` }} />
+        <Card.Cover style={styles.image} source={{ uri: `${ip}/${product?.image}` }} />
         <Card.Content style={styles.content}>
           <View style={styles.bottomContainer}>
             <Text style={styles.title}>{product?.name}</Text>
@@ -109,7 +111,7 @@ const CardScreen = () => {
 
   useEffect(() => {
     axios
-      .get('http://10.171.240.70:4000/products/getAll') // Update the API endpoint
+      .get(`${ip}/products/getAll`) // Update the API endpoint
       .then((response) => {
         console.log(response.data)
         setProducts(response.data); // Update the response handling

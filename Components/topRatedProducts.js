@@ -1,55 +1,92 @@
-import { View, Image, StyleSheet, Dimensions } from 'react-native';
-import { Text, TouchableOpacity, Button ,Card } from 'react-native-paper';
-import Icon from 'react-native-vector-icons/Ionicons'
-import React, { useEffect, } from 'react';
+import {Image, View, StyleSheet,TouchableOpacity, Dimensions,Alert, Modal, Pressable } from 'react-native';
+import { Text ,Card } from 'react-native-paper';
+import React, { useEffect,useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../Redux/Slices/ProductSlice';
 import StarRating from '../Components/Rate';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'; // Import the FontAwesome icon
+import ip from '../ipConfig'
 
 const TopRatedProducts = ({ item }) => {
+  const dispatch = useDispatch();
+  const [modalVisible, setModalVisible] = useState(false);
 
+  const handleAddToCart = () => {
+
+    dispatch(addToCart(item));
+    setModalVisible(true)
+
+  };
   useEffect(() => {
     
     console.log(item,"endddddddd");
-    console.log(item.category,"category");
 
   }, []);
-    const nav = useNavigation();
+  const navigation = useNavigation();
     return (
-        <Card style={styles.card} onPress={() => navigation.navigate('ProductDetails', { item })}>
-        <Card.Cover style={styles.image} source= {item.image} />
-        <Card.Content style={styles.content}>
-          <View style={styles.bottomContainer}>
-            <Text style={styles.title}>{item.nameOfProduct}</Text>
-            <View style={styles.ratingContainer}>
-              <StarRating rating={item.rate} />
+
+ //modal----------------------------------------------------------------------------------------------------------
+ <>
+ <Modal
+   animationType="slide"
+   transparent={true}
+   visible={modalVisible}
+   onRequestClose={() => {
+     Alert.alert('Modal has been closed.');
+     setModalVisible(!modalVisible);
+   }}
+ >
+   <View style={styles.centeredView}>
+     <View style={styles.modalView}>
+       <FontAwesomeIcon name="check" size={30} style={{ marginRight: 5, color: 'green' }} />
+       <Text style={[styles.modalText, { fontFamily: 'Droid' }]}>تمت الاضافة الى السلة</Text>
+       <Pressable
+         style={[styles.button, styles.buttonClose]}
+         onPress={() => setModalVisible(!modalVisible)}
+       >
+         <Text style={[styles.textStyle, { fontFamily: 'Droid' }]}>إغلاق النافذة</Text>
+       </Pressable>
+     </View>
+   </View>
+ </Modal>
+ {/* modal---------------------------------------------------------------------------------------------------------- */}
+
+      <Card style={styles.card} onPress={() => navigation.navigate('ProductDetails', { item })}>
+      <Card.Cover style={styles.image} source={{ uri: `${ip}/${item?.image}` }} />
+      <Card.Content style={styles.content}>
+        <View style={styles.bottomContainer}>
+          <Text style={styles.title}>{item?.name}</Text>
+          <View style={styles.ratingContainer}>
+            <StarRating rating={item?.rate} />
+          </View>
+        </View>
+        <Text style={styles.description}>{item?.description}</Text>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <Text style={styles.price}>{item?.price}L.E</Text>
+          <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
+            <View style={styles.buttonContent}>
+              <FontAwesomeIcon name="shopping-cart" size={16} style={{ marginRight: 5, color: 'white' }} />
+              <Text style={[styles.addToCartButtonText, { fontFamily: 'Droid' }]}>اضف الي السله</Text>
             </View>
-          </View>
-          <Text style={styles.description}>{item.nameOfProduct}</Text>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={styles.price}>{item.nameOfProduct}L.E</Text>
-            {/* <TouchableOpacity style={styles.addToCartButton} onPress={console.log('first')}>
-              <View style={styles.buttonContent}>
-                <FontAwesomeIcon name="shopping-cart" size={16} style={{ marginRight: 5, color: 'white' }} />
-                <Text style={[styles.addToCartButtonText, { fontFamily: 'Droid' }]}>اضف الي السله</Text>
-              </View>
-            </TouchableOpacity> */}
-          </View>
-        </Card.Content>
-      </Card>
+          </TouchableOpacity>
+        </View>
+      </Card.Content>
+    </Card>
+    </>
     )
 }
 
 const styles = StyleSheet.create({
   card: {
-    width: Dimensions.get('screen').width * 0.44,
-    marginHorizontal: 12,
+    width: Dimensions.get('screen').width * 0.5,
+    marginHorizontal: 20,
     marginVertical: 18,
     elevation: 2,
     borderRadius: 10,
   },
   image: {
-    height: 190,
+    height: 200,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     resizeMode: 'contain'
@@ -142,6 +179,87 @@ const styles = StyleSheet.create({
   },
   categoryButtonText: {
     color: 'white',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalView: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center',
+  },
+  modalText: {
+    fontSize: 18,
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  modalIcon: {
+    marginBottom: 20,
+    color: 'green',
+  },
+  button: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    elevation: 2,
+    marginBottom: 10,
+  },
+  buttonClose: {
+    backgroundColor: 'blue',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  chips: {
+    marginHorizontal: 3,
+    backgroundColor: '#f8e7f4',
+    flexDirection: 'column'
+  },centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalView: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center',
+  },
+  modalText: {
+    fontSize: 18,
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  modalIcon: {
+    marginBottom: 20,
+    color: 'green',
+  },
+  button: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    elevation: 2,
+    marginBottom: 10,
+  },
+  buttonClose: {
+    backgroundColor: 'blue',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  chips: {
+    marginHorizontal: 3,
+    backgroundColor: '#f8e7f4',
+    flexDirection: 'column'
   },
 
 })

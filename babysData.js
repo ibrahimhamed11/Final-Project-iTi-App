@@ -23,4 +23,17 @@ export default[
         BabyAge:'1',
         babyGender:'male',
     },
+    {
+        babyName:'Sara',
+        BabyImage:require('./assets/homeimages/jonathan-borba-oHB7VKdpHQM-unsplash.jpg'),
+        BabyAge:'1',
+        babyGender:'male',
+    },{
+        babyName:'Sara',
+        BabyImage:require('./assets/homeimages/jonathan-borba-oHB7VKdpHQM-unsplash.jpg'),
+        BabyAge:'1',
+        babyGender:'male',
+    },
+
+    
 ]
