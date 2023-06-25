@@ -65,10 +65,10 @@ export default function StartScreen({ navigation }) {
           }}
         >
           <Text
-            style={{ margin: 10, padding: 0, fontSize: 20, fontWeight: "bold" }}
+            style={{ margin: 10, padding: 0, fontSize: 20, fontWeight: "bold",color:'#430335' }}
           >
             {" "}
-            الاعلى تقييماً
+            الاعلــى تقيـيـمـــاً
           </Text>
         </View>
         <View
@@ -76,7 +76,7 @@ export default function StartScreen({ navigation }) {
             width: Dimensions.get("screen").width * 0.2,
             backgroundColor: "#a072a1",
             height: 1,
-            marginLeft: 260,
+            marginLeft: 330,
           }}
         >
         </View>
@@ -99,10 +99,10 @@ export default function StartScreen({ navigation }) {
         }}
       >
         <Text
-          style={{ margin: 10, padding: 0, fontSize: 20, fontWeight: "bold" }}
+          style={{ margin: 10, padding: 0, fontSize: 20, fontWeight: "bold",color:'#430335' }}
         >
           {" "}
-          مدونات شائعة
+          مدونــات شــائعة
         </Text>
       </View>
       <View
@@ -110,7 +110,7 @@ export default function StartScreen({ navigation }) {
           width: Dimensions.get("screen").width * 0.2,
           backgroundColor: "#a072a1",
           height: 1,
-          marginLeft: 260,
+          marginLeft: 330,
         }}
       ></View>
 

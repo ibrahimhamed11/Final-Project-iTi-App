@@ -4,7 +4,7 @@ import { View, StyleSheet, FlatList, ScrollView, Image, Text, Dimensions, Toucha
 // import Icon from 'react-native-vector-icons/Ionicons'
 import { Checkbox, Divider } from 'react-native-paper';
 import axios from 'axios';
-
+import ip from '../ipConfig'
 
 const VaccinationScreen = ({ motherId }) => {
     // set age averages 
@@ -42,16 +42,25 @@ const VaccinationScreen = ({ motherId }) => {
         { name: 'جدرى', status: 'complete', date: '16 jun 2023' },]);
 
     const showVaccines = (min, max) => {
-        axios.get(`http://192.168.80.1:4000/vaccination/user/6492bf65d14976a97957160f`, { min, max }).then(res => {
+        axios.get(`${ip}vaccination/user/${motherId}`, { min, max }).then(res => {
 
             // console.log(res.data)
             setArr([...res.data.vaccinations]);
         }).catch(err => console.log(err));
     }
+    const [status,setStatus]=useState('completed')
+    const toggleStatus = (index) => {
+        if(status=='completed')
+        setStatus('uncompleted');
+        else 
+        setStatus('completed');
+        handleCompletedVaccine(index)
 
+      };
     const handleCompletedVaccine = (index) => {
         const updatedVaccinations = [...arr];
-        updatedVaccinations[index].status = 'completed';
+        updatedVaccinations[index].status = status;
+       
         setArr(updatedVaccinations);
     
         axios.put(`http://192.168.80.1:4000/vaccination/${updatedVaccinations[index]._id}`,{ status: 'completed' }
@@ -63,8 +72,8 @@ const VaccinationScreen = ({ motherId }) => {
 
 
     return (
-        <View>
-            <View style={{ height: 240, backgroundColor: '#d4bdd0b3', borderBottomLeftRadius: 30, borderBottomRightRadius: 30 }}>
+        <View style={{backgroundColor:'#ffffff'}}>
+            <View style={{ height: Dimensions.get('screen').height * 0.35,backgroundColor: '#d4bdd0b3', borderBottomLeftRadius: 90 }}>
                 <View style={styles.header_con}>
                     {/* <Image source={require('../assets/images/Untitled design.png')} style={{ width: 100 }}></Image> */}
                     <Text style={styles.title}>التـطعيـمـــات</Text>
@@ -72,6 +81,7 @@ const VaccinationScreen = ({ motherId }) => {
                 </View>
 
                 <FlatList
+                style={{marginLeft:2}}
                     horizontal
                     data={vaccinationAge}
                     key={(item) => item.age}
@@ -93,7 +103,7 @@ const VaccinationScreen = ({ motherId }) => {
                     }}
                 />
             </View>
-            <ScrollView contentContainerStyle={{ paddingBottom: 10, }}>
+            <ScrollView contentContainerStyle={{ paddingBottom: 1 }}>
                 <ImageBackground source={require('../assets/images/background.jpg')} >
                     <FlatList
                         style={{ height: Dimensions.get('screen').height, }}
@@ -102,7 +112,7 @@ const VaccinationScreen = ({ motherId }) => {
                         renderItem={({ item, index }) => {
                             return (
                                 <View style={styles.progress_container}>
-                                    <TouchableOpacity onPress={() => {  handleCompletedVaccine(index) }} style={{ elevation: 5 }}>
+                                    <TouchableOpacity onPress={() => {  toggleStatus(index) }} style={{ elevation: 5 }}>
                                         <View style={[styles.vaccine_box, { backgroundColor: item.status === 'completed' ? '#3d0a31' : itemColors[index] }]}>
                                             <View style={{ flexDirection: 'column' }}>
                                                 <Text style={{ fontSize: 20, paddingHorizontal: 10,  color: item.status === 'completed' ? '#f2eef1' : '#3d0a31' ,textDecorationLine:item.status === 'completed' ?'line-through' :'none' }}>{item.name}</Text>
@@ -143,12 +153,9 @@ const styles = StyleSheet.create({
         fontSize: 26,
         fontWeight: 500,
         paddingVertical: 10,
-        // marginVertical: 8,
+        marginVertical: 10,
         color: '#76005f',
         marginTop: 40
-
-        // borderBottomColor: 'grey',
-        // borderBottomWidth: 0.5,
     },
     boxes_con: {
         flexDirection: 'row',
@@ -163,7 +170,7 @@ const styles = StyleSheet.create({
         height: 100,
         // backgroundColor: '#b802c5d3',
         // borderRadius: 200,
-        margin: 3,
+        margin: 5,
         shadowColor: '#000000f8',
         shadowOffset: { width: 10, height: 10 },
         shadowOpacity: 1,

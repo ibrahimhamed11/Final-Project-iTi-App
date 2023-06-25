@@ -106,7 +106,7 @@ const ProfileScreen = () => {
   }
 
   return (
-    <ScrollView style={{ flex: 1 }}>
+    <ScrollView style={{ flex: 1,backgroundColor:'#ffffff' }}>
       {/* Start Begain First Section */}
       <View style={{ flex: 1, paddingHorizontal:20,paddingBottom:50 }}>
         <View style={{ marginBottom:20, alignItems: 'center' }}>
@@ -117,7 +117,6 @@ const ProfileScreen = () => {
             />
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', position: 'absolute', bottom: -50 }}>
-            <IconButton icon="logout" onPress={handleLogout} style={{ color: '#7600gf', backgroundColor: 'white' }} />
             <Image
               source={profilePhoto}
               style={{ width: 100, height: 100, borderRadius: 50, marginHorizontal: 20, borderColor: 'white', borderWidth: 4 }}
@@ -143,15 +142,15 @@ const ProfileScreen = () => {
               onPress={() => handelupdateProfile()}
               labelStyle={{ fontFamily: 'Droid', fontSize: 12, color: '#76005f', padding: 0, margin: 0 }}
               style={{
-                width: 100,
+                width: 150,
                 borderRadius: 7,
                 backgroundColor: 'transparent',
                 borderWidth: 1,
                 borderColor: '#76005f',
               }}
-              icon={({ color }) => <Icon name="settings" size={12} color="#76005f" />}
+              icon={({ color }) => <Icon name="person" size={12} color="#76005f" />}
             >
-              تعديل
+              معلوماتي
             </PaperButton>
           </View>
         </View>

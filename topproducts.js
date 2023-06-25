@@ -18,5 +18,20 @@ export default[
         image:require('./assets/homeimages/R.jpeg'),
         nameOfProduct:'product4',
         rate:'5'
+    },
+    {
+        image:require('./assets/homeimages/R.jpeg'),
+        nameOfProduct:'product4',
+        rate:'5'
+    },
+    {
+        image:require('./assets/homeimages/R.jpeg'),
+        nameOfProduct:'product4',
+        rate:'5'
+    },
+    {
+        image:require('./assets/homeimages/R.jpeg'),
+        nameOfProduct:'product4',
+        rate:'5'
     }
 ]
