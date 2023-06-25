@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { Card, Title, Button, Modal, Text } from 'react-native-paper';
 import { FontAwesome } from '@expo/vector-icons';
 import { FlatList } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
+import { IconButton } from 'react-native-paper';
 
 
 //ip 
@@ -35,7 +37,58 @@ const SellerProfileScreen = () => {
         }
     };
 
-
+    const handleLogout = () => {
+        Alert.alert(
+            'تسجيل الخروج',
+            'هل أنت متأكد أنك ترغب في تسجيل الخروج؟',
+            [
+                {
+                    text: 'إلغاء',
+                    style: 'cancel',
+                },
+                {
+                    text: 'تسجيل الخروج',
+                    onPress: async () => {
+                        // Clear local storage
+                        try {
+                            await AsyncStorage.clear();
+                            console.log('localstorage cleard');
+                        } catch (error) {
+                            console.log('failed to clear local strorage', error);
+                        }
+                        // Redirect to the login screen
+                        navigation.navigate('LoginScreen'); // Replace 'Login' with the actual name of your login screen route
+                    },
+                },
+            ],
+            {
+                // Styling the alert
+                style: 'default', // 'default', 'secureText', or 'loginAndPassword'
+                titleStyle: {
+                    fontSize: 20,
+                    fontWeight: 'bold',
+                    textAlign: 'right',
+                },
+                messageStyle: {
+                    fontSize: 16,
+                    textAlign: 'right',
+                },
+                cancelButtonStyle: {
+                    backgroundColor: 'red',
+                },
+                cancelTextStyle: {
+                    color: 'white',
+                },
+                destructiveButtonStyle: {
+                    backgroundColor: 'red',
+                },
+                destructiveTextStyle: {
+                    color: 'white',
+                },
+                // Additional options...
+            }
+        );
+    };
 
     const toggleModal = () => {
         setModalVisible(!isModalVisible);
@@ -224,6 +277,7 @@ const SellerProfileScreen = () => {
                         <FontAwesome name="user-circle" size={100} color="#999999" />
                     )}
                 </View>
+                <IconButton icon="logout" onPress={handleLogout} style={{ color: '#7600gf', backgroundColor: 'white' }} />
 
                 <Card style={styles.card}>
                     <Card.Content>

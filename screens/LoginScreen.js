@@ -51,13 +51,17 @@ export default function LoginScreen({ navigation }) {
         // Save the token and ID in AsyncStorage
         await AsyncStorage.setItem('token', token);
         await AsyncStorage.setItem('userId', user._id);
+        await AsyncStorage.setItem('Role', user.role);
+
 
         const storedToken = await AsyncStorage.getItem('token');
+        const storedToken2 = await AsyncStorage.getItem('role');
 
         // Decode the token to retrieve its data
         const decodedToken = jwtDecode(storedToken);
 
         console.log('Decoded Token:', decodedToken);
+        console.log('role ', storedToken2);
 
         navigation.reset({
           index: 0,
