@@ -62,13 +62,13 @@ const TabBar = () => {
         tabBarInactiveTintColor: '#76005e59',
        tabBarStyle: {
             borderTopWidth: 1,
-            height: 50,
+            height: 60,
           // borderTopLeftRadius: 20,
           // borderTopRightRadius: 0,
           // borderBottomLeftRadius:0,
           // borderBottomRightRadius:20,
           position: 'absolute',
-          bottom: 5,
+          bottom: 10,
           left: 10,
           right: 10,
           borderRadius: 25,
@@ -83,7 +83,7 @@ const TabBar = () => {
           elevation: 5,
 
         },
-        tabBarLabelStyle: [styles.customText, { fontSize: 10}],
+        tabBarLabelStyle: [styles.customText, { fontSize: 11}],
         tabBarIconStyle: {
           marginTop: 5, // Adjust the margin as per your preference
         },

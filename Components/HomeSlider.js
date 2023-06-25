@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
         margin: 15,
         elevation: 5,
         shadowColor: '#101011',
-        height: Dimensions.get('screen').height * 0.25,
+        height: Dimensions.get('screen').height * 0.3,
         boxShadow: "10px 10px 17px 12px rgba(0, 0, 0, 0.893)",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.26,
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     },
     img: {
         width: Dimensions.get('screen').width*0.9,
-        height: Dimensions.get('screen').height * 0.25,
+        height: Dimensions.get('screen').height * 0.3,
 
         position: 'relative'
     },

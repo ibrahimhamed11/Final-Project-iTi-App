@@ -1,12 +1,19 @@
 import { View, Image, StyleSheet, Dimensions } from 'react-native';
 import { Text, TouchableOpacity, Button ,Card } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons'
-import React from 'react'
+import React, { useEffect, } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import StarRating from '../Components/Rate';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'; // Import the FontAwesome icon
 
 const TopRatedProducts = ({ item }) => {
+
+  useEffect(() => {
+    
+    console.log(item,"endddddddd");
+    console.log(item.category,"category");
+
+  }, []);
     const nav = useNavigation();
     return (
         <Card style={styles.card} onPress={() => navigation.navigate('ProductDetails', { item })}>

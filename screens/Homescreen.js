@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -14,37 +14,32 @@ import card from "../card";
 import topproducts from "../topproducts";
 import HomeBlogsCard from "../Components/HomeBlogsCard";
 import TopRatedProducts from "../Components/topRatedProducts";
-// import Background from "../Components/Background";
+import axios from "axios";
 
 export default function StartScreen({ navigation }) {
+ 
+  const [products, setProducts] = useState([]);
+  const [topProducts, setTopProducts] = useState([]);
+
+  useEffect(() => {
+    axios.get('https://dummyjson.com/products').then((response) => {
+        setProducts(response.data.products);
+        const topProducts = products.filter((product) => {
+          if (product.rating >=4.5 && product.rating <=5){
+              return true;
+        }})
+        setTopProducts(topProducts)
+        console.log("start",topProducts,"endddddddd");
+ 
+        })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
   return (
     // <Background>
     <ScrollView style={styles.con}>
-      {/* <View>
-        <View
-          style={{
-            flexDirection: "row",
-            width: Dimensions.get("screen").width,
-            paddingRight: 10,
-          }}
-        >
-          <Text
-            style={{ margin: 10, padding: 0, fontSize: 20, fontWeight: "bold" }}
-          >
-            {" "}
-            خدماتنا
-          </Text>
-        </View>
-        <View
-          style={{
-            width: Dimensions.get("screen").width * 0.2,
-            backgroundColor: "#a072a1",
-            height: 1,
-            marginLeft: 260,
-          }}
-        >
-        </View>
-      </View> */}
+      
       <View>
         <FlatList
           data={card}
@@ -73,16 +68,16 @@ export default function StartScreen({ navigation }) {
         </View>
         <View
           style={{
-            width: Dimensions.get("screen").width * 0.2,
+            width: Dimensions.get("screen").width * 0.3,
             backgroundColor: "#a072a1",
             height: 1,
-            marginLeft: 330,
+            marginLeft: 300,
           }}
         >
         </View>
 
         <FlatList
-          data={topproducts}
+          data={topProducts}
           renderItem={({ item }) => <TopRatedProducts item={item} />}
           pagingEnabled
           horizontal
@@ -115,7 +110,7 @@ export default function StartScreen({ navigation }) {
       ></View>
 
       <FlatList
-        data={topproducts}
+        data={topProducts}
         renderItem={({ item }) => <HomeBlogsCard item={item} />}
         pagingEnabled
         numColumns={2}
