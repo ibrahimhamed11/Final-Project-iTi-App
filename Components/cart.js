@@ -36,9 +36,9 @@ const Cart = () => {
   };
 
   const renderCartItem = ({ item }) => (
-    <View key={item.id} style={styles.cartItem}>
+    <View key={item._id} style={styles.cartItem}>
       <View style={styles.imageContainer}>
-        <Image source={{ uri: item.images[0] }} style={styles.image} />
+        <Image source={{ uri: `http://10.171.240.70:4000/${item?.image}` }} style={styles.image} />
       </View>
       <View style={styles.infoContainer}>
         <Text style={styles.title}>{item.title}</Text>
@@ -84,7 +84,7 @@ const Cart = () => {
           <FlatList
             data={cart}
             renderItem={renderCartItem}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => item._id.toString()}
             contentContainerStyle={styles.cartList}
             showsVerticalScrollIndicator={false}
           />
@@ -166,11 +166,11 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     borderRadius: 5,
     marginTop: 20,
-    width:100,
-    height:30,
+    width: 100,
+    height: 30,
     fontWeight: 'bold',
     textAlign: 'center',
-    alignSelf:'center'
+    alignSelf: 'center'
 
 
   },

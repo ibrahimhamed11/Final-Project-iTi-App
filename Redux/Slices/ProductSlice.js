@@ -27,8 +27,8 @@ const ProductSlice = createSlice({
   },
   reducers: {
     addToCart: (state, action) => {
-      const { id } = action.payload;
-      const existingItem = state.cart.find(item => item.id === id);
+      const { _id } = action.payload;
+      const existingItem = state.cart.find(item => item._id === _id);
       if (existingItem) {
         existingItem.quantity += 1;
         // Alert.alert('حضرتك ضيفته قبل كدا !هزودلك الكميه');
@@ -41,8 +41,8 @@ const ProductSlice = createSlice({
       AsyncStorage.setItem('cart', JSON.stringify(state.cart));
     },
     removeFromCart: (state, action) => {
-      const { id } = action.payload;
-      const existingItemIndex = state.cart.findIndex(item => item.id === id);
+      const { _id } = action.payload;
+      const existingItemIndex = state.cart.findIndex(item => item._id === _id);
       if (existingItemIndex !== -1) {
         const existingItem = state.cart[existingItemIndex];
         if (existingItem.quantity === 1) {
@@ -55,15 +55,15 @@ const ProductSlice = createSlice({
       AsyncStorage.setItem('cart', JSON.stringify(state.cart));
     },
     incrementQuantity: (state, action) => {
-      const { id } = action.payload;
-      const existingItem = state.cart.find(item => item.id === id);
+      const { _id } = action.payload;
+      const existingItem = state.cart.find(item => item._id === _id);
       if (existingItem) {
         existingItem.quantity += 1;
       }
     },
     decrementQuantity: (state, action) => {
-      const { id } = action.payload;
-      const existingItemIndex = state.cart.findIndex(item => item.id === id);
+      const { _id } = action.payload;
+      const existingItemIndex = state.cart.findIndex(item => item._id === _id);
       if (existingItemIndex !== -1) {
         const existingItem = state.cart[existingItemIndex];
         if (existingItem.quantity === 1) {

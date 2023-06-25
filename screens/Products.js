@@ -52,18 +52,23 @@ const ProductCard = ({ product }) => {
         </View>
       </Modal>
       {/* modal---------------------------------------------------------------------------------------------------------- */}
+
+
+
+
+
       <Card style={styles.card} onPress={() => navigation.navigate('ProductDetails', { product })}>
-        <Card.Cover style={styles.image} source={{ uri: product.images[0] }} />
+        <Card.Cover style={styles.image} source={{ uri: `http://10.171.240.70:4000/${product?.image}` }} />
         <Card.Content style={styles.content}>
           <View style={styles.bottomContainer}>
-            <Text style={styles.title}>{product.title}</Text>
+            <Text style={styles.title}>{product?.name}</Text>
             <View style={styles.ratingContainer}>
-              <StarRating rating={product.rating} />
+              <StarRating rating={product?.rate} />
             </View>
           </View>
-          <Text style={styles.description}>{product.brand}</Text>
+          <Text style={styles.description}>{product?.description}</Text>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={styles.price}>{product.price}L.E</Text>
+            <Text style={styles.price}>{product?.price}L.E</Text>
             <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
               <View style={styles.buttonContent}>
                 <FontAwesomeIcon name="shopping-cart" size={16} style={{ marginRight: 5, color: 'white' }} />
@@ -76,6 +81,8 @@ const ProductCard = ({ product }) => {
     </>
   );
 };
+
+
 
 const CardScreen = () => {
   const [products, setProducts] = useState([]);
@@ -102,15 +109,17 @@ const CardScreen = () => {
 
   useEffect(() => {
     axios
-      .get('https://dummyjson.com/products')
+      .get('http://10.171.240.70:4000/products/getAll') // Update the API endpoint
       .then((response) => {
-        setProducts(response.data.products);
+        console.log(response.data)
+        setProducts(response.data); // Update the response handling
       })
       .catch((error) => {
         console.error(error);
       });
   }, []);
 
+  // console.log("iti", products)
   const handleSearch = (query) => {
     setSearchQuery(query);
 
@@ -144,11 +153,14 @@ const CardScreen = () => {
     setSearchQuery(''); // Clear search query when selecting a category
   };
 
-  const renderCard = ({ item }) => <ProductCard product={item} />;
+  const renderCard = ({ item }) => {
+    console.log(item)
+    return <ProductCard product={item} />
+  };
 
   return (
     <View style={styles.container}>
-      <View style={{marginBottom:25}}>
+      <View style={{ marginBottom: 25 }}>
         <Image
           source={require('../assets/images/nav.jpg')}
           style={styles.mainImage} />
@@ -163,32 +175,42 @@ const CardScreen = () => {
             placeholder="ابحث عن المنتج"
             onChangeText={handleSearch}
             value={searchQuery}
-            style={{ backgroundColor: '#f8e7f4', marginVertical: 20, width: Dimensions.get('screen').width * 0.88, height:50 }}
+            style={{ backgroundColor: '#f8e7f4', marginVertical: 20, width: Dimensions.get('screen').width * 0.88, height: 50 }}
           />
         </View>
-        <View style={{marginTop:20, justifyContent:'center'}} >
+        <View style={{ marginTop: 20, justifyContent: 'center' }} >
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
           >
-          <Chip style={styles.chips} selectedColor='grey' textStyle={{fontSize:18, padding:1, color:'#76005f'}} onPress={() => handleCategoryFilter('all')}>all</Chip>
-          <Chip style={styles.chips} textStyle={{fontSize:14, padding:1, color:'#76005f'}}  onPress={() => handleCategoryFilter('smartphones')}>smartphones</Chip>
-          <Chip style={styles.chips} textStyle={{fontSize:14, padding:1, color:'#76005f'}}  onPress={() => handleCategoryFilter('laptops')}>laptops</Chip>
-          <Chip style={styles.chips} textStyle={{fontSize:14, padding:1, color:'#76005f'}}  onPress={() => handleCategoryFilter('fragrances')}>fragrances</Chip>
-          <Chip style={styles.chips} textStyle={{fontSize:14, padding:1, color:'#76005f'}}  onPress={() => handleCategoryFilter('fragrances')}>fragrances</Chip>
+            <Chip style={styles.chips} selectedColor='grey' textStyle={{ fontSize: 18, padding: 1, color: '#76005f' }} onPress={() => handleCategoryFilter('all')}>all</Chip>
+            <Chip style={styles.chips} textStyle={{ fontSize: 14, padding: 1, color: '#76005f' }} onPress={() => handleCategoryFilter('smartphones')}>smartphones</Chip>
+            <Chip style={styles.chips} textStyle={{ fontSize: 14, padding: 1, color: '#76005f' }} onPress={() => handleCategoryFilter('laptops')}>laptops</Chip>
+            <Chip style={styles.chips} textStyle={{ fontSize: 14, padding: 1, color: '#76005f' }} onPress={() => handleCategoryFilter('fragrances')}>fragrances</Chip>
+            <Chip style={styles.chips} textStyle={{ fontSize: 14, padding: 1, color: '#76005f' }} onPress={() => handleCategoryFilter('fragrances')}>fragrances</Chip>
           </ScrollView>
         </View>
       </View>
       <ScrollView
         showsVerticalScrollIndicator={false}
       >
+        {/* <FlatList
+          contentContainerStyle={styles.scrollViewContainer}
+          data={products}
+          renderItem={renderCard}
+          keyExtractor={(item, index) => index}
+          numColumns={2}
+        />
+         */}
+
         <FlatList
           contentContainerStyle={styles.scrollViewContainer}
           data={filteredProducts.length > 0 ? filteredProducts : products}
           renderItem={renderCard}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item._id.toString()}
           numColumns={2}
         />
+
       </ScrollView>
     </View>
   );
@@ -197,7 +219,7 @@ const CardScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:'white'
+    backgroundColor: 'white'
   },
   scrollViewContainer: {
     flexGrow: 1,
@@ -235,8 +257,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#76005f',
     paddingVertical: 10,
-    height:70,
-    textAlign:'center'
+    height: 70,
+    textAlign: 'center'
   },
   description: {
     fontSize: 14,
@@ -245,12 +267,12 @@ const styles = StyleSheet.create({
   bottomContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems:'center'
+    alignItems: 'center'
   },
   ratingContainer: {
     flexDirection: 'row',
-    alignItems:'center',
-    width:'50%',
+    alignItems: 'center',
+    width: '50%',
   },
   ratingIcon: {
     color: 'gold',
@@ -354,7 +376,7 @@ const styles = StyleSheet.create({
   chips: {
     marginHorizontal: 3,
     backgroundColor: '#f8e7f4',
-    flexDirection:'column'
+    flexDirection: 'column'
   },
   // nav style
   mainImage: {
@@ -362,7 +384,7 @@ const styles = StyleSheet.create({
     height: Dimensions.get('screen').height * 0.26,
     position: 'relative',
     borderBottomLeftRadius: 90,
-    paddingBottom:10,
+    paddingBottom: 10,
   }
 });
 

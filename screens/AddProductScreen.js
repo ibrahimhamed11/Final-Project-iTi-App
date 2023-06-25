@@ -39,7 +39,7 @@ const AddProduct = () => {
                 name: 'product.jpg',
             });
 
-            const response = await axios.post('http://192.168.1.9:4000/products/add', formData, {
+            const response = await axios.post('http://10.171.240.70:4000/products/add', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
 
