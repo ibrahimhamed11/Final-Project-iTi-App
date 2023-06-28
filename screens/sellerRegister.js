@@ -129,7 +129,7 @@ export default function SellerRegister({ navigation }) {
                 headers: { 'Content-Type': 'multipart/form-data' },
 
             });
-            
+
 
             // Handle the response from the server
             console.log('user add ', response.data); // You can customize this based on your backend API response
@@ -190,7 +190,6 @@ export default function SellerRegister({ navigation }) {
                         size={30}
                         style={styles.progressIcon}
                     />
-                    <Text style={styles.stepNumber}>{ip}</Text>
                 </View>
                 <View style={styles.progressLine} />
                 <View style={styles.progressStep}>
