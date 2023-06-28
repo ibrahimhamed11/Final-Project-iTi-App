@@ -51,7 +51,7 @@ export default function LoginScreen({ navigation }) {
         // Save the token and ID in AsyncStorage
         await AsyncStorage.setItem('token', token);
         await AsyncStorage.setItem('userId', user._id);
-        await AsyncStorage.setItem('Role', user.role);
+        await AsyncStorage.setItem('role', user.role);
 
 
         const storedToken = await AsyncStorage.getItem('token');
@@ -65,7 +65,8 @@ export default function LoginScreen({ navigation }) {
 
         navigation.reset({
           index: 0,
-          routes: [{ name: 'Home' }],
+          // routes: [{ name: storedToken2 == 'mother' ? 'Profile' : 'SellerProfile' }],
+          routes: [{ name: 'Home'}],
         });
       } else {
         throw new Error('Invalid email or password');

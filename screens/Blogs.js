@@ -20,9 +20,9 @@ export default function Blogs({ navigation }) {
 
     {
       id: 1,
-      title: 'عنوان المدونة 1',
-      content: 'هذا هو محتوى المدونة 1.',
-      image: require('../assets/images/babies.jpg'), // Replace with the actual path to the blog image
+      title: 'طعام صحي لطفلك',
+      content: " مع نمو طفلك إلى طفل صغير ، ينتقل إلى مرحلة من النمو البدني والعقلي السريع ويحتاج إلى نظام غذائي متوازن لضمان نمو وتطور صحي. تعرّفي أكثر على الغذاء الصحي للاطفال والأطعمة التي يجب تجنبها.  ",
+      image: require('../assets/images/feeding_baby.jpg'), // Replace with the actual path to the blog image
       owner: {
         photo: require('../assets/images/babies.jpg'),
         name: 'Ibrahim Hamed',
@@ -63,9 +63,9 @@ export default function Blogs({ navigation }) {
     // Add more blog objects as needed
     {
       id: 5,
-      title: 'عنوان المدونة 2',
-      content: 'هذا هو محتوى المدونة 2.',
-      image: require('../assets/images/babies.jpg'), // Replace with the actual path to the blog image
+      title: 'الالعاب المناسبة لطفلك',
+      content: " الألعاب من أهم الوسائل التربوية للمربي وهي في الوقت نفسه من أهم الأولويات عند الطفل وتُعد من وسائل النمو" ,
+         image: require('../assets/images/babies.jpg'), // Replace with the actual path to the blog image
       owner: {
         name: 'جين سميث',
         photo: require('../assets/images/babies.jpg'), // Replace with the actual path to the owner's photo

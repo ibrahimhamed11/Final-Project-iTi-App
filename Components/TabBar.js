@@ -28,8 +28,8 @@ const TabBar = () => {
       });
       setFontLoaded(true);
     };
-
     loadFonts();
+    // getRole()
   }, []);
 
   const styles = StyleSheet.create({
@@ -38,18 +38,18 @@ const TabBar = () => {
     },
   });
 
+  // const [role, setRole] = useState('');
 
-  const getRole = async () => {
-    try {
-      const role = await AsyncStorage.getItem('Role');
-      console.log('The rOLE ', role)
-
-      return role;
-    } catch (error) {
-      console.log('Error retrieving role:', error);
-      return null;
-    }
-  };
+  // const getRole = async () => {
+  //   try {
+  //     const role = await AsyncStorage.getItem('role');
+  //     setRole(role)
+  //     console.log('The ROLEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE ', role)
+  //   } catch (error) {
+  //     console.log('Error retrieving role:', error);
+  //     return null;
+  //   }
+  // };
 
 
   if (!fontLoaded) {
@@ -58,6 +58,7 @@ const TabBar = () => {
 
   return (
     <Tab.Navigator
+
       screenOptions={({ route }) => ({
         tabBarIcon: ({ color, focused, size }) => {
           let iconName;
@@ -116,7 +117,7 @@ const TabBar = () => {
       {/* <Tab.Screen name='الملف الشخصي' component={ProfileScreen} options={{ headerShown: false }} /> */}
       <Tab.Screen
         name='الملف الشخصي'
-        component={role === 'mother' ? MotherProfile : Sellerprofile}
+        component={role == 'mother' ? ProfileScreen : Sellerprofile}
         options={{ headerShown: false }}
       />
 

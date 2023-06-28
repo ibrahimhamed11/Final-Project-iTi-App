@@ -23,7 +23,7 @@ import joinUsScreen from './screens/joinUsScreen'
 import SellerProfileScreen from './screens/SellerProfile'
 import AllProductsScreen from './screens/AllProductsScreen'
 // import Home from './screens/Homescreen'
-
+import ProfileScreen from './screens/ProfileScreen';
 import EachProduct from './Components/EachProduct';
 import MoreDetails from './Components/MoreDetails';
 import ToDo from './Components/ToDo';
@@ -216,13 +216,13 @@ export default function App() {
           <Stack.Screen name='Blogs' component={Blogs} options={{ headerShown: false }} />
           <Stack.Screen name='Cart' component={cart} options={{ headerShown: false }} />
 
-
           <Stack.Screen name='toDO' component={ToDo} options={{ headerShown: false }} />
           <Stack.Screen name='eachproduct' component={EachProduct} options={{ headerShown: false }} />
           <Stack.Screen name='moreDetails' component={MoreDetails} options={{ headerShown: false }} />
 
           <Stack.Screen name='Vaccinations' component={Vaccination} options={{ headerShown: false }} />
           <Stack.Screen name='SellerProfile' component={SellerProfileScreen} options={{ headerShown: false }} />
+          {/* <Stack.Screen name='Profile' component={ProfileScreen} options={{ headerShown: false }} /> */}
           <Stack.Screen name='AllProductsScreen' component={AllProductsScreen} options={{ headerShown: true }} />
           <Stack.Screen name='sellerRegister' component={sellerRegister} options={{ headerShown: false }} />
           <Stack.Screen name='motherRegister' component={motherRegister} options={{ headerShown: false }} />

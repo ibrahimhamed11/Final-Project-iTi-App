@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeFromCart, decrementQuantity, incrementQuantity } from '../Redux/Slices/ProductSlice';
-
+import ip from '../ipConfig'
 const Cart = () => {
   const { cart } = useSelector((state) => state.ProductSlice);
   const dispatch = useDispatch();
@@ -38,7 +38,7 @@ const Cart = () => {
   const renderCartItem = ({ item }) => (
     <View key={item._id} style={styles.cartItem}>
       <View style={styles.imageContainer}>
-        <Image source={{ uri: `http://10.171.240.70:4000/${item?.image}` }} style={styles.image} />
+        <Image source={{ uri: `${ip}/${item?.image}` }} style={styles.image} />
       </View>
       <View style={styles.infoContainer}>
         <Text style={styles.title}>{item.title}</Text>

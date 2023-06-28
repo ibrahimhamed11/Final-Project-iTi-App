@@ -21,7 +21,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 25,
-        marginBottom: 25,
     },
     box: {
         marginHorizontal: 8,

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, FlatList, Image, Modal, StyleSheet, Alert, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, FlatList, Image, Modal, StyleSheet, Alert, ScrollView, Dimensions, TouchableOpacity,Button } from 'react-native';
 import { DataTable, Button as PaperButton } from 'react-native-paper';
 import * as Font from 'expo-font';
 import { IconButton, Card, TouchableRipple } from 'react-native-paper';
@@ -10,25 +10,51 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
 import TabBar from '../Components/TabBar';
 import babysData from '../babysData';
 import BabyComponent from '../Components/BabyComponent';
+import axios from 'axios';
 
 
 //ip 
 import ip from '../ipConfig';
 
 const ProfileScreen = () => {
-  const [fontLoaded, setFontLoaded] = useState(false);
-  const [name, setName] = useState('Test Name');
-  const [email, setEmail] = useState('mail@gmail.com');
-  const [phone, setPhone] = useState('01212117200');
-
-  const [vaccinations, setVaccinations] = useState([
-    { id: '1', name: 'لقاح 1', date: '2023-06-15', address: 'شارع 123' },
-    { id: '2', name: 'لقاح 2', date: '2023-06-20', address: 'شارع 456' },
-  ]);
-
-  const [showVaccinations, setShowVaccinations] = useState(false);
+  useEffect(() => {
+    const loadFont = async () => {
+      await Font.loadAsync({
+        Droid: require('../assets/fonts/Droid.ttf'),
+      });
+      setFontLoaded(true);
+    };
+    loadFont();
+  }, []);
   const navigation = useNavigation();
+  const [fontLoaded, setFontLoaded] = useState(false);
+  const [image, setImage] = useState(null);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [babyModal, setBabyModal] = useState(false);
+  const [babies, setBabies] = useState([]);
+  const [babyName, setBabyName] = useState('');
+  const [babyAge, setBabyAge] = useState(0);
+    const [motherData, setMotherData] = useState({
+    name: '',
+    email: '',
+    age: 0,
+    phone: '',
+    image: '',
+    profile: {babyInfo:[]}
+  });
 
+
+  // Function to retrieve the ID from AsyncStorage
+  const getUserId = async () => {
+    try {
+      const motherId = await AsyncStorage.getItem('userId');
+      return motherId;
+    } catch (error) {
+      console.log('Error retrieving ID:', error);
+      return null;
+    }
+  };
+// logout
   const handleLogout = () => {
     Alert.alert(
       'تسجيل الخروج',
@@ -82,21 +108,118 @@ const ProfileScreen = () => {
     );
   };
 
+
+  //Back End Connection
   useEffect(() => {
-    const loadFont = async () => {
-      await Font.loadAsync({
-        Droid: require('../assets/fonts/Droid.ttf'),
+    fetchMotherDetails()
+      .then((data) => {
+        setMotherData(data);
+        console.log(data.profile)
+      })
+      .catch((error) => {
+        console.error('Error fetching seller details:', error);
       });
-      setFontLoaded(true);
-    };
-
-
-    loadFont();
   }, []);
 
-  const updateProfile = () => {
-    // Code to update profile data
+// get mother details
+  const fetchMotherDetails = async () => {
+    try {
+
+      const userId = await getUserId();
+      const response = await fetch(`${ip}/user/${userId}`);
+      if (response.ok) {
+
+        const data = await response.json();
+        console.log(data)
+
+        const motherData = data.data
+        console.log(motherData.image);
+
+        return motherData;
+
+      } else {
+        throw new Error('Failed to fetch seller details');
+      }
+    } catch (error) {
+      throw new Error('Error fetching seller details: ' + error.message);
+    }
   };
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+};
+
+// const handleImageUpload = async () => {
+//   const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+//   if (permissionResult.granted === false) {
+//       alert('Permission to access camera roll is required!');
+//       return;
+//   }
+
+//   const imageResult = await ImagePicker.launchImageLibraryAsync();
+//   if (!imageResult.canceled) {
+//       setSelectedImage(imageResult.uri);
+//   }
+// };
+const handleCancel = () => {
+  setBabyModal(false);
+  // Reset form and state
+  setBabyName('');
+  setBabyAge('');
+  // setSelectedImage(null);
+};
+const handleAddBaby = async () => {
+  try {
+      const formData = new FormData();
+      formData.append('profile.babyInfo.name', babyName);
+      formData.append('profile.babyInfo.age', parseInt(babyAge));
+      formData.append('name', motherData.name);
+            formData.append('email', motherData.email);
+            formData.append('phone', motherData.phone);
+            formData.append('age', motherData.age);
+            formData.append('role', 'mother');
+      // formData.append('image', {
+      //     uri: selectedImage,
+      //     type: 'image/jpeg',
+      //     name: 'product.jpg',
+      // });
+      const userId = await getUserId();
+const updatedData=formData
+      console.log(userId,"iddddddddddddd")
+      console.log(updatedData,"iddddddddddddd")
+      const response = await axios.put(`${ip}/user/${userId}`, updatedData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+      });
+console.log(response,'addddddd')
+      // Reset form and state
+      
+      setBabyAge('');
+      setBabyName('');
+      // setSelectedImage(null);
+
+      fetchBabies(); // Fetch updated list of products after adding
+  } catch (error) {
+      console.error('Error adding baby:', error);
+  }
+};
+
+
+//Get All
+useEffect(() => {
+  fetchBabies();
+}, []);
+
+const fetchBabies = async () => {
+  try {
+    const userId = await getUserId();
+
+      const response = await axios.get(`${ip}/user/${userId}`);
+      setBabies(response.data.data.profile.babyInfo);
+      console.log(response.data.data.profile.babyInfo,"dataaaaaaaaaaaaaaaaaaaaaaaaa");
+  } catch (error) {
+      console.error('Error fetching babies:', error);
+  }
+};
 
 
   const profilePhoto = require('../assets/homeimages/james-wheeler-RRZM3cwS1DU-unsplash.jpg');
@@ -108,7 +231,7 @@ const ProfileScreen = () => {
   return (
     <ScrollView style={{ flex: 1, backgroundColor: '#ffffff' }}>
       {/* Start Begain First Section */}
-      <View style={{ flex: 1, paddingHorizontal: 20, paddingBottom: 50 }}>
+      <View style={{ flex: 1, paddingHorizontal: 20, paddingBottom: 80 }}>
         <View style={{ marginBottom: 20, alignItems: 'center' }}>
           <View>
             <Image
@@ -119,10 +242,20 @@ const ProfileScreen = () => {
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', position: 'absolute', bottom: -50 }}>
             {/* <IconButton icon="logout" onPress={handleLogout} style={{ color: '#7600gf', backgroundColor: 'white' ,visibility:'hidden'}} /> */}
 
-            <Image
-              source={profilePhoto}
-              style={{ width: 100, height: 100, borderRadius: 50, marginHorizontal: 20, borderColor: 'white', borderWidth: 4, marginLeft: 70 }}
-            />
+
+            {motherData.image ? (
+              <Image
+                source={{
+                  uri: `${ip}/${motherData.image}`,
+                }}
+                style={{ width: 100, height: 100, borderRadius: 50, marginHorizontal: 20, borderColor: 'white', borderWidth: 4, marginLeft: 70 }}
+              />
+            ) : (
+              <Image
+                source={profilePhoto}
+                style={{ width: 100, height: 100, borderRadius: 50, marginHorizontal: 20, borderColor: 'white', borderWidth: 4, marginLeft: 70 }}
+              />)}
+
             <IconButton icon="logout" onPress={handleLogout} style={{ color: '#7600gf', backgroundColor: 'white' }} />
           </View>
         </View>
@@ -132,16 +265,16 @@ const ProfileScreen = () => {
         <View style={styles.userInfo}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <FontAwesomeIcon name="user" size={14} style={{ marginRight: 5 }} />
-            <Text style={styles.userName}>Sara Mohamed Ali</Text>
+            <Text style={styles.userName}>{motherData.name}</Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <FontAwesomeIcon name="envelope" size={14} style={{ marginRight: 5 }} />
-            <Text style={styles.userEmail}>Sara300@gmail.com</Text>
+            <Text style={styles.userEmail}>{motherData.email}</Text>
           </View>
           <View style={{ marginTop: 10, alignSelf: 'center' }}>
             <PaperButton
               mode="contained"
-              onPress={() => handelupdateProfile()}
+              onPress={ toggleModal}
               labelStyle={{ fontFamily: 'Droid', fontSize: 12, color: '#76005f', padding: 0, margin: 0 }}
               style={{
                 width: 150,
@@ -158,18 +291,28 @@ const ProfileScreen = () => {
         </View>
         <View >
           {/* End Begain First Section */}
-
-          {/* Start Begain Mother's baby Section */}
+ {/* profile card modals */}
+ {/* <Modal visible={isModalVisible} onDismiss={toggleModal} contentContainerStyle={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalText}>Name: {motherData.name}</Text>
+                        <Text style={styles.modalText}>Email: {motherData.email}</Text>
+                        <Text style={styles.modalText}>Age: {motherData.age}</Text>
+                        <Text style={styles.modalText}>Phone: {motherData.phone}</Text>
+                        <Text style={styles.modalText}>Phone: {motherData.profile.babyinfo}</Text>
+                    </View>
+                </Modal>
+          Start Begain Mother's baby Section */}
         </View>
-        <View style={{ marginVertical: 10 }}>
+        <View style={{ marginVertical: 0 }}>
           <Text style={{ color: '#76005f', fontSize: 24 }}>أطفالى</Text>
-          <View style={{flexDirection:'row'}}>
-            <TouchableOpacity onPress={() => console.log('first')} >
+          <View style={{marginBottom: 25, flexDirection: 'row' }}>
+          <TouchableOpacity onPress={() => setBabyModal(true)}>
               <View style={styles.floating_Button}>
                 <FontAwesomeIcon name="plus" size={26} color={'#fff'} />
               </View>
             </TouchableOpacity>
             <FlatList
+              
               data={babysData}
               renderItem={({ item }) => <BabyComponent item={item} />}
               pagingEnabled
@@ -281,6 +424,57 @@ const ProfileScreen = () => {
           )}
         </View> */}
       </View>
+      <Modal visible={babyModal} onRequestClose={() => setBabyModal(false)}>
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <TextInput
+                            placeholder="اسم الطفل"
+                            value={babyName}
+                            onChangeText={setBabyName}
+                            style={styles.input}
+                        />
+                        <TextInput
+                            placeholder="عمر الطفل (بالشهور)"
+                            value={babyAge}
+                            onChangeText={setBabyAge}
+                            keyboardType="numeric"
+                            style={styles.input}
+                        />
+                       
+                        {/* <View style={styles.imageContainer}>
+                            {selectedImage ? (
+                                <Image source={{ uri: selectedImage }} style={styles.image} />
+                            ) : (
+                                <TouchableOpacity style={styles.uploadButton} onPress={handleImageUpload}>
+                                    <Text style={styles.uploadButtonText}>رفع صورة</Text>
+                                </TouchableOpacity>
+                            )}
+                        </View> */}
+
+                        <View style={styles.modalButtons}>
+                            <Button
+                            title='save'
+                                mode="contained"
+                                style={styles.addButton}
+                                onPress={ handleAddBaby}
+                                icon={({ color, size }) => <FontAwesomeIcon name="save" size={size} color={color} />}
+                            >
+                                
+                            </Button>
+
+                            <Button
+                            title='الغاء'
+                                // mode="outlined"
+                                style={styles.deleteButton}
+                                onPress={handleCancel}
+                                icon={({ color, size }) => <FontAwesomeIcon name="times" size={size} color={'white'} />}
+                            >
+                            </Button>
+                        </View>
+                    </View>
+
+                </View>
+            </Modal>
     </ScrollView>
 
   );
@@ -307,27 +501,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    width:300,
+    height:100,
 
   },
   modalContent: {
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff4a',
     padding: 20,
     borderRadius: 10,
     alignItems: 'center',
     width: 300
   },
-  input: {
-    width: '100%',
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-    textAlign: 'right',
-    fontFamily: 'Droid',
-    alignItems: 'center',
-
-  },
+ 
   button: {
     width: 90,
     fontSize: 10,
@@ -361,10 +546,10 @@ const styles = StyleSheet.create({
     left: -10,
     borderRadius: 100,
     backgroundColor: '#76005ee5',
-    justifyContent:'center',
-     width: 80, 
-     height: 80,
-      borderRadius: 20 ,
+    justifyContent: 'center',
+    width: 80,
+    height: 80,
+    borderRadius: 20,
     alignItems: 'center',
     elevation: 5
   },
