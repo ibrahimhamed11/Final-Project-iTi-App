@@ -20,6 +20,7 @@ const TabBar = () => {
   const Tab = createBottomTabNavigator();
   const theme = useTheme();
   const [fontLoaded, setFontLoaded] = useState(false);
+  const [role, setRole] = useState(null); // Initialize role with null
 
   useEffect(() => {
     const loadFonts = async () => {
@@ -30,6 +31,18 @@ const TabBar = () => {
     };
 
     loadFonts();
+
+    const getRole = async () => {
+      try {
+        const storedRole = await AsyncStorage.getItem('Role');
+        console.log('The role: ', storedRole);
+        setRole(storedRole); // Set the retrieved role in the state
+      } catch (error) {
+        console.log('Error retrieving role:', error);
+      }
+    };
+
+    getRole();
   }, []);
 
   const styles = StyleSheet.create({
@@ -37,20 +50,6 @@ const TabBar = () => {
       fontFamily: 'Droid',
     },
   });
-
-
-  const getRole = async () => {
-    try {
-      const role = await AsyncStorage.getItem('Role');
-      console.log('The rOLE ', role)
-
-      return role;
-    } catch (error) {
-      console.log('Error retrieving role:', error);
-      return null;
-    }
-  };
-
 
   if (!fontLoaded) {
     return null; // Render null or a loading indicator while the font is loading
@@ -81,10 +80,6 @@ const TabBar = () => {
         tabBarStyle: {
           borderTopWidth: 1,
           height: 60,
-          // borderTopLeftRadius: 20,
-          // borderTopRightRadius: 0,
-          // borderBottomLeftRadius:0,
-          // borderBottomRightRadius:20,
           position: 'absolute',
           bottom: 10,
           left: 10,
@@ -99,7 +94,6 @@ const TabBar = () => {
           shadowOpacity: 0.25,
           shadowRadius: 3.5,
           elevation: 5,
-
         },
         tabBarLabelStyle: [styles.customText, { fontSize: 11 }],
         tabBarIconStyle: {
@@ -113,14 +107,11 @@ const TabBar = () => {
     >
       <Tab.Screen name='الرئيسيه' component={Home} options={{ headerShown: false }} />
       <Tab.Screen name='المدونات' component={Blogs} options={{ headerShown: false }} />
-      {/* <Tab.Screen name='الملف الشخصي' component={ProfileScreen} options={{ headerShown: false }} /> */}
       <Tab.Screen
         name='الملف الشخصي'
         component={role === 'mother' ? MotherProfile : Sellerprofile}
         options={{ headerShown: false }}
       />
-
-
       <Tab.Screen name='المتجر' component={Products} options={{ headerShown: false }} />
       <Tab.Screen name='السله' component={Cart} options={{ tabBarBadge: data.cart.length > 0 ? data.cart.length : null, headerShown: false }} />
     </Tab.Navigator>

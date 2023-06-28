@@ -88,7 +88,6 @@ export default function LoginScreen({ navigation }) {
           <Logo />
           <Header style={[styles.arabicText, { fontFamily: 'Droid', fontSize: 20 }]}>
             مرحبا بك مجدداً.
-            <Text>{ip}</Text>
           </Header>
           <TextInput
             label="البريد الإلكتروني"
