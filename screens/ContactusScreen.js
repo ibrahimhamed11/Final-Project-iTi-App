@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Text, View } from 'react-native'
 
-export default class CheckoutScreen extends Component {
+export default class ContactusScreen extends Component {
     render() {
         return (
             <View>
