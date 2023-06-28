@@ -31,15 +31,7 @@ const TabBar = () => {
     };
     loadFonts();
 
-    const getRole = async () => {
-      try {
-        const storedRole = await AsyncStorage.getItem('Role');
-        console.log('The role: ', storedRole);
-        setRole(storedRole); // Set the retrieved role in the state
-      } catch (error) {
-        console.log('Error retrieving role:', error);
-      }
-    };
+    
 
     getRole();
     // getRole()
@@ -63,7 +55,15 @@ const TabBar = () => {
   //     return null;
   //   }
   // };
-
+const getRole = async () => {
+      try {
+        const storedRole = await AsyncStorage.getItem('role');
+        console.log('The role: ', storedRole);
+        setRole(storedRole); // Set the retrieved role in the state
+      } catch (error) {
+        console.log('Error retrieving role:', error);
+      }
+    };
 
   if (!fontLoaded) {
     return null; // Render null or a loading indicator while the font is loading
@@ -124,7 +124,7 @@ const TabBar = () => {
       <Tab.Screen name='المدونات' component={Blogs} options={{ headerShown: false }} />
       <Tab.Screen
         name='الملف الشخصي'
-        component={role == 'mother' ? ProfileScreen : Sellerprofile}
+        component={role === 'mother' ? ProfileScreen : Sellerprofile}
         options={{ headerShown: false }}
       />
       <Tab.Screen name='المتجر' component={Products} options={{ headerShown: false }} />
