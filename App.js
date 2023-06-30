@@ -30,7 +30,9 @@ import ToDo from './Components/ToDo';
 import Vaccination from './screens/VaccinationScreen'
 import sellerRegister from './screens/sellerRegister';
 import motherRegister from './screens/motherRegister'
-
+import ContactusScreen from './screens/ContactusScreen';
+import CheckoutScreen from './screens/checkoutScreen';
+import AboutusScreen from './screens/AboutScreen'
 //redux
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { Store } from './Redux/Store';
@@ -86,7 +88,7 @@ export default function App() {
           {notification > 0 && (
             <View
               style={{
-                position: 'absolute', 
+                position: 'absolute',
                 top: -8,
                 right: 10,
                 backgroundColor: 'red',
@@ -129,11 +131,11 @@ export default function App() {
               </View>
             ),
             headerStyle: {
-              backgroundColor: '#76005f', 
-              height:Dimensions.get('screen').height*0.09 ,
+              backgroundColor: '#76005f',
+              height: Dimensions.get('screen').height * 0.09,
               // elevation:5
-               
-            },  
+
+            },
             headerTintColor: '#ffffff',
           }}
         />
@@ -142,7 +144,7 @@ export default function App() {
 
         <Drawer.Screen
           name="تواصل معنا"
-          component={joinUsScreen}
+          component={ContactusScreen}
           options={{
             drawerIcon: ({ color, size }) => (
               <FontAwesome name="phone" color={color} size={size} style={{ marginRight: 10 }} />
@@ -162,8 +164,7 @@ export default function App() {
           component={NotficationsScreen}
           options={({ navigation }) => ({
             drawerIcon: ({ color, size }) => (
-              <TouchableOpacity onPress={() => DrawerNavigator.navigate('ResetPasswordScreen')}>
-              </TouchableOpacity>
+              <FontAwesome name="bell" color={color} size={size} style={{ marginRight: 10 }} />
             ),
             headerShown: true,
             headerStyle: {
@@ -173,23 +174,6 @@ export default function App() {
           })} 
         />
 
- 
-        <Drawer.Screen 
-          name="البائع"
-          component={SellerProfileScreen}
-          options={({ navigation }) => ({
-            drawerIcon: ({ color, size }) => (
-              <TouchableOpacity onPress={() => DrawerNavigator.navigate('AllProductsScreen')}>
-                <FontAwesome name="sign-out" color={color} size={size} style={{ fontFamily: 'Droid', marginRight: 10 }} />
-              </TouchableOpacity>
-            ),
-            headerShown: true,
-            headerStyle: {
-              backgroundColor: '#6f2f04',   
-            },
-            headerTintColor: 'white',
-          })}
-        />
       </Drawer.Navigator>
 
     );
@@ -226,7 +210,9 @@ export default function App() {
           <Stack.Screen name='AllProductsScreen' component={AllProductsScreen} options={{ headerShown: true }} />
           <Stack.Screen name='sellerRegister' component={sellerRegister} options={{ headerShown: false }} />
           <Stack.Screen name='motherRegister' component={motherRegister} options={{ headerShown: false }} />
-
+          <Stack.Screen name='AboutusScreen' component={AboutusScreen} options={{ headerShown: false }} />
+          <Stack.Screen name='ContactusScreen' component={ContactusScreen} options={{ headerShown: false }} />
+          <Stack.Screen name='CheckoutScreen' component={CheckoutScreen} options={{ headerShown: false }} />
           <Stack.Screen name='ProductDetails'
             component={ProductDetails}
             options={({ navigation }) => ({
