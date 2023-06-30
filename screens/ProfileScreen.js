@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, FlatList, Image, Modal, StyleSheet, Alert, ScrollView, Dimensions, TouchableOpacity,Button } from 'react-native';
+import { View, Text, TextInput, FlatList, Image, Modal, StyleSheet, Alert, ScrollView, Dimensions, TouchableOpacity, Button } from 'react-native';
 import { DataTable, Button as PaperButton } from 'react-native-paper';
 import * as Font from 'expo-font';
 import { IconButton, Card, TouchableRipple } from 'react-native-paper';
@@ -34,13 +34,13 @@ const ProfileScreen = () => {
   const [babies, setBabies] = useState([]);
   const [babyName, setBabyName] = useState('');
   const [babyAge, setBabyAge] = useState(0);
-    const [motherData, setMotherData] = useState({
+  const [motherData, setMotherData] = useState({
     name: '',
     email: '',
     age: 0,
     phone: '',
     image: '',
-    profile: {babyInfo:[]}
+    profile: { babyInfo: [] }
   });
 
 
@@ -54,7 +54,7 @@ const ProfileScreen = () => {
       return null;
     }
   };
-// logout
+  // logout
   const handleLogout = () => {
     Alert.alert(
       'تسجيل الخروج',
@@ -121,7 +121,7 @@ const ProfileScreen = () => {
       });
   }, []);
 
-// get mother details
+  // get mother details
   const fetchMotherDetails = async () => {
     try {
 
@@ -147,79 +147,70 @@ const ProfileScreen = () => {
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
-};
+  };
 
-// const handleImageUpload = async () => {
-//   const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-//   if (permissionResult.granted === false) {
-//       alert('Permission to access camera roll is required!');
-//       return;
-//   }
+  // const handleImageUpload = async () => {
+  //   const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+  //   if (permissionResult.granted === false) {
+  //       alert('Permission to access camera roll is required!');
+  //       return;
+  //   }
 
-//   const imageResult = await ImagePicker.launchImageLibraryAsync();
-//   if (!imageResult.canceled) {
-//       setSelectedImage(imageResult.uri);
-//   }
-// };
-const handleCancel = () => {
-  setBabyModal(false);
-  // Reset form and state
-  setBabyName('');
-  setBabyAge('');
-  // setSelectedImage(null);
-};
-const handleAddBaby = async () => {
-  try {
-      const formData = new FormData();
-      formData.append('profile.babyInfo.name', babyName);
-      formData.append('profile.babyInfo.age', parseInt(babyAge));
-      formData.append('name', motherData.name);
-            formData.append('email', motherData.email);
-            formData.append('phone', motherData.phone);
-            formData.append('age', motherData.age);
-            formData.append('role', 'mother');
+  //   const imageResult = await ImagePicker.launchImageLibraryAsync();
+  //   if (!imageResult.canceled) {
+  //       setSelectedImage(imageResult.uri);
+  //   }
+  // };
+  const handleCancel = () => {
+    setBabyModal(false);
+    // Reset form and state
+    setBabyName('');
+    setBabyAge('');
+    // setSelectedImage(null);
+  };
+  const handleAddBaby = async () => {
+    try {
+      const updatedData={
+        motherData
+  
+    }
       // formData.append('image', {
       //     uri: selectedImage,
       //     type: 'image/jpeg',
       //     name: 'product.jpg',
       // });
       const userId = await getUserId();
-const updatedData=formData
-      console.log(userId,"iddddddddddddd")
-      console.log(updatedData,"iddddddddddddd")
-      const response = await axios.put(`${ip}/user/${userId}`, updatedData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-      });
-console.log(response,'addddddd')
+     
+      const response = await axios.put(`${ip}/user/${userId}`,{updatedData});
       // Reset form and state
-      
+
       setBabyAge('');
       setBabyName('');
       // setSelectedImage(null);
 
       fetchBabies(); // Fetch updated list of products after adding
-  } catch (error) {
+    } catch (error) {
       console.error('Error adding baby:', error);
-  }
-};
+    }
+  };
 
 
-//Get All
-useEffect(() => {
-  fetchBabies();
-}, []);
+  //Get All
+  useEffect(() => {
+    fetchBabies();
+  }, []);
 
-const fetchBabies = async () => {
-  try {
-    const userId = await getUserId();
+  const fetchBabies = async () => {
+    try {
+      const userId = await getUserId();
 
       const response = await axios.get(`${ip}/user/${userId}`);
       setBabies(response.data.data.profile.babyInfo);
-      console.log(response.data.data.profile.babyInfo,"dataaaaaaaaaaaaaaaaaaaaaaaaa");
-  } catch (error) {
+      console.log(response.data.data.profile.babyInfo, "dataaaaaaaaaaaaaaaaaaaaaaaaa");
+    } catch (error) {
       console.error('Error fetching babies:', error);
-  }
-};
+    }
+  };
 
 
   const profilePhoto = require('../assets/homeimages/james-wheeler-RRZM3cwS1DU-unsplash.jpg');
@@ -274,7 +265,7 @@ const fetchBabies = async () => {
           <View style={{ marginTop: 10, alignSelf: 'center' }}>
             <PaperButton
               mode="contained"
-              onPress={ toggleModal}
+              onPress={toggleModal}
               labelStyle={{ fontFamily: 'Droid', fontSize: 12, color: '#76005f', padding: 0, margin: 0 }}
               style={{
                 width: 150,
@@ -291,8 +282,8 @@ const fetchBabies = async () => {
         </View>
         <View >
           {/* End Begain First Section */}
- {/* profile card modals */}
- {/* <Modal visible={isModalVisible} onDismiss={toggleModal} contentContainerStyle={styles.modalContainer}>
+          {/* profile card modals */}
+          {/* <Modal visible={isModalVisible} onDismiss={toggleModal} contentContainerStyle={styles.modalContainer}>
                     <View style={styles.modalContent}>
                         <Text style={styles.modalText}>Name: {motherData.name}</Text>
                         <Text style={styles.modalText}>Email: {motherData.email}</Text>
@@ -305,14 +296,14 @@ const fetchBabies = async () => {
         </View>
         <View style={{ marginVertical: 0 }}>
           <Text style={{ color: '#76005f', fontSize: 24 }}>أطفالى</Text>
-          <View style={{marginBottom: 25, flexDirection: 'row' }}>
-          <TouchableOpacity onPress={() => setBabyModal(true)}>
+          <View style={{ marginBottom: 25, flexDirection: 'row' }}>
+            <TouchableOpacity onPress={() => setBabyModal(true)}>
               <View style={styles.floating_Button}>
                 <FontAwesomeIcon name="plus" size={26} color={'#fff'} />
               </View>
             </TouchableOpacity>
             <FlatList
-              
+
               data={babysData}
               renderItem={({ item }) => <BabyComponent item={item} />}
               pagingEnabled
@@ -425,23 +416,23 @@ const fetchBabies = async () => {
         </View> */}
       </View>
       <Modal visible={babyModal} onRequestClose={() => setBabyModal(false)}>
-                <View style={styles.modalContainer}>
-                    <View style={styles.modalContent}>
-                        <TextInput
-                            placeholder="اسم الطفل"
-                            value={babyName}
-                            onChangeText={setBabyName}
-                            style={styles.input}
-                        />
-                        <TextInput
-                            placeholder="عمر الطفل (بالشهور)"
-                            value={babyAge}
-                            onChangeText={setBabyAge}
-                            keyboardType="numeric"
-                            style={styles.input}
-                        />
-                       
-                        {/* <View style={styles.imageContainer}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <TextInput
+              placeholder="اسم الطفل"
+              value={babyName}
+              onChangeText={setBabyName}
+              style={styles.input}
+            />
+            <TextInput
+              placeholder="عمر الطفل (بالشهور)"
+              value={babyAge}
+              onChangeText={setBabyAge}
+              keyboardType="numeric"
+              style={styles.input}
+            />
+
+            {/* <View style={styles.imageContainer}>
                             {selectedImage ? (
                                 <Image source={{ uri: selectedImage }} style={styles.image} />
                             ) : (
@@ -451,30 +442,30 @@ const fetchBabies = async () => {
                             )}
                         </View> */}
 
-                        <View style={styles.modalButtons}>
-                            <Button
-                            title='save'
-                                mode="contained"
-                                style={styles.addButton}
-                                onPress={ handleAddBaby}
-                                icon={({ color, size }) => <FontAwesomeIcon name="save" size={size} color={color} />}
-                            >
-                                
-                            </Button>
+            <View style={styles.modalButtons}>
+              <Button
+                title='save'
+                mode="contained"
+                style={styles.addButton}
+                onPress={handleAddBaby}
+                icon={({ color, size }) => <FontAwesomeIcon name="save" size={size} color={color} />}
+              >
 
-                            <Button
-                            title='الغاء'
-                                // mode="outlined"
-                                style={styles.deleteButton}
-                                onPress={handleCancel}
-                                icon={({ color, size }) => <FontAwesomeIcon name="times" size={size} color={'white'} />}
-                            >
-                            </Button>
-                        </View>
-                    </View>
+              </Button>
 
-                </View>
-            </Modal>
+              <Button
+                title='الغاء'
+                // mode="outlined"
+                style={styles.deleteButton}
+                onPress={handleCancel}
+                icon={({ color, size }) => <FontAwesomeIcon name="times" size={size} color={'white'} />}
+              >
+              </Button>
+            </View>
+          </View>
+
+        </View>
+      </Modal>
     </ScrollView>
 
   );
@@ -501,8 +492,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    width:300,
-    height:100,
+    width: 300,
+    height: 100,
 
   },
   modalContent: {
@@ -512,7 +503,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: 300
   },
- 
+
   button: {
     width: 90,
     fontSize: 10,

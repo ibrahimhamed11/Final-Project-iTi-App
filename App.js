@@ -169,12 +169,12 @@ export default function App() {
             headerStyle: {
               backgroundColor: '#76005f',
             },
-            headerTintColor: 'white',
-          })}
+            headerTintColor: 'white', 
+          })} 
         />
 
-
-        <Drawer.Screen
+ 
+        <Drawer.Screen 
           name="البائع"
           component={SellerProfileScreen}
           options={({ navigation }) => ({
@@ -185,7 +185,7 @@ export default function App() {
             ),
             headerShown: true,
             headerStyle: {
-              backgroundColor: '#76005f',
+              backgroundColor: '#6f2f04',   
             },
             headerTintColor: 'white',
           })}
