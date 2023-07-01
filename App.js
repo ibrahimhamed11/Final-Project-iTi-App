@@ -32,7 +32,9 @@ import sellerRegister from './screens/sellerRegister';
 import motherRegister from './screens/motherRegister'
 import ContactusScreen from './screens/ContactusScreen';
 import CheckoutScreen from './screens/checkoutScreen';
-import AboutusScreen from './screens/AboutScreen'
+import AboutusScreen from './screens/AboutScreen';
+import addrate from './screens/AddRateScreen';
+import myorders from './screens/MyorderScreen';
 //redux
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { Store } from './Redux/Store';
@@ -144,7 +146,7 @@ export default function App() {
 
         <Drawer.Screen
           name="تواصل معنا"
-          component={ContactusScreen}
+          component={CheckoutScreen}
           options={{
             drawerIcon: ({ color, size }) => (
               <FontAwesome name="phone" color={color} size={size} style={{ marginRight: 10 }} />
@@ -165,6 +167,23 @@ export default function App() {
           options={({ navigation }) => ({
             drawerIcon: ({ color, size }) => (
               <FontAwesome name="bell" color={color} size={size} style={{ marginRight: 10 }} />
+            ),
+            headerShown: true,
+            headerStyle: {
+              backgroundColor: '#76005f',
+            },
+            headerTintColor: 'white',
+          })}
+        />
+
+
+        
+<Drawer.Screen
+          name="'طلباتي'"
+          component={myorders}
+          options={({ navigation }) => ({
+            drawerIcon: ({ color, size }) => (
+              <FontAwesome name="market" color={color} size={size} style={{ marginRight: 10 }} />
             ),
             headerShown: true,
             headerStyle: {
@@ -213,6 +232,8 @@ export default function App() {
           <Stack.Screen name='AboutusScreen' component={AboutusScreen} options={{ headerShown: false }} />
           <Stack.Screen name='ContactusScreen' component={ContactusScreen} options={{ headerShown: false }} />
           <Stack.Screen name='CheckoutScreen' component={CheckoutScreen} options={{ headerShown: false }} />
+          <Stack.Screen name='addrate' component={addrate} options={{ headerShown: false }} />
+          <Stack.Screen name='myorders' component={myorders} options={{ headerShown: false }} />
           <Stack.Screen name='ProductDetails'
             component={ProductDetails}
             options={({ navigation }) => ({
