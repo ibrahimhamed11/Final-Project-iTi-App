@@ -172,8 +172,8 @@ export default function App() {
             headerStyle: {
               backgroundColor: '#76005f',
             },
-            headerTintColor: 'white',
-          })}
+            headerTintColor: 'white', 
+          })} 
         />
 
 

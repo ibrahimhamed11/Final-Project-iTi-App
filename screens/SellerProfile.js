@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Image, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity, ScrollView, Alert, Dimensions } from 'react-native';
 import { Card, Title, Button, Modal, Text } from 'react-native-paper';
 import { FontAwesome } from '@expo/vector-icons';
 import { FlatList } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
+import { Button as PaperButton } from 'react-native-paper';
 import axios from 'axios';
+import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
 import { IconButton } from 'react-native-paper';
@@ -121,7 +123,7 @@ const SellerProfileScreen = () => {
     const fetchOrders = async () => {
         try {
             const response = await axios.get(`${ip}/orders/getAll`).then((res) => {
-                console.log(res.data.data)
+                console.log("orderrrrrr",res.data.data)
                 setOrders(res.data.data)
                 // printUserId();
             });
@@ -250,7 +252,7 @@ const SellerProfileScreen = () => {
         return (
             <View style={styles.orderItem}>
                 <Text style={[styles.orderProduct, { color: orderNameTextColor }]}>
-                    {item.productName}
+                    {item.shippingAdress}
                 </Text>
                 <Text style={styles.orderQuantity}>{item.qty}</Text>
                 <Text style={styles.orderQuantity}>{item.delStatus}</Text>
@@ -260,50 +262,73 @@ const SellerProfileScreen = () => {
             </View>
         );
     };
+    const profilePhoto = require('../assets/homeimages/james-wheeler-RRZM3cwS1DU-unsplash.jpg');
 
     return (
         <View style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollContent}>
 
-                <View style={styles.imageContainer}>
-                    {sellerData.image ? (
+                <View style={{ marginBottom: 20, alignItems: 'center' }}>
+                    <View>
                         <Image
-                            source={{
-                                uri: `${ip}/${sellerData.image}`,
-                            }}
-                            style={styles.image}
+                            source={require('../assets/images/babies.jpg')}
+                            style={{ width: Dimensions.get('screen').width, height: 160, position: 'relative', backgroundColor: 'grgreyeen' }}
                         />
-                    ) : (
-                        <FontAwesome name="user-circle" size={100} color="#999999" />
-                    )}
-                </View>
-                <IconButton icon="logout" onPress={handleLogout} style={{ color: '#7600gf', backgroundColor: 'white' }} />
+                    </View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', position: 'absolute', bottom: -50 }}>
+                        {/* <IconButton icon="logout" onPress={handleLogout} style={{ color: '#7600gf', backgroundColor: 'white' ,visibility:'hidden'}} /> */}
 
-                <Card style={styles.card}>
-                    <Card.Content>
-                        <Title style={styles.sellerName}>{sellerData.name}</Title>
-                        <Text style={styles.sellerEmail}>{sellerData.email}</Text>
-                    </Card.Content>
-                    <Card.Actions style={styles.cardActions}>
+
+                        {sellerData.image ? (
+                            <Image
+                                source={{
+                                    uri: `${ip}/${sellerData.image}`,
+                                }}
+                                style={{ width: 100, height: 100, borderRadius: 50, marginHorizontal: 20, borderColor: 'white', borderWidth: 4, marginLeft: 70 }}
+                            />
+                        ) : (
+                            <Image
+                                source={profilePhoto}
+                                style={{ width: 100, height: 100, borderRadius: 50, marginHorizontal: 20, borderColor: 'white', borderWidth: 4, marginLeft: 70 }}
+                            />)}
+
+                        <IconButton icon="logout" onPress={handleLogout} style={{ color: '#7600gf', backgroundColor: 'white' }} />
+                    </View>
+                </View>
+                <View style={{ position: 'absolute', top: 20, right: 20 }}>
+
+                </View>
+                <View style={styles.userInfo}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <FontAwesomeIcon name="user" size={14} style={{ marginRight: 5 }} />
+                        <Text style={styles.userName}>{sellerData.name}</Text>
+                    </View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <FontAwesomeIcon name="envelope" size={14} style={{ marginRight: 5 }} />
+                        <Text style={styles.userEmail}>{sellerData.email}</Text>
+                    </View>
+                    <View style={{ marginTop: 10, alignSelf: 'center' }}>
                         <TouchableOpacity onPress={toggleModal} style={styles.profileDetailsButton}>
-                            <FontAwesome name="user-circle" size={20} color="#999999" style={styles.icon} />
+                            <FontAwesome name="user-circle" size={20} color="#643f17" style={styles.icon} />
                             <Text style={styles.buttonText}>معلومات حسابك</Text>
                         </TouchableOpacity>
-                    </Card.Actions>
-                </Card>
+                    </View>
+                </View>
+
+
                 <View style={styles.statsContainer}>
                     <View style={styles.statsItem}>
-                        <FontAwesome name="shopping-bag" size={30} color="#999999" />
+                        <FontAwesome name="shopping-bag" size={30} color="#cc8e489f" />
                         <Text style={styles.statsLabel}>اجمالي منتجاتك</Text>
                         <Text style={styles.statsNumber}>{10}</Text>
                     </View>
                     <View style={styles.statsItem}>
-                        <FontAwesome name="shopping-cart" size={30} color="#999999" />
+                        <FontAwesome name="shopping-cart" size={30} color="#cc8e489f" />
                         <Text style={styles.statsLabel}>اجمالي الطلبات</Text>
                         <Text style={styles.statsNumber}>{orders.length}</Text>
                     </View>
                     <View style={styles.statsItem}>
-                        <FontAwesome name="check-circle" size={30} color="#999999" />
+                        <FontAwesome name="check-circle" size={30} color="#cc8e489f" />
                         <Text style={styles.statsLabel}> طلبات مكتمله</Text>
                         <Text style={styles.statsNumber}>
                             {orders.filter((order) => order.status === 'done').length}
@@ -342,9 +367,11 @@ const SellerProfileScreen = () => {
                 </View>
                 {isOrdersVisible && (
                     <View style={styles.orderList}>
+                        <View >
                         <Text style={styles.sectionTitle}>الطلبات</Text>
+                        </View>
                         <View style={styles.orderItem}>
-                            <Text style={styles.orderHeader}>اسم الطلب</Text>
+                            <Text style={styles.orderHeader}>عنوان التوصيل</Text>
                             <Text style={styles.orderHeader}>الكمية</Text>
                             <Text style={styles.orderHeader}>حالة التوصيل</Text>
                             <Text style={styles.orderHeader}>إجراءات</Text>
@@ -371,6 +398,20 @@ const SellerProfileScreen = () => {
     );
 };
 const styles = StyleSheet.create({
+    userInfo: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 30,
+    },
+    userName: {
+        fontSize: 18,
+        fontWeight: 600,
+        color: '#522e059f',
+    },
+    userEmail: {
+        fontSize: 13,
+        color: "grey",
+    },
     container: {
         flex: 1,
         // padding: 20,
@@ -379,7 +420,8 @@ const styles = StyleSheet.create({
     scrollContent: {
         flexGrow: 1, // Allow content to grow vertically
         width: '100%',
-        height: '100%'
+        // height: '100%',
+        marginBottom: 100
     },
 
     imageContainer: {
@@ -414,7 +456,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginBottom: 30,
-        marginTop: 40
+        marginTop: 40,
+        marginHorizontal: 10
     },
     statsItem: {
         alignItems: 'center',
@@ -425,13 +468,15 @@ const styles = StyleSheet.create({
     statsLabel: {
         marginTop: 5,
         fontSize: 14,
-        color: '#999999',
+        color: '#513905',
         fontFamily: 'Droid',
 
     },
     statsNumber: {
         fontWeight: 'bold',
         // fontFamily: 'Droid',
+        color: '#513905',
+
 
     },
     buttonsContainer: {
@@ -444,19 +489,25 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     ordersButton: {
-        backgroundColor: '#2196f3',
+        backgroundColor: '#cc8e48b8',
     },
     productsButton: {
-        backgroundColor: '#4caf50',
+        backgroundColor: '#6f2f04ab',
     },
     orderList: {
         // flex: 1,
         width: '100%',
+        // justifyContent:'flex-start',
+        // alignItems:'flex-end'
     },
     sectionTitle: {
         fontSize: 18,
         fontWeight: 'bold',
         marginBottom: 10,
+        alignItems: 'flex-end', 
+        // justifyContent:'flex-start',
+        width:'100%'
+
     },
     orderItem: {
         flexDirection: 'row',
@@ -559,7 +610,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: '#999999',
+        borderColor: '#4f2f0af4',
         borderRadius: 5,
         paddingHorizontal: 5,
         paddingVertical: 5,

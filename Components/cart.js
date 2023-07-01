@@ -76,9 +76,15 @@ const Cart = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>عربة التسوق</Text>
+      {/* <Text style={styles.title}>عربة التسوق</Text> */}
       {cart.length === 0 ? (
-        <Text>عربة التسوق فارغة.</Text>
+        <>
+          {/* <Text style={styles.title}>عربة التسوق فارغة</Text> */}
+          <Image source={require('../assets/images/empty_cart_800x600_dribbble.webp')} style={{
+            width: '100%',
+            height: '80%'
+          }}></Image>
+        </>
       ) : (
         <>
           <FlatList
@@ -107,12 +113,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    backgroundColor: '#ffffff',
+
   },
   title: {
-    fontSize: 24,
+    position: 'absolute',
+    top: 100,
+    left: 50,
+    zIndex: 999,
+    fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
     textAlign: 'center',
+    padding: 10,
+    color: '#540343'
   },
   cartList: {
     paddingBottom: 20,
@@ -122,15 +136,16 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 10,
-    backgroundColor: '#f2f2f2',
+    backgroundColor: '#ffffff',
     borderRadius: 5,
     padding: 10,
   },
   imageContainer: {
     width: 100,
     height: 100,
-    borderRadius: 50,
+    borderRadius: 5,
     overflow: 'hidden',
+    marginRight: 10
   },
   image: {
     width: '100%',
@@ -146,7 +161,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   quantityButton: {
-    backgroundColor: '#e6e6e6',
+    backgroundColor: '#ffffff',
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 5,
@@ -188,17 +203,23 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   completePaymentButton: {
-    backgroundColor: 'green',
-    paddingHorizontal: 20,
+    backgroundColor: '#76005f',
+    paddingHorizontal: 0,
     paddingVertical: 10,
-    borderRadius: 5,
+    borderRadius: 15,
     marginTop: 20,
+    marginBottom: 60,
+    marginHorizontal: 60,
     alignItems: 'center',
+    width: 200
   },
   completePaymentButtonText: {
-    color: 'white',
+    color: '#ffffff',
     fontWeight: 'bold',
     fontSize: 16,
+    paddingHorizontal: 0,
+
+
   },
 });
 
