@@ -1,5 +1,14 @@
 {
   "expo": {
+    "plugins": [
+      [
+        "@stripe/stripe-react-native",
+        {
+          "merchantIdentifier": "YOUR_MERCHANT_IDENTIFIER",
+          "enableGooglePay": true
+        }
+      ]
+    ],
     "name": "myapp",
     "slug": "myapp",
     "version": "1.0.0",

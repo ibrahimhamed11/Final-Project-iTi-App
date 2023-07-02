@@ -123,7 +123,7 @@ const SellerProfileScreen = () => {
     const fetchOrders = async () => {
         try {
             const response = await axios.get(`${ip}/orders/getAll`).then((res) => {
-                console.log("orderrrrrr",res.data.data)
+                console.log("orderrrrrr", res.data.data)
                 setOrders(res.data.data)
                 // printUserId();
             });
@@ -248,11 +248,10 @@ const SellerProfileScreen = () => {
             );
             orderNameTextColor = '#4caf50';
         }
-
         return (
             <View style={styles.orderItem}>
                 <Text style={[styles.orderProduct, { color: orderNameTextColor }]}>
-                    {item.shippingAdress}
+                    {item.shippingAddress ? `${item.shippingAddress.street}, ${item.shippingAddress.city}, ${item.shippingAddress.zipCode}, ${item.shippingAddress.country}` : ''}
                 </Text>
                 <Text style={styles.orderQuantity}>{item.qty}</Text>
                 <Text style={styles.orderQuantity}>{item.delStatus}</Text>
@@ -368,7 +367,7 @@ const SellerProfileScreen = () => {
                 {isOrdersVisible && (
                     <View style={styles.orderList}>
                         <View >
-                        <Text style={styles.sectionTitle}>الطلبات</Text>
+                            <Text style={styles.sectionTitle}>الطلبات</Text>
                         </View>
                         <View style={styles.orderItem}>
                             <Text style={styles.orderHeader}>عنوان التوصيل</Text>
@@ -504,9 +503,9 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         marginBottom: 10,
-        alignItems: 'flex-end', 
+        alignItems: 'flex-end',
         // justifyContent:'flex-start',
-        width:'100%'
+        width: '100%'
 
     },
     orderItem: {

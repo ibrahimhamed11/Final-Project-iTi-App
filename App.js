@@ -172,14 +172,14 @@ export default function App() {
             headerStyle: {
               backgroundColor: '#76005f',
             },
-            headerTintColor: 'white', 
-          })} 
+            headerTintColor: 'white',
+          })}
         />
 
 
-        
-<Drawer.Screen
-          name="'طلباتي'"
+
+        <Drawer.Screen
+          name="طلباتي"
           component={myorders}
           options={({ navigation }) => ({
             drawerIcon: ({ color, size }) => (
@@ -192,6 +192,22 @@ export default function App() {
             headerTintColor: 'white',
           })}
         />
+
+        <Drawer.Screen
+          name="الدفع"
+          component={CheckoutScreen}
+          options={({ navigation }) => ({
+            drawerIcon: ({ color, size }) => (
+              <FontAwesome name="market" color={color} size={size} style={{ marginRight: 10 }} />
+            ),
+            headerShown: true,
+            headerStyle: {
+              backgroundColor: '#76005f',
+            },
+            headerTintColor: 'white',
+          })}
+        />
+
 
       </Drawer.Navigator>
 

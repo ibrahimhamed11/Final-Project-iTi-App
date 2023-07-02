@@ -1,264 +1,114 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Modal, TextInput } from 'react-native';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faCreditCard, faMoneyBillWave, faMobileAlt, faShippingFast } from '@fortawesome/free-solid-svg-icons';
-import { Card, Title, Button, Divider, Provider } from 'react-native-paper';
+import { Text, View, StyleSheet, Button, I18nManager } from 'react-native';
+import { CreditCardInput } from 'react-native-credit-card-input';
+import { StripeProvider, useStripe } from '@stripe/stripe-react-native';
 
-const PaymentScreen = () => {
-    const [visaModalVisible, setVisaModalVisible] = useState(false);
-    const [bankModalVisible, setBankModalVisible] = useState(false);
-    const [vodafoneModalVisible, setVodafoneModalVisible] = useState(false);
-    const [postaModalVisible, setPostaModalVisible] = useState(false);
+// Replace with your Stripe publishable key
+const publishableKey = 'YOUR_STRIPE_PUBLISHABLE_KEY';
 
-    const [visaCardNumber, setVisaCardNumber] = useState('');
-    const [visaCardHolder, setVisaCardHolder] = useState('');
-    const [visaExpirationDate, setVisaExpirationDate] = useState('');
+const CheckoutScreen = () => {
+    const { confirmPayment } = useStripe();
+    const [cardData, setCardData] = useState(null);
 
-    const [bankAccountNumber, setBankAccountNumber] = useState('');
-    const [bankAccountHolder, setBankAccountHolder] = useState('');
+    const handlePayment = async () => {
+        try {
+            I18nManager.forceRTL(false);
 
-    const [vodafonePhoneNumber, setVodafonePhoneNumber] = useState('');
+            const { error } = await confirmPayment({
+                type: 'Card',
+                card: {
+                    number: cardData.values.number,
+                    expMonth: cardData.values.expiry.split('/')[0],
+                    expYear: cardData.values.expiry.split('/')[1],
+                    cvc: cardData.values.cvc,
+                },
+            });
 
-    const [postaAddress, setPostaAddress] = useState('');
-
-    const handleVisaPayment = () => {
-        // Visa payment validation logic
-        if (visaCardNumber && visaCardHolder && visaExpirationDate) {
-            // Process the payment
-            setVisaModalVisible(false);
+            if (error) {
+                console.log('Payment Error:', error);
+            } else {
+                console.log('Payment Success!');
+            }
+        } catch (error) {
+            console.log('Error:', error);
         }
     };
 
-    const handleBankPayment = () => {
-        // Bank account payment validation logic
-        if (bankAccountNumber && bankAccountHolder) {
-            // Process the payment
-            setBankModalVisible(false);
-        }
-    };
-
-    const handleVodafonePayment = () => {
-        // Vodafone Cash payment validation logic
-        if (vodafonePhoneNumber) {
-            // Process the payment
-            setVodafoneModalVisible(false);
-        }
-    };
-
-    const handlePostaPayment = () => {
-        // Posta payment validation logic
-        if (postaAddress) {
-            // Process the payment
-            setPostaModalVisible(false);
-        }
+    const onChange = (formData) => {
+        setCardData(formData);
     };
 
     return (
-        <Provider>
+        <StripeProvider publishableKey={publishableKey}>
             <View style={styles.container}>
-                <Text style={styles.title}>الدفع</Text>
-                <View style={styles.paymentContainer}>
-                    <TouchableOpacity style={styles.paymentButton} onPress={() => setVisaModalVisible(true)}>
-                        <FontAwesomeIcon icon={faCreditCard} size={48} style={styles.creditCardIcon} />
-                        <Text style={styles.paymentText}>الدفع بواسطة فيزا</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.paymentButton} onPress={() => setBankModalVisible(true)}>
-                        <FontAwesomeIcon icon={faMoneyBillWave} size={48} style={styles.icon} />
-                        <Text style={styles.paymentText}>الدفع بواسطة الحساب المصرفي</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.paymentButton} onPress={() => setVodafoneModalVisible(true)}>
-                        <FontAwesomeIcon icon={faMobileAlt} size={48} style={styles.icon} />
-                        <Text style={styles.paymentText}>الدفع بواسطة فودافون كاش</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.paymentButton} onPress={() => setPostaModalVisible(true)}>
-                        <FontAwesomeIcon icon={faShippingFast} size={48} style={styles.icon} />
-                        <Text style={styles.paymentText}>الدفع بواسطة البوستة</Text>
-                    </TouchableOpacity>
-                </View>
-
-                {/* Visa Modal */}
-                <Modal visible={visaModalVisible} animationType="slide" transparent>
-                    <View style={styles.modalContainer}>
-                        <Card style={styles.modalCard}>
-                            <Title style={styles.modalTitle}>دفع بواسطة فيزا</Title>
-                            <Divider style={styles.divider} />
-                            <TextInput
-                                style={styles.input}
-                                placeholder="رقم البطاقة"
-                                value={visaCardNumber}
-                                onChangeText={setVisaCardNumber}
-                            />
-                            <TextInput
-                                style={styles.input}
-                                placeholder="اسم صاحب البطاقة"
-                                value={visaCardHolder}
-                                onChangeText={setVisaCardHolder}
-                            />
-                            <TextInput
-                                style={styles.input}
-                                placeholder="تاريخ الانتهاء (MM/YY)"
-                                value={visaExpirationDate}
-                                onChangeText={setVisaExpirationDate}
-                            />
-                            <View style={styles.modalButtons}>
-                                <Button style={styles.modalButton} mode="contained" onPress={() => setVisaModalVisible(false)}>
-                                    إلغاء
-                                </Button>
-                                <Button style={styles.modalButton} mode="contained" onPress={handleVisaPayment}>
-                                    دفع
-                                </Button>
-                            </View>
-                        </Card>
-                    </View>
-                </Modal>
-
-                {/* Bank Account Modal */}
-                <Modal visible={bankModalVisible} animationType="slide" transparent>
-                    <View style={styles.modalContainer}>
-                        <Card style={styles.modalCard}>
-                            <Title style={styles.modalTitle}>دفع بواسطة الحساب المصرفي</Title>
-                            <Divider style={styles.divider} />
-                            <TextInput
-                                style={styles.input}
-                                placeholder="رقم الحساب البنكي"
-                                value={bankAccountNumber}
-                                onChangeText={setBankAccountNumber}
-                            />
-                            <TextInput
-                                style={styles.input}
-                                placeholder="اسم صاحب الحساب"
-                                value={bankAccountHolder}
-                                onChangeText={setBankAccountHolder}
-                            />
-                            <View style={styles.modalButtons}>
-                                <Button style={styles.modalButton} mode="contained" onPress={() => setBankModalVisible(false)}>
-                                    إلغاء
-                                </Button>
-                                <Button style={styles.modalButton} mode="contained" onPress={handleBankPayment}>
-                                    دفع
-                                </Button>
-                            </View>
-                        </Card>
-                    </View>
-                </Modal>
-
-                {/* Vodafone Cash Modal */}
-                <Modal visible={vodafoneModalVisible} animationType="slide" transparent>
-                    <View style={styles.modalContainer}>
-                        <Card style={styles.modalCard}>
-                            <Title style={styles.modalTitle}>دفع بواسطة فودافون كاش</Title>
-                            <Divider style={styles.divider} />
-                            <TextInput
-                                style={styles.input}
-                                placeholder="رقم الهاتف"
-                                value={vodafonePhoneNumber}
-                                onChangeText={setVodafonePhoneNumber}
-                            />
-                            <View style={styles.modalButtons}>
-                                <Button style={styles.modalButton} mode="contained" onPress={() => setVodafoneModalVisible(false)}>
-                                    إلغاء
-                                </Button>
-                                <Button style={styles.modalButton} mode="contained" onPress={handleVodafonePayment}>
-                                    دفع
-                                </Button>
-                            </View>
-                        </Card>
-                    </View>
-                </Modal>
-
-                {/* Posta Modal */}
-                <Modal visible={postaModalVisible} animationType="slide" transparent>
-                    <View style={styles.modalContainer}>
-                        <Card style={styles.modalCard}>
-                            <Title style={styles.modalTitle}>دفع بواسطة البوستة</Title>
-                            <Divider style={styles.divider} />
-                            <TextInput
-                                style={styles.input}
-                                placeholder="عنوان التوصيل"
-                                value={postaAddress}
-                                onChangeText={setPostaAddress}
-                            />
-                            <View style={styles.modalButtons}>
-                                <Button style={styles.modalButton} mode="contained" onPress={() => setPostaModalVisible(false)}>
-                                    إلغاء
-                                </Button>
-                                <Button style={styles.modalButton} mode="contained" onPress={handlePostaPayment}>
-                                    دفع
-                                </Button>
-                            </View>
-                        </Card>
-                    </View>
-                </Modal>
+                <Text style={styles.heading}>Checkout</Text>
+                <CreditCardInput
+                    onChange={onChange}
+                    allowScroll={true}
+                    requiresCVC={true}
+                    cardScale={0.8}
+                    cardFontFamily="Droid"
+                    cardNumberContainerStyle={styles.cardNumberContainer}
+                    cardNumberInputStyle={styles.cardNumberInput}
+                    cardExpiryContainerStyle={styles.cardExpiryContainer}
+                    cardExpiryInputStyle={styles.cardExpiryInput}
+                    cardCVCContainerStyle={styles.cardCVCContainer}
+                    cardCVCInputStyle={styles.cardCVCInput}
+                />
+                <Button title="Make Payment" onPress={handlePayment} />
             </View>
-        </Provider>
+        </StripeProvider>
     );
 };
 
-const styles = {
+const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#ffffff',
+        alignItems: 'center',
+        padding: 16,
+        flexDirection: 'column',
+        writingDirection: 'rtl', // Make content Arabic
     },
-    title: {
+    heading: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 20,
-        fontFamily: 'Droid',
+        marginBottom: 16,
+        textAlign: 'right', // Align text to the right for Arabic
     },
-    paymentContainer: {
-        alignItems: 'center',
-    },
-    paymentButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 20,
-    },
-    creditCardIcon: {
-        color: '#1B98E0',
-        marginRight: 10,
-    },
-    icon: {
-        color: '#FFC107',
-        marginRight: 10,
-    },
-    modalContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    },
-    modalCard: {
-        marginHorizontal: 20,
-        padding: 20,
-    },
-    modalTitle: {
-        fontSize: 18,
+    cardNumberContainer: {
+        borderBottomWidth: 1,
+        borderColor: 'gray',
         marginBottom: 10,
-        fontFamily: 'Droid',
+        alignSelf: 'stretch',
     },
-    divider: {
-        marginBottom: 20,
-    },
-    input: {
-        marginBottom: 10,
-        padding: 10,
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 4,
-    },
-    modalButtons: {
-        flexDirection: 'row-reverse',
-        justifyContent: 'space-between',
-        marginTop: 20,
-    },
-    modalButton: {
-        width: '40%',
-    },
-    paymentText: {
+    cardNumberInput: {
         fontSize: 16,
         fontFamily: 'Droid',
+        textAlign: 'right', // Align text to the right for Arabic
     },
-};
+    cardExpiryContainer: {
+        borderBottomWidth: 1,
+        borderColor: 'gray',
+        marginBottom: 10,
+        alignSelf: 'stretch',
+    },
+    cardExpiryInput: {
+        fontSize: 16,
+        fontFamily: 'Droid',
+        textAlign: 'right', // Align text to the right for Arabic
+    },
+    cardCVCContainer: {
+        borderBottomWidth: 1,
+        borderColor: 'gray',
+        marginBottom: 10,
+        alignSelf: 'stretch',
+    },
+    cardCVCInput: {
+        fontSize: 16,
+        fontFamily: 'Droid',
+        textAlign: 'right', // Align text to the right for Arabic
+    },
+});
 
-export default PaymentScreen;
+export default CheckoutScreen;
