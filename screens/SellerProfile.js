@@ -1,23 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Image, TouchableOpacity, ScrollView, Alert, Dimensions } from 'react-native';
-import { Card, Title, Button, Modal, Text } from 'react-native-paper';
+import { Button, Modal, Text } from 'react-native-paper';
 import { FontAwesome } from '@expo/vector-icons';
-import { FlatList } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
-import { Button as PaperButton } from 'react-native-paper';
 import axios from 'axios';
-import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
 import { IconButton } from 'react-native-paper';
-
-
-//ip 
 import ip from '../ipConfig';
 
-
 const SellerProfileScreen = () => {
-    const [image, setImage] = useState(null);
+    const [orderModalVisible, setOrderModalVisible] = useState(false);
+    const [selectedOrder, setSelectedOrder] = useState(null);
     const [isModalVisible, setModalVisible] = useState(false);
     const [isOrdersVisible, setOrdersVisible] = useState(false);
     const [sellerData, setSellerDetails] = useState({
@@ -27,6 +21,51 @@ const SellerProfileScreen = () => {
         phone: '',
         image: '',
     });
+
+
+    //order details
+    const handleOrderDetails = (order) => {
+        console.log(order)
+        setSelectedOrder(order);
+        setOrderModalVisible(true);
+    };
+    const handleCloseModal = () => {
+        setSelectedOrder(null);
+        setOrderModalVisible(false);
+    };
+
+    // Function to render the appropriate icon based on the order status
+    const renderOrderStatusIcon = (status) => {
+        switch (status) {
+            case 'pending':
+                return 'clock-o';
+            case 'delivered':
+                return 'check-circle';
+            case 'canceled':
+                return 'times-circle';
+            case 'shipped':
+                return 'truck';
+            default:
+                return 'question-circle';
+        }
+    };
+
+    // Function to render the order status text in Arabic
+    const renderOrderStatusText = (status) => {
+        switch (status) {
+            case 'pending':
+                return 'قيد الانتظار';
+            case 'delivered':
+                return 'تم التوصيل';
+            case 'canceled':
+                return 'ملغى';
+            case 'shipped':
+                return 'تم الشحن';
+            default:
+                return 'غير معروف';
+        }
+    };
+    //-----------------------------------------------------  
 
     // Function to retrieve the ID from AsyncStorage
     const getUserId = async () => {
@@ -122,7 +161,9 @@ const SellerProfileScreen = () => {
 
     const fetchOrders = async () => {
         try {
-            const response = await axios.get(`${ip}/orders/getAll`).then((res) => {
+
+            const sellerId = await getUserId();
+            const response = await axios.get(`${ip}/orders/seller/${sellerId}`).then((res) => {
                 console.log("orderrrrrr", res.data.data)
                 setOrders(res.data.data)
                 // printUserId();
@@ -173,8 +214,27 @@ const SellerProfileScreen = () => {
     };
     const renderOrderItem = ({ item }) => {
         let statusButtons;
+        let detailsbtn;
         let orderNameTextColor;
 
+        //status
+
+
+        detailsbtn = (
+            <>
+                <Button
+                    icon="check"
+                    mode="contained"
+                    onPress={() => handleOrderDetails(item)}
+                    style={[styles.orderdetailsbutton, { backgroundColor: '#DC1CA5' }]}
+                    labelStyle={styles.orderStatus}
+                >
+                    <Text style={{ fontWeight: 'bold', fontFamily: 'Droid', color: 'white' }}>
+                        تفاصيل </Text>
+                </Button>
+
+            </>
+        );
         if (item.delStatus === 'pending') {
             statusButtons = (
                 <>
@@ -250,17 +310,35 @@ const SellerProfileScreen = () => {
         }
         return (
             <View style={styles.orderItem}>
-                <Text style={[styles.orderProduct, { color: orderNameTextColor }]}>
-                    {item.shippingAddress ? `${item.shippingAddress.street}, ${item.shippingAddress.city}, ${item.shippingAddress.zipCode}, ${item.shippingAddress.country}` : ''}
-                </Text>
-                <Text style={styles.orderQuantity}>{item.qty}</Text>
-                <Text style={styles.orderQuantity}>{item.delStatus}</Text>
+
+
+                <View style={styles_order.statusContainer}>
+                    <FontAwesome
+                        name={renderOrderStatusIcon(item.delStatus)}
+                        style={styles_order.icon}
+                    />
+                    <Text style={styles_order.statusText}>
+                        {renderOrderStatusText(item.delStatus)}
+                    </Text>
+                </View>
+                {/* <Text style={styles.orderStatus}>{item.delStatus}</Text> */}
+
+
+                <View style={styles.orderStatusContainer}>
+                    {detailsbtn}
+
+                </View>
                 <View style={styles.orderStatusContainer}>
                     {statusButtons}
                 </View>
+
             </View>
         );
     };
+
+
+
+
     const profilePhoto = require('../assets/homeimages/james-wheeler-RRZM3cwS1DU-unsplash.jpg');
 
     return (
@@ -276,7 +354,6 @@ const SellerProfileScreen = () => {
                     </View>
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', position: 'absolute', bottom: -50 }}>
                         {/* <IconButton icon="logout" onPress={handleLogout} style={{ color: '#7600gf', backgroundColor: 'white' ,visibility:'hidden'}} /> */}
-
 
                         {sellerData.image ? (
                             <Image
@@ -315,11 +392,14 @@ const SellerProfileScreen = () => {
                 </View>
 
 
+
                 <View style={styles.statsContainer}>
                     <View style={styles.statsItem}>
                         <FontAwesome name="shopping-bag" size={30} color="#cc8e489f" />
-                        <Text style={styles.statsLabel}>اجمالي منتجاتك</Text>
-                        <Text style={styles.statsNumber}>{10}</Text>
+                        <Text style={styles.statsLabel}> طلبات معلقه</Text>
+                        <Text style={styles.statsNumber}>
+                            {orders.filter((order) => order.delStatus === 'pending').length}
+                        </Text>
                     </View>
                     <View style={styles.statsItem}>
                         <FontAwesome name="shopping-cart" size={30} color="#cc8e489f" />
@@ -330,7 +410,7 @@ const SellerProfileScreen = () => {
                         <FontAwesome name="check-circle" size={30} color="#cc8e489f" />
                         <Text style={styles.statsLabel}> طلبات مكتمله</Text>
                         <Text style={styles.statsNumber}>
-                            {orders.filter((order) => order.status === 'done').length}
+                            {orders.filter((order) => order.delStatus === 'delivered').length}
                         </Text>
                     </View>
                 </View>
@@ -366,13 +446,9 @@ const SellerProfileScreen = () => {
                 </View>
                 {isOrdersVisible && (
                     <View style={styles.orderList}>
-                        <View >
-                            <Text style={styles.sectionTitle}>الطلبات</Text>
-                        </View>
                         <View style={styles.orderItem}>
-                            <Text style={styles.orderHeader}>عنوان التوصيل</Text>
-                            <Text style={styles.orderHeader}>الكمية</Text>
-                            <Text style={styles.orderHeader}>حالة التوصيل</Text>
+                            <Text style={styles.orderHeader}>حالة الطلب</Text>
+                            <Text style={styles.orderHeader}>تفاصيل</Text>
                             <Text style={styles.orderHeader}>إجراءات</Text>
                         </View>
                         {orders.map((item) => renderOrderItem({ item }))}
@@ -381,7 +457,6 @@ const SellerProfileScreen = () => {
 
 
                 )}
-
 
                 {/* profile card modals */}
                 <Modal visible={isModalVisible} onDismiss={toggleModal} contentContainerStyle={styles.modalContainer}>
@@ -392,8 +467,58 @@ const SellerProfileScreen = () => {
                         <Text style={styles.modalText}>Phone: {sellerData.phone}</Text>
                     </View>
                 </Modal>
+
+                {/* order */}
+
+                <Modal visible={orderModalVisible} animationType="slide" transparent>
+                    <View style={styles.modalContainer}>
+                        <Text style={styles_order.modalTitle}>تفاصيل الطلب</Text>
+                        {selectedOrder && (
+                            <View>
+                                <Text style={styles_order.text}>المنتج: {selectedOrder.productName}</Text>
+                                <Text style={styles_order.text}>اسم العميل: {selectedOrder.user.name}</Text>
+                                <Text style={styles_order.text}>بريد العميل: {selectedOrder.user.email}</Text>
+                                <Text style={styles_order.text}>رقم موبايل العميل: {selectedOrder.phoneNumber}</Text>
+                                {selectedOrder.shippingAddress && (
+                                    <View>
+                                        <Text style={styles_order.text}>عنوان التوصيل:</Text>
+                                        <Text style={styles_order.text}>
+                                            الشارع: {selectedOrder.shippingAddress.street}
+                                        </Text>
+                                        <Text style={styles_order.text}>
+                                            المدينة: {selectedOrder.shippingAddress.city}
+                                        </Text>
+                                        <Text style={styles_order.text}>
+                                            الرمز البريدي: {selectedOrder.shippingAddress.zipCode}
+                                        </Text>
+                                        <Text style={styles_order.text}>
+                                            البلد: {selectedOrder.shippingAddress.country}
+                                        </Text>
+                                    </View>
+                                )}
+                                <View style={styles_order.statusContainer}>
+                                    <FontAwesome
+                                        name={renderOrderStatusIcon(selectedOrder.delStatus)}
+                                        style={styles_order.icon}
+                                    />
+                                    <Text style={styles_order.statusText}>
+                                        حالة الطلب: {renderOrderStatusText(selectedOrder.delStatus)}
+                                    </Text>
+                                </View>
+                            </View>
+                        )}
+                        <Button
+                            onPress={handleCloseModal}
+                            style={[styles_order.button, { backgroundColor: 'red', width: 100 }]}
+                        >
+                            <Text style={{ color: 'white', fontFamily: 'Droid' }}>اغلاق</Text>
+                        </Button>
+                    </View>
+                </Modal>
+
+
             </ScrollView>
-        </View>
+        </View >
     );
 };
 const styles = StyleSheet.create({
@@ -417,7 +542,7 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     scrollContent: {
-        flexGrow: 1, // Allow content to grow vertically
+        flexGrow: 1,
         width: '100%',
         // height: '100%',
         marginBottom: 100
@@ -495,9 +620,11 @@ const styles = StyleSheet.create({
     },
     orderList: {
         // flex: 1,
-        width: '100%',
-        // justifyContent:'flex-start',
+        width: '90%',
+        justifyContent: 'center',
         // alignItems:'flex-end'
+        alignSelf: 'center',
+        marginBottom: 50
     },
     sectionTitle: {
         fontSize: 18,
@@ -505,7 +632,10 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         alignItems: 'flex-end',
         // justifyContent:'flex-start',
-        width: '100%'
+        width: '100%',
+        alignSelf: 'center',
+        fontFamily: 'Droid',
+
 
     },
     orderItem: {
@@ -536,8 +666,22 @@ const styles = StyleSheet.create({
         height: 40,
         marginBottom: 5
     },
+
+    orderdetailsbutton: {
+        width: 100,
+        height: 15,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 15,
+        height: 40,
+        marginBottom: 5
+
+    },
     orderStatus: {
         fontSize: 11,
+    },
+    orderdetails: {
+        fontSize: 10,
     },
     productsContainer: {
         // flex: 1,
@@ -635,6 +779,47 @@ const styles = StyleSheet.create({
         fontFamily: 'Droid'
 
     }
-});
 
+
+});
+const styles_order = StyleSheet.create({
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        paddingHorizontal: 20,
+    },
+    modalTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 10,
+        color: 'black',
+        fontFamily: 'Droid',
+    },
+    text: {
+        fontSize: 14,
+        marginBottom: 5,
+        fontFamily: 'Droid',
+    },
+    statusContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 10,
+    },
+    icon: {
+        fontSize: 16,
+        marginRight: 5,
+        color: 'black',
+    },
+    statusText: {
+        fontSize: 13,
+        color: 'black',
+        fontFamily: 'Droid',
+    },
+    button: {
+        alignSelf: 'center'
+
+    },
+});
 export default SellerProfileScreen;
