@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList,Dimensions } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeFromCart, decrementQuantity, incrementQuantity } from '../Redux/Slices/ProductSlice';
 import ip from '../ipConfig'
@@ -79,10 +79,10 @@ const Cart = () => {
       {/* <Text style={styles.title}>عربة التسوق</Text> */}
       {cart.length === 0 ? (
         <>
-          {/* <Text style={styles.title}>عربة التسوق فارغة</Text> */}
-          <Image source={require('../assets/images/empty_cart_800x600_dribbble.webp')} style={{
-            width: '100%',
-            height: '80%'
+          <Text style={styles.title}>أضيفي منتجات لعربة التسوق</Text>
+          <Image source={require('../assets/images/add_Cart.png')} style={{
+            width: Dimensions.get('window').width*1.2,
+            height:Dimensions.get('window').height*0.85
           }}></Image>
         </>
       ) : (
@@ -112,21 +112,23 @@ const Cart = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    // padding: 10,
     backgroundColor: '#ffffff',
 
   },
   title: {
     position: 'absolute',
-    top: 100,
-    left: 50,
+    top: 20,
+    left: 40,
     zIndex: 999,
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
     textAlign: 'center',
     padding: 10,
-    color: '#540343'
+    color: '#540343',
+    // borderBottomColor:'#540343',
+    // borderBottomWidth:5
   },
   cartList: {
     paddingBottom: 20,
@@ -138,7 +140,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     backgroundColor: '#ffffff',
     borderRadius: 5,
-    padding: 10,
+    padding: 20,
   },
   imageContainer: {
     width: 100,

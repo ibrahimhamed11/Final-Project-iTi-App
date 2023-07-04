@@ -19,37 +19,39 @@ const COLORS = { primary: '#282534', white: '#fff' };
 const slides = [
   {
     id: '1',
-    image: require('../assets/log.png'),
-    title: 'أفضل حل لمتابعة مهامك ',
-    subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    image: require('../assets/onboarding/Motherhood.gif'),
+    title:'أهلاً بك في عالم الامومة',
+    subtitle: ' هذا الموقع خصيصا لك حتى يسهل عليكي عالم الامومة و تنظيم حياتك اليومية لكي و لطفلك',
   },
   {
     id: '2',
-    image: require('../assets/log.png'),
-    title: 'تحقيق أهدافك',
-    subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    image: require('../assets/onboarding/online.gif'),
+    title: 'متجرك الالكترونى',
+    subtitle: 'يتوفر لدينا متجر متكامل لاحتياجاتك واحتياجات طفلك ',
   },
   {
     id: '3',
-    image: require('../assets/log.png'),
+    image: require('../assets/onboarding/Midwives.gif'),
     title: 'متابعة بانتظام',
-    subtitle: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    subtitle: 'خصصنا لكى نظام كامل لمتابعه تطعيمات مولودك منذ الولادة بالاضافة الى توفر سجل صحى متكامل',
   },
 ];
 
 const Slide = ({ item }) => {
   return (
-    <View style={{ alignItems: 'center' }}>
+    <View style={{ width, justifyContent: 'center' }}>
       <Image
         source={item?.image}
         style={{
-          height: '40%',
-          width,
+          height: '70%',
+          width: Dimensions.get('window').width * 0.75,
           resizeMode: 'contain',
-          marginTop: 200,
+          marginTop: 50,
+          justifyContent: 'flex-end',
+          marginLeft: '15%'
         }}
       />
-      <View>
+      <View style={{ alignItems: 'center' }}>
         <Text style={styles.title}>{item?.title}</Text>
         <Text style={styles.subtitle}>{item?.subtitle}</Text>
       </View>
@@ -91,9 +93,9 @@ const OnboardingScreen = ({ navigation }) => {
     return (
       <View
         style={{
-          height: height * 0.25,
+          height: height * 0.2,
           justifyContent: 'space-between',
-          paddingHorizontal: 20,
+          paddingVertical: 10,
         }}
       >
         {/* Indicator container */}
@@ -101,7 +103,6 @@ const OnboardingScreen = ({ navigation }) => {
           style={{
             flexDirection: 'row',
             justifyContent: 'center',
-            marginTop: 20,
           }}
         >
           {/* Render indicator */}
@@ -111,8 +112,10 @@ const OnboardingScreen = ({ navigation }) => {
               style={[
                 styles.indicator,
                 currentSlideIndex === index && {
-                  backgroundColor: COLORS.white,
-                  width: 25,
+                  backgroundColor: '#76005f',
+                  width: 20,
+                  height: 6,
+                  borderRadius: 4
                 },
               ]}
             />
@@ -120,40 +123,44 @@ const OnboardingScreen = ({ navigation }) => {
         </View>
 
         {/* Render buttons */}
-        <View style={{ marginBottom: 20 }}>
+        <View style={{marginBottom: 20 }}>
           {currentSlideIndex === slides.length - 1 ? (
-            <View style={{ height: 50 }}>
-              <TouchableOpacity style={styles.btn} onPress={goToLogin}>
+            <View style={{justifyContent:'center', alignItems:'center'}}>
+              <TouchableOpacity  onPress={goToLogin}>
                 <Text style={{
-                  fontWeight: 'bold', fontSize: 15
-                  , fontFamily: 'Droid', // Add fontFamily property
-
+                    fontWeight: 'bold',
+                    fontSize: 18,
+                    fontFamily: 'Droid', // Add fontFamily property
+                    color: 'white',
+                    paddingHorizontal: 60,
+                    paddingVertical: 15,
+                    backgroundColor: '#76005f',
+                    borderRadius:20,
+                    textAlign:'center',
+                    width:Dimensions.get('screen').width*0.75
                 }}>
                   البدء
                 </Text>
               </TouchableOpacity>
             </View>
           ) : (
-            <View style={{ flexDirection: 'row' }}>
+            <View style={{ flexDirection: 'row', alignItems:'center' , justifyContent:'space-between', marginHorizontal:30}}>
               <TouchableOpacity
                 activeOpacity={0.8}
-                style={[
-                  styles.btn,
-                  {
-                    borderColor: COLORS.white,
-                    borderWidth: 1,
-                    backgroundColor: 'transparent',
-                  },
-                ]}
                 onPress={skip}
               >
                 <Text
                   style={{
                     fontWeight: 'bold',
-                    fontSize: 15,
-                    color: COLORS.white,
-                    fontFamily: 'Droid', // Add fontFamily property
-
+                    fontSize: 18,
+                    color: '#A9A9A9',
+                    fontFamily: 'Droid',
+                    paddingHorizontal: Dimensions.get('screen').width*0.14,
+                    paddingVertical: Dimensions.get('screen').width*0.04,
+                    // backgroundColor:'#A9A9A9',
+                    // borderRadius:20,
+                    // borderColor:'#76005f',
+                    // borderWidth:1.5
                   }}
                 >
                   تخطي
@@ -163,15 +170,17 @@ const OnboardingScreen = ({ navigation }) => {
               <TouchableOpacity
                 activeOpacity={0.8}
                 onPress={goToNextSlide}
-                style={styles.btn}
               >
                 <Text
                   style={{
                     fontWeight: 'bold',
-                    fontSize: 15,
+                    fontSize: 18,
                     fontFamily: 'Droid', // Add fontFamily property
-
-
+                    color: 'white',
+                    paddingHorizontal: Dimensions.get('screen').width*0.14,
+                    paddingVertical: Dimensions.get('screen').width*0.04,
+                    backgroundColor: '#76005f',
+                    borderRadius:20,
                   }}
                 >
                   التالي
@@ -193,60 +202,48 @@ const OnboardingScreen = ({ navigation }) => {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.primary }}>
-      <StatusBar backgroundColor={COLORS.primary} />
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+      <StatusBar backgroundColor={COLORS.white} />
       <FlatList
         ref={ref}
         onMomentumScrollEnd={updateCurrentSlideIndex}
-        contentContainerStyle={{ height: height * 0.6 }}
+        contentContainerStyle={{ height: height * 0.7 }}
         showsHorizontalScrollIndicator={false}
         horizontal
         data={slides}
         pagingEnabled
         renderItem={({ item }) => <Slide item={item} />}
       />
-      <Footer />
+      <View>
+        <Footer />
+      </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   subtitle: {
-    color: COLORS.white,
-    fontSize: 13,
-    marginTop: 10,
-    maxWidth: '70%',
+    color: '#A9A9A9',
+    fontSize: 14,
+    marginTop: 8,
+    maxWidth: '81%',
     textAlign: 'center',
     lineHeight: 23,
     fontFamily: 'Droid',
   },
   title: {
-    color: COLORS.white,
-    fontSize: 22,
+    color: '#3A3A3A',
+    fontSize: 24,
     fontWeight: 'bold',
-    marginTop: 20,
     textAlign: 'center',
     fontFamily: 'Droid',
   },
-  image: {
-    height: '100%',
-    width: '100%',
-    resizeMode: 'contain',
-  },
   indicator: {
-    height: 2.5,
-    width: 10,
-    backgroundColor: 'red',
+    height: 6,
+    width: 8,
+    backgroundColor: '#cf96c4',
     marginHorizontal: 3,
-    borderRadius: 2,
-  },
-  btn: {
-    flex: 1,
-    height: 50,
-    borderRadius: 5,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
-    alignItems: 'center',
+    borderRadius: 20,
   },
 });
 

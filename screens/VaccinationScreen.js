@@ -63,7 +63,7 @@ const VaccinationScreen = ({ motherId }) => {
        
         setArr(updatedVaccinations);
     
-        axios.put(`http://192.168.80.1:4000/vaccination/${updatedVaccinations[index]._id}`,{ status: 'completed' }
+        axios.put(`${ip}vaccination/${updatedVaccinations[index]._id}`,{ status: 'completed' }
           ).then((res) => {
             console.log(res.data);
           })

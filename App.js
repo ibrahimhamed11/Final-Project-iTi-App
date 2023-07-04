@@ -62,6 +62,7 @@ export default function App() {
   }, []);
 
 
+// to show on boarding pages
 
   useEffect(async () => {
     const appData = await AsyncStorage.getItem('isAppFirstLaunched');
@@ -83,6 +84,9 @@ export default function App() {
 
   function DrawerNavigator() {
     const nav = useNavigation()
+
+        // Notification icon 
+
     const NotificationIcon = ({ notification }) => (
       <View style={{ marginRight: 30 }}>
         <TouchableOpacity onPress={() => nav.navigate("الاشعارات")}>

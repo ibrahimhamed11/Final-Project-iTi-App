@@ -48,7 +48,7 @@ const ProductSlice = createSlice({
         if (existingItem.quantity === 1) {
           state.cart.splice(existingItemIndex, 1);
         } else {
-          existingItem.quantity -= 1;
+          state.cart.splice(existingItemIndex, existingItem.quantity);
         }
       }
 
