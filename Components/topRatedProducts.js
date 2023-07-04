@@ -1,80 +1,90 @@
-import {Image, View, StyleSheet,TouchableOpacity, Dimensions,Alert, Modal, Pressable } from 'react-native';
-import { Text ,Card } from 'react-native-paper';
-import React, { useEffect,useState } from 'react';
+import { Image, View, StyleSheet, TouchableOpacity, Dimensions, Alert, Modal, Pressable } from 'react-native';
+import { Text, Card } from 'react-native-paper';
+import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../Redux/Slices/ProductSlice';
-import StarRating from '../Components/Rate';
+import Icon from 'react-native-vector-icons/Ionicons';
+import axios from 'axios';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'; // Import the FontAwesome icon
 import ip from '../ipConfig'
 
-const TopRatedProducts = ({ item }) => {
+const TopRatedProducts = ({ product }) => {
   const dispatch = useDispatch();
   const [modalVisible, setModalVisible] = useState(false);
+  const [Rate, setRate] = useState(0);
 
   const handleAddToCart = () => {
 
-    dispatch(addToCart(item));
+    dispatch(addToCart(product));
     setModalVisible(true)
 
   };
   useEffect(() => {
-    
-    console.log(item,"endddddddd");
+    axios.get(`${ip}/products/${product._id}/getrate`) // get product rate
+    .then((response) => {
+      console.log(response.data)
+      setRate(response.data.averageRate); // Update the response handling
+
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+    console.log(product, "endddddddd");
 
   }, []);
   const navigation = useNavigation();
-    return (
+  return (
 
- //modal----------------------------------------------------------------------------------------------------------
- <>
- <Modal
-   animationType="slide"
-   transparent={true}
-   visible={modalVisible}
-   onRequestClose={() => {
-     Alert.alert('Modal has been closed.');
-     setModalVisible(!modalVisible);
-   }}
- >
-   <View style={styles.centeredView}>
-     <View style={styles.modalView}>
-       <FontAwesomeIcon name="check" size={30} style={{ marginRight: 5, color: 'green' }} />
-       <Text style={[styles.modalText, { fontFamily: 'Droid' }]}>تمت الاضافة الى السلة</Text>
-       <Pressable
-         style={[styles.button, styles.buttonClose]}
-         onPress={() => setModalVisible(!modalVisible)}
-       >
-         <Text style={[styles.textStyle, { fontFamily: 'Droid' }]}>إغلاق النافذة</Text>
-       </Pressable>
-     </View>
-   </View>
- </Modal>
- {/* modal---------------------------------------------------------------------------------------------------------- */}
-
-      <Card style={styles.card} onPress={() => navigation.navigate('ProductDetails', { item })}>
-      <Card.Cover style={styles.image} source={{ uri: `${ip}/${item?.image}` }} />
-      <Card.Content style={styles.content}>
-        <View style={styles.bottomContainer}>
-          <Text style={styles.title}>{item?.name}</Text>
-          <View style={styles.ratingContainer}>
-            <StarRating rating={item?.rate} />
+    //modal----------------------------------------------------------------------------------------------------------
+    <>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert('Modal has been closed.');
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <FontAwesomeIcon name="check" size={30} style={{ marginRight: 5, color: 'green' }} />
+            <Text style={[styles.modalText, { fontFamily: 'Droid' }]}>تمت الاضافة الى السلة</Text>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Text style={[styles.textStyle, { fontFamily: 'Droid' }]}>إغلاق النافذة</Text>
+            </Pressable>
           </View>
         </View>
-        <Text style={styles.description}>{item?.description}</Text>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text style={styles.price}>{item?.price}L.E</Text>
-          <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
-            <View style={styles.buttonContent}>
-              <FontAwesomeIcon name="shopping-cart" size={16} style={{ marginRight: 5, color: 'white' }} />
-              <Text style={[styles.addToCartButtonText, { fontFamily: 'Droid' }]}>اضف الي السله</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-      </Card.Content>
-    </Card>
+      </Modal>
+      {/* modal---------------------------------------------------------------------------------------------------------- */}
+
+      <Card style={styles.card} onPress={() => navigation.navigate('ProductDetails', { product,Rate })}>
+        <Card.Cover style={styles.image} source={{ uri: `${ip}/${product?.image}` }} />
+        <Card.Content style={styles.content}>
+          <View style={styles.bottomContainer}>
+            <Text style={styles.title}>{product?.name}</Text>
+            <View style={{ backgroundColor: '#eed1f0', width: 60, padding: 5, borderRadius: 20, justifyContent: 'center', flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={{ color: 'white', marginHorizontal:5, fontSize: 15 }} >{Rate}</Text>
+            <Icon name='star' size={14} color={'white'} />
+          </View>
+          </View>
+          <Text style={styles.price}>{product?.price}L.E</Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
+              <View style={styles.buttonContent}>
+                <FontAwesomeIcon name="shopping-cart" size={16} style={{ marginRight: 5, color: 'white' }} />
+                <Text style={[styles.addToCartButtonText, { fontFamily: 'Droid' }]}>اضف الي السله</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </Card.Content>
+      </Card>
     </>
-    )
+  )
 }
 
 const styles = StyleSheet.create({
@@ -99,25 +109,25 @@ const styles = StyleSheet.create({
   title: {
     width: '50%',
     fontSize: 18,
-    marginTop: 10,
+    // marginTop: 10,
     fontWeight: 'bold',
     color: '#76005f',
-    height:40,
-    textAlign:'center'
+    height: 30,
+    textAlign: 'center'
   },
   description: {
     fontSize: 14,
     // marginBottom: 10,
   },
   bottomContainer: {
-    flexDirection: 'row',
+    flexDirection: 'row-reverse',
     justifyContent: 'space-between',
-    alignItems:'center'
+    alignItems: 'center'
   },
   ratingContainer: {
     flexDirection: 'row',
-    alignItems:'center',
-    width:'50%',
+    alignItems: 'center',
+    width: '50%',
   },
   ratingIcon: {
     color: 'gold',
@@ -134,11 +144,12 @@ const styles = StyleSheet.create({
     color: 'green',
   },
   price: {
-    marginTop: 15,
-    marginBottom: 10,
+width:'100%',
+textAlign:'right',
+paddingRight:5,
     fontWeight: 'bold',
-    fontSize: 16,
-    color: '#76005f',
+    fontSize: 15,
+    color: '#23091e',
   },
   addToCartButton: {
     backgroundColor: '#76005f',
@@ -152,8 +163,8 @@ const styles = StyleSheet.create({
   buttonContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 8,
-    height: 40,
+    paddingHorizontal: 5,
+    height: 30,
   },
   addToCartButtonText: {
     marginLeft: 8,
@@ -220,7 +231,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 3,
     backgroundColor: '#f8e7f4',
     flexDirection: 'column'
-  },centeredView: {
+  }, centeredView: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',

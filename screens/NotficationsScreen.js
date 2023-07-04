@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, Dimensions } from 'react-native';
 import { Provider as PaperProvider, Card, Title, Badge } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import io from 'socket.io-client';
@@ -93,13 +93,13 @@ const Notification = ({ message, createdAt, deletionTime, onDelete }) => {
 
   return (
     <Card style={styles.notificationContainer}>
-      <View style={styles.iconContainer}>
-        <Icon name="bell" size={35} color="#333" />
-      </View>
-      <TouchableOpacity style={styles.deleteButton} onPress={onDelete}>
-        <Icon name="trash" size={20} color="#fff" />
-      </TouchableOpacity>
+      {/* <View style={styles.iconContainer}>
+        <Icon name="bell" size={15} color="#333" />
+      </View> */}
       <Card.Content>
+      <TouchableOpacity style={styles.deleteButton} onPress={onDelete}>
+        <Icon name="close" size={18} color="#76005f" />
+      </TouchableOpacity>
         <View style={styles.textContainer}>
           <Title style={styles.notificationText}>{message}</Title>
           <Text style={styles.notificationDate}>تم الانشاء في: {formattedCreatedAt}</Text>
@@ -214,6 +214,7 @@ const Notfications = () => {
   return (
     <PaperProvider>
       <View style={styles.container}>
+        <Image style={styles.background} source={require('../assets/images/notificationPhoto.jpg')}></Image>
         <Text style={styles.header}></Text>
         <ScrollView style={styles.notificationContainer}>
           {notifications.map((item) => (
@@ -264,7 +265,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#F160D9',
+    backgroundColor: '#ffffff',
+  },
+  background: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    width: Dimensions.get('screen').width,
+    height: Dimensions.get('screen').height * 0.8
   },
   header: {
     fontSize: 24,
@@ -292,6 +300,7 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flex: 1,
+    width:'80%'
   },
   notificationText: {
     fontSize: 16,
@@ -324,15 +333,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 10,
     right: 10,
-    marginLeft: 10, // Add a margin on the right side
-    backgroundColor: 'red',
-    borderRadius: 5,
+    // marginLeft: 10, // Add a margin on the right side
     padding: 5,
     alignSelf: 'flex-end',
+    
   },
   toggleButton: {
     marginTop: 10,
-    backgroundColor: '#333',
+    backgroundColor: '#76005efd',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,

@@ -40,14 +40,14 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     starFilled: {
-        color: '#EDB016',
-        fontSize: 14,
+        color: '#eded16',
+        fontSize: 18,
         marginLeft: 5,
         // You can customize the filled star style here
     },
     starEmpty: {
-        color: 'gray',
-        fontSize: 14,
+        color: '#787373',
+        fontSize: 18,
         marginLeft: 5,
         // You can customize the empty star style here
 

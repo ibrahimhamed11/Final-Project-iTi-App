@@ -14,11 +14,27 @@ import ip from '../ipConfig'
 
 
 const ProductCard = ({ product }) => {
+  const [Rate, setRate] = useState(0);
 
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
+  
+
+    useEffect(() => {
+      axios.get(`${ip}/products/${product._id}/getrate`) // get product rate
+      .then((response) => {
+        console.log(response.data)
+        setRate(response.data.averageRate); // Update the response handling
+
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+        // calculateAverageRate()
+  
+    }, []);
   const handleAddToCart = () => {
 
     dispatch(addToCart(product));
@@ -58,17 +74,16 @@ const ProductCard = ({ product }) => {
 
 
 
-
-      <Card style={styles.card} onPress={() => navigation.navigate('ProductDetails', { product })}>
+<TouchableOpacity onPress={() => navigation.navigate('ProductDetails', { product,Rate })}>
+      <Card style={styles.card} >
         <Card.Cover style={styles.image} source={{ uri: `${ip}/${product?.image}` }} />
         <Card.Content style={styles.content}>
           <View style={styles.bottomContainer}>
-            <Text style={styles.title}>{product?.name}</Text>
             <View style={styles.ratingContainer}>
-              <StarRating rating={product?.rate} />
+              <StarRating rating={Rate} />
             </View>
+            <Text style={styles.title}>{product?.name}</Text>
           </View>
-          <Text style={styles.description}>{product?.description}</Text>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={styles.price}>{product?.price}L.E</Text>
             <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
@@ -80,6 +95,7 @@ const ProductCard = ({ product }) => {
           </View>
         </Card.Content>
       </Card>
+      </TouchableOpacity>
     </>
   );
 };
@@ -95,31 +111,24 @@ const CardScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTitle: 'Products',
-      headerRight: () => (
-        <IconButton
-          icon="account"
-          color="white"
-          size={24}
-          onPress={() => navigation.navigate('Profile')}
-        />
-      ),
-    });
-  }, [navigation]);
-
+ 
   useEffect(() => {
     axios
       .get(`${ip}/products/getAll`) // Update the API endpoint
       .then((response) => {
         console.log(response.data)
         setProducts(response.data); // Update the response handling
+ 
       })
       .catch((error) => {
         console.error(error);
       });
+      // calculateAverageRate()
+
   }, []);
+
+
+
 
   // console.log("iti", products)
   const handleSearch = (query) => {
@@ -156,40 +165,40 @@ const CardScreen = () => {
   };
 
   const renderCard = ({ item }) => {
-    console.log(item)
+    // console.log(item)
     return <ProductCard product={item} />
   };
 
   return (
     <View style={styles.container}>
-      <View style={{ marginBottom: 25 }}>
+      <View style={{ marginBottom: 5 }}>
         <Image
           source={require('../assets/images/nav.jpg')}
           style={styles.mainImage} />
-        <View style={{ position: 'absolute', top: 0, right: 0, paddingTop: 20, paddingRight: 10 }}>
+        <View style={{ position: 'absolute', top: 0, right: 0, paddingTop: 20, paddingRight: 10 ,alignItems:'flex-end'}}>
           <Text style={{ fontSize: 24, fontWeight: 600, color: '#f8e7f4' }}>
             اهلا بكم فى متجرنا للتسوق
           </Text>
-          <Text style={{ fontSize: 18, fontWeight: 600, color: '#e0e0e0', marginVertical: 10 }}>
+          {/* <Text style={{ fontSize: 18, fontWeight: 600, color: '#e0e0e0', marginVertical: 10 }}>
             سارة محمد احمد
-          </Text>
+          </Text> */}
           <Searchbar
             placeholder="ابحث عن المنتج"
             onChangeText={handleSearch}
             value={searchQuery}
-            style={{ backgroundColor: '#f8e7f4', marginVertical: 20, width: Dimensions.get('screen').width * 0.88, height: 50 }}
+            style={{ backgroundColor: '#f8e7f4', marginVertical: 15, width: Dimensions.get('screen').width * 0.88, height:50 }}
           />
         </View>
-        <View style={{ marginTop: 20, justifyContent: 'center' }} >
+        <View style={{ marginTop: 10, justifyContent: 'center' }} >
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
           >
             <Chip style={styles.chips} selectedColor='grey' textStyle={{ fontSize: 18, padding: 1, color: '#76005f' }} onPress={() => handleCategoryFilter('all')}>all</Chip>
-            <Chip style={styles.chips} textStyle={{ fontSize: 14, padding: 1, color: '#76005f' }} onPress={() => handleCategoryFilter('smartphones')}>smartphones</Chip>
-            <Chip style={styles.chips} textStyle={{ fontSize: 14, padding: 1, color: '#76005f' }} onPress={() => handleCategoryFilter('laptops')}>laptops</Chip>
-            <Chip style={styles.chips} textStyle={{ fontSize: 14, padding: 1, color: '#76005f' }} onPress={() => handleCategoryFilter('fragrances')}>fragrances</Chip>
-            <Chip style={styles.chips} textStyle={{ fontSize: 14, padding: 1, color: '#76005f' }} onPress={() => handleCategoryFilter('fragrances')}>fragrances</Chip>
+            <Chip style={styles.chips} textStyle={{ fontSize: 14, padding: 1, color: '#76005f' }} onPress={() => handleCategoryFilter('clothes')}>clothes</Chip>
+            <Chip style={styles.chips} textStyle={{ fontSize: 14, padding: 1, color: '#76005f' }} onPress={() => handleCategoryFilter('shoes')}>shoes</Chip>
+            <Chip style={styles.chips} textStyle={{ fontSize: 14, padding: 1, color: '#76005f' }} onPress={() => handleCategoryFilter('food')}>food</Chip>
+            <Chip style={styles.chips} textStyle={{ fontSize: 14, padding: 1, color: '#76005f' }} onPress={() => handleCategoryFilter('babycare')}>babycare</Chip>
           </ScrollView>
         </View>
       </View>
@@ -210,7 +219,6 @@ const CardScreen = () => {
           data={filteredProducts.length > 0 ? filteredProducts : products}
           renderItem={renderCard}
           keyExtractor={(item) => item._id.toString()}
-          numColumns={2}
         />
 
       </ScrollView>
@@ -221,7 +229,8 @@ const CardScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+    marginBottom:40
   },
   scrollViewContainer: {
     flexGrow: 1,
@@ -235,37 +244,45 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   card: {
-    width: Dimensions.get('screen').width * 0.44,
-    marginHorizontal: 12,
-    marginVertical: 18,
+    width: Dimensions.get('screen').width * 0.9,
+    height: 250,
+    marginHorizontal: 10,
+    marginVertical: 20,
     elevation: 2,
     borderRadius: 10,
   },
   image: {
-    height: 220,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    resizeMode: 'contain'
+    position:'absolute',
+    top:0,
+    right:0,
+    width:'100%',
+    height: 250,
+    // borderTopLeftRadius: 10,
+    // borderTopRightRadius: 10,
+    // resizeMode: 'cover'
   },
   content: {
+    position:'absolute',
+    top:140,
+    right:0,
+    width:'100%',
     paddingHorizontal: 10,
     paddingVertical: 10,
     paddingBottom: 10,
+    backgroundColor:'#f4eeee7c',
+    borderBottomLeftRadius:10,
+    borderBottomRightRadius:10
   },
   title: {
-    width: '50%',
+    width: '60%',
     fontSize: 18,
-    marginTop: 10,
+    // marginTop: 10,
     fontWeight: 'bold',
     color: '#76005f',
     paddingVertical: 10,
-    height: 70,
-    textAlign: 'center'
+    textAlign: 'right'
   },
-  description: {
-    fontSize: 14,
-    marginBottom: 10,
-  },
+ 
   bottomContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -273,8 +290,8 @@ const styles = StyleSheet.create({
   },
   ratingContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    width: '50%',
+    textAlign: 'right',
+    width: '40%',
   },
   ratingIcon: {
     color: 'gold',
@@ -291,7 +308,6 @@ const styles = StyleSheet.create({
     color: 'green',
   },
   price: {
-    marginTop: 15,
     marginBottom: 10,
     fontWeight: 'bold',
     fontSize: 16,
@@ -368,7 +384,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   buttonClose: {
-    backgroundColor: 'blue',
+    backgroundColor: '#76005f',
+    marginTop:10
   },
   textStyle: {
     color: 'white',
@@ -383,7 +400,7 @@ const styles = StyleSheet.create({
   // nav style
   mainImage: {
     width: Dimensions.get('screen').width,
-    height: Dimensions.get('screen').height * 0.26,
+    height: Dimensions.get('screen').height * 0.23,
     position: 'relative',
     borderBottomLeftRadius: 90,
     paddingBottom: 10,

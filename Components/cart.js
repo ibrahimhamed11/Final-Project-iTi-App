@@ -79,7 +79,7 @@ const Cart = () => {
       {/* <Text style={styles.title}>عربة التسوق</Text> */}
       {cart.length === 0 ? (
         <>
-          <Text style={styles.title}>أضيفي منتجات لعربة التسوق</Text>
+          <Text style={styles.title}>أضيفي منتجات للسلة</Text>
           <Image source={require('../assets/images/add_Cart.png')} style={{
             width: Dimensions.get('window').width*1.2,
             height:Dimensions.get('window').height*0.85
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
   title: {
     position: 'absolute',
     top: 20,
-    left: 40,
+    right: 20,
     zIndex: 999,
     fontSize: 24,
     fontWeight: 'bold',

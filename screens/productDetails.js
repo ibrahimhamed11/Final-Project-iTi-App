@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import React, { useRef } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, Dimensions, SafeAreaView } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../Redux/Slices/ProductSlice';
 import { Rating } from 'react-native-ratings';
@@ -10,11 +10,21 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'; // Import t
 import { faCartPlus } from '@fortawesome/free-solid-svg-icons';
 import StarRating from '../Components/Rate';
 import { Alert, Modal, Pressable } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+import Icon from 'react-native-vector-icons/Ionicons'
+import { Button, SegmentedButtons, TouchableRipple } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+import ip from '../ipConfig'
+
 
 const ProductDetails = ({ route }) => {
   const [modalVisible, setModalVisible] = useState(false);
-
-  const { product } = route.params;
+  const [value, setValue] = React.useState('');
+  const nav = useNavigation();
+ 
+  const {product ,Rate} = route.params;
+  console.log(route.params)
+  console.log(product)
   const dispatch = useDispatch();
   const swiperRef = useRef(null);
 
@@ -24,16 +34,10 @@ const ProductDetails = ({ route }) => {
 
   };
 
-  const handleBuyNow = () => {
-  };
 
-  const handleImagePress = (index) => {
-    swiperRef.current.scrollTo(index, true);
-  };
 
   return (
-
-
+    // start product details
     //modal----------------------------------------------------------------------------------------------------------
     <>
       <Modal
@@ -64,41 +68,74 @@ const ProductDetails = ({ route }) => {
       </Modal>
       {/* modal---------------------------------------------------------------------------------------------------------- */}
 
-      <ScrollView contentContainerStyle={styles.container}>
-        <Swiper
-          ref={swiperRef}
-          style={styles.slider}
-          showsButtons={true}
-          autoplay={true}
-          autoplayTimeout={5}
-        >
-          {product.images.map((image, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.slide}
-              onPress={() => handleImagePress(index)}
-            >
-              <Image style={styles.image} source={{ uri: image }} />
-            </TouchableOpacity>
-          ))}
-        </Swiper>
-        <Text style={styles.title}>{product.title}</Text>
-        <Text style={styles.price}>{product.price}</Text>
+      <View style={styles.container}>
+        <View style={styles.productsImages}>
+          <FontAwesome name="heart-o" size={20} color="white" style={{ marginRight: 10, position: 'absolute', zIndex: 500, right: 10, top: 20 }} />
+          {/* <TouchableRipple
+          onPress={() => require('../assets/homeimages/baby_clothes.jpg')}
+          rippleColor="rgba(0, 0, 0, .32)"
+        > */}
+          <Image source={{ uri: `${ip}/${product?.image}` }} style={styles.image} />
+          {/* </TouchableRipple> */}
+        </View>
+        <View style={styles.productsDetails}>
+          <View style={{ backgroundColor: '#eed1f0', width: 60, padding: 8, borderRadius: 20, justifyContent: 'flex-start', flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={{ color: 'white', marginHorizontal:5, fontSize: 15 }} >{Rate}</Text>
+            <Icon name='star' size={14} color={'white'} />
+          </View>
+          <View style={{ alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', marginVertical: 20, marginHorizontal: 5 }}>
+            <Text style={styles.productPrice}> {product?.price} L.E</Text>
+            <Text style={styles.productName}>{product?.name}</Text>
+          </View>
 
+          <View style={styles.sizes}>
+            {/* <Text style={styles.productSize}>مقاس</Text> */}
+            <SafeAreaView style={styles.sizesIcons}>
+              <SegmentedButtons
+                value={value}
+                onValueChange={setValue}
+                buttons={[
+                  {
+                    value: '12',
+                    label: '12',
+                    checkedColor: 'white',
+                  },
+                  {
+                    value: '13',
+                    label: '13',
+                    checkedColor: 'white',
+                  },
+                  {
+                    value: '14',
+                    label: '14',
+                    checkedColor: 'white',
+                  },
+                  {
+                    value: '15',
+                    label: '15',
+                    checkedColor: 'white',
+                  },
+                ]}
+              />
+            </SafeAreaView>
+          </View>
+          {/* <Divider /> */}
+          <View style={styles.productDescription}>
+            <Text style={styles.title}>تفاصيل </Text>
+            <View style={styles.description}>
+              <Text style={styles.descriptionText}> {product?.description}</Text>
+            </View>
+              <Text style={styles.descriptionText}>في المخزن:{product?.stock}</Text>
+              <Text style={styles.descriptionText}>عدد التقييمات:{product?.rate.length}</Text>
 
-        <StarRating rating={product.rating} />
+          </View>
+            <View style={styles.addProduct}>
 
-        <Text style={styles.description}>{product.description}</Text>
-
-        <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
-          <FontAwesomeIcon icon={faCartPlus} style={styles.addToCartButtonIcon} />
-          <Text style={[styles.addToCartButtonText, { fontFamily: 'Droid' }]}>إضافة إلى السلة</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.buyNowButton} onPress={handleBuyNow}>
-          <Text style={[styles.buyNowButtonText, { fontFamily: 'Droid' }]}>شراء الآن</Text>
-        </TouchableOpacity>
-      </ScrollView>
+              <Button mode="contained" style={{ backgroundColor: '#76005F' }} onPress={handleAddToCart} > <FontAwesome name="shopping-cart" size={20} color="#fbf9fa" style={{ marginRight:20 }} />
+                أضف لعربة التسوق</Button>
+            </View>
+        </View>
+      </View>
     </>
   );
 };
@@ -119,19 +156,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  image: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 10,
-  },
   title: {
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: 'bold',
     marginTop: 20,
     textAlign: 'center',
   },
   price: {
-    fontSize: 18,
+    fontSize: 16,
     marginTop: 10,
     textAlign: 'center',
   },
@@ -139,9 +171,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   description: {
-    fontSize: 16,
-    marginTop: 10,
-    textAlign: 'center',
+    fontSize: 14,
+    // marginTop: 10,
+    textAlign: 'right',
   },
   addToCartButton: {
     backgroundColor: '#4caf50',
@@ -208,15 +240,89 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   buttonClose: {
-    backgroundColor: 'blue',
+    backgroundColor: '#76005F',
   },
   textStyle: {
     color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  // start product code
+  container: {
+    flex: 1,
+  },
+  image: {
+    width: Dimensions.get('screen').width,
+    height: Dimensions.get('screen').height,
+    position: 'relative',
+    resizeMode: 'contain',
+    top: -210
+  },
+  productsDetails: {
+    width: Dimensions.get('screen').width,
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    backgroundColor: 'white',
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
+    position: 'absolute',
+    bottom: 0,
+    right: 0
+  },
+  productName: {
+    fontSize: 24,
+    fontWeight: 600,
+    color: '#76005F',
+  },
+  productPrice: {
+    color: '#76005F',
+    fontWeight: 500,
+    fontSize: 16
+  },
+  sizes: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  productSize: {
+    fontSize: 22,
+    fontWeight: 400,
+    color: '#76005F',
+  },
+  sizesIcons: {
+    width: '100%',
+    // marginVertical: 10,
+  },
+  addProduct: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignContent: 'center',
+    marginTop: 20,
 
-
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: 400,
+    color: '#76005F',
+    marginTop: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eaeaea',
+    borderRadius: 3
+  },
+  description: {
+    marginHorizontal: 10,
+    marginVertical: 10
+  },
+  descriptionText: {
+    fontSize: 14,
+    fontWeight: 400,
+    color: '#320053',
+    // margin: 5,
+  },
+  productDescription:{
+alignItems:'flex-end',
+justifyContent:'flex-end'
+  }
 });
 
 export default ProductDetails;

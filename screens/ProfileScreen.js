@@ -11,10 +11,12 @@ import TabBar from '../Components/TabBar';
 import babysData from '../babysData';
 import BabyComponent from '../Components/BabyComponent';
 import axios from 'axios';
-
-
 //ip 
 import ip from '../ipConfig';
+// date picker
+import DatePicker from 'react-native-datepicker';
+
+
 
 const ProfileScreen = () => {
   useEffect(() => {
@@ -28,19 +30,18 @@ const ProfileScreen = () => {
   }, []);
   const navigation = useNavigation();
   const [fontLoaded, setFontLoaded] = useState(false);
-  const [image, setImage] = useState(null);
   const [isModalVisible, setModalVisible] = useState(false);
   const [babyModal, setBabyModal] = useState(false);
   const [babies, setBabies] = useState([]);
-  const [babyName, setBabyName] = useState('');
-  const [babyAge, setBabyAge] = useState(0);
+  const [name, setBabyName] = useState('');
+  const [babyAge, setBabyAge] = useState(new Date());
   const [motherData, setMotherData] = useState({
     name: '',
     email: '',
     age: 0,
     phone: '',
     image: '',
-    profile: { babyInfo: [] }
+  babyInfo: [] 
   });
 
 
@@ -114,7 +115,7 @@ const ProfileScreen = () => {
     fetchMotherDetails()
       .then((data) => {
         setMotherData(data);
-        console.log(data.profile)
+       
       })
       .catch((error) => {
         console.error('Error fetching seller details:', error);
@@ -170,18 +171,10 @@ const ProfileScreen = () => {
   };
   const handleAddBaby = async () => {
     try {
-      const updatedData={
-        motherData
-  
-    }
-      // formData.append('image', {
-      //     uri: selectedImage,
-      //     type: 'image/jpeg',
-      //     name: 'product.jpg',
-      // });
+   
       const userId = await getUserId();
      
-      const response = await axios.put(`${ip}/user/${userId}`,{updatedData});
+      const response = await axios.patch(`${ip}/user/${userId}`,{babyAge,name});
       // Reset form and state
 
       setBabyAge('');
@@ -205,8 +198,8 @@ const ProfileScreen = () => {
       const userId = await getUserId();
 
       const response = await axios.get(`${ip}/user/${userId}`);
-      setBabies(response.data.data.profile.babyInfo);
-      console.log(response.data.data.profile.babyInfo, "dataaaaaaaaaaaaaaaaaaaaaaaaa");
+      console.log(response.data.data.babyInfo, "dataaaaaaaaaaaaaaaaaaaaa");
+      setBabies(response.data.data.babyInfo);
     } catch (error) {
       console.error('Error fetching babies:', error);
     }
@@ -220,6 +213,8 @@ const ProfileScreen = () => {
   }
 
   return (
+
+    <>
     <ScrollView style={{ flex: 1, backgroundColor: '#ffffff' }}>
       {/* Start Begain First Section */}
       <View style={{ flex: 1, paddingHorizontal: 20, paddingBottom: 80 }}>
@@ -295,7 +290,7 @@ const ProfileScreen = () => {
           Start Begain Mother's baby Section */}
         </View>
         <View style={{ marginVertical: 0 }}>
-          <Text style={{ color: '#76005f', fontSize: 24 }}>أطفالى</Text>
+          <Text style={{ color: '#76005f', fontSize: 24,textAlign:'right' }}>أطفالى</Text>
           <View style={{ marginBottom: 25, flexDirection: 'row' }}>
             <TouchableOpacity onPress={() => setBabyModal(true)}>
               <View style={styles.floating_Button}>
@@ -304,7 +299,7 @@ const ProfileScreen = () => {
             </TouchableOpacity>
             <FlatList
 
-              data={babysData}
+              data={babies}
               renderItem={({ item }) => <BabyComponent item={item} />}
               pagingEnabled
               horizontal
@@ -364,73 +359,41 @@ const ProfileScreen = () => {
         </View>
         {/* End Begain Babies's Sections */}
 
-        {/* <View style={{ marginBottom: 20 }}>
-          <PaperButton
-            mode="contained"
-            onPress={() => setShowVaccinations(!showVaccinations)}
-            labelStyle={{ fontFamily: 'Droid' }}
-            style={{ marginTop: 5, alignSelf: 'center', width: 150, borderRadius: 7, }}
-          >
-            {showVaccinations ? 'إخفاء التطعيمات' : 'عرض التطعيمات'}
-          </PaperButton>
-          {showVaccinations && (
-            <DataTable style={{ backgroundColor: '#F5F5F5' }}>
-              <DataTable.Header>
-                <DataTable.Title style={{ textAlign: 'right', fontFamily: 'Droid', color: 'black' }}>
-                  الاسم
-                </DataTable.Title>
-                <DataTable.Title style={{ textAlign: 'right', fontFamily: 'Droid', color: 'black' }}>
-                  التاريخ
-                </DataTable.Title>
-                <DataTable.Title style={{ textAlign: 'right', fontFamily: 'Droid', color: 'black' }}>
-                  العنوان
-                </DataTable.Title>
-              </DataTable.Header>
-
-              <DataTable.Row>
-                <DataTable.Cell style={{ textAlign: 'right', fontFamily: 'Droid', color: 'black' }}>
-                  لقاح 1
-                </DataTable.Cell>
-                <DataTable.Cell style={{ textAlign: 'right', fontFamily: 'Droid', color: 'black' }}>
-                  2023-06-15
-                </DataTable.Cell>
-                <DataTable.Cell style={{ textAlign: 'right', fontFamily: 'Droid', color: 'black' }}>
-                  شارع 123
-                </DataTable.Cell>
-              </DataTable.Row>
-
-              <DataTable.Row>
-                <DataTable.Cell style={{ textAlign: 'right', fontFamily: 'Droid', color: 'black' }}>
-                  لقاح 2
-                </DataTable.Cell>
-                <DataTable.Cell style={{ textAlign: 'right', fontFamily: 'Droid', color: 'black' }}>
-                  2023-06-20
-                </DataTable.Cell>
-                <DataTable.Cell style={{ textAlign: 'right', fontFamily: 'Droid', color: 'black' }}>
-                  شارع 456
-                </DataTable.Cell>
-              </DataTable.Row>
-            </DataTable>
-
-          )}
-        </View> */}
+       
       </View>
-      <Modal visible={babyModal} onRequestClose={() => setBabyModal(false)}>
+      
+    </ScrollView>
+    <Modal visible={babyModal} animationType="slide"
+        transparent={true}
+       onRequestClose={() => setBabyModal(false)}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
+            <View style={styles.inputContainer}>
             <TextInput
               placeholder="اسم الطفل"
-              value={babyName}
+              value={name}
               onChangeText={setBabyName}
               style={styles.input}
-            />
-            <TextInput
-              placeholder="عمر الطفل (بالشهور)"
-              value={babyAge}
-              onChangeText={setBabyAge}
-              keyboardType="numeric"
-              style={styles.input}
-            />
+              placeholderTextColor={'#000000'}
+              />
+              </View>
+             <DatePicker
+        style={{ width: 180}}
+        date={babyAge}
+        mode="date"
+        placeholder="Select date"
+        format="YYYY-MM-DD"
+        minDate="1900-01-01" // optional
+        maxDate="2100-12-31" // optional
+        confirmBtnText="Confirm"
+        cancelBtnText="Cancel"
+        onDateChange={(date) => setBabyAge( date )}
+        useNativeDriver={true}
+        customStyles={{dateInput:{borderRadius:10,borderColor:'#76005f',height:30},
+      dateIcon:{width:30,height:30},
+    datePicker:{backgroundColor:'#000000',} ,
+          }}
+      />
 
             {/* <View style={styles.imageContainer}>
                             {selectedImage ? (
@@ -466,8 +429,7 @@ const ProfileScreen = () => {
 
         </View>
       </Modal>
-    </ScrollView>
-
+    </>
   );
 };
 
@@ -492,12 +454,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    width: 300,
+    width: Dimensions.get('screen').width,
     height: 100,
 
   },
   modalContent: {
-    backgroundColor: '#ffffff4a',
+    backgroundColor: '#fffffff7',
     padding: 20,
     borderRadius: 10,
     alignItems: 'center',
@@ -511,7 +473,17 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 7,
   },
-
+  inputContainer:{
+    borderWidth: 1,
+    borderRadius:10,
+    borderColor:'#76005f',
+    height:30,
+    width:150,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    color:'#000000'
+  }
+,
   // the changes
   userInfo: {
     justifyContent: 'center',
