@@ -123,6 +123,7 @@ export default function App() {
         }}
       >
         <Drawer.Screen
+        
           name="الرئيسية"
           component={TabBar}
           options={{
@@ -143,6 +144,9 @@ export default function App() {
 
             },
             headerTintColor: '#ffffff',
+            drawerActiveBackgroundColor:'#76005e50' ,
+            drawerActiveTintColor:'#ffffff',
+            
           }}
         />
 
@@ -155,6 +159,8 @@ export default function App() {
             drawerIcon: ({ color, size }) => (
               <FontAwesome name="phone" color={color} size={size} style={{ marginRight: 10 }} />
             ),
+            drawerActiveBackgroundColor:'#76005e50' ,
+            drawerActiveTintColor:'#ffffff',
             headerShown: true,
             headerStyle: {
               backgroundColor: '#76005f',
@@ -177,6 +183,9 @@ export default function App() {
               backgroundColor: '#76005f',
             },
             headerTintColor: 'white',
+            drawerActiveBackgroundColor:'#76005e50' ,
+            drawerActiveTintColor:'#ffffff',
+            
           })}
         />
 
@@ -194,6 +203,9 @@ export default function App() {
               backgroundColor: '#76005f',
             },
             headerTintColor: 'white',
+            drawerActiveBackgroundColor:'#76005e50' ,
+            drawerActiveTintColor:'#ffffff',
+            
           })}
         />
 
@@ -209,6 +221,9 @@ export default function App() {
               backgroundColor: '#76005f',
             },
             headerTintColor: 'white',
+            drawerActiveBackgroundColor:'#76005e50' ,
+            drawerActiveTintColor:'#ffffff',
+            
           })}
         />
 
@@ -217,7 +232,7 @@ export default function App() {
 
     );
   }
-
+  
 
 
   return (
@@ -270,15 +285,7 @@ export default function App() {
                   <Ionicons name="arrow-back" size={24} color="white" />
                 </TouchableOpacity>
               ),
-              headerRight: () => (
-                <TouchableOpacity
-                  onPress={() => {
-                  }}
-                  style={{ marginRight: 16 }}
-                >
-                  <Ionicons name="heart" size={24} color="red" />
-                </TouchableOpacity>
-              ),
+              
             })}
           />
         </Stack.Navigator>

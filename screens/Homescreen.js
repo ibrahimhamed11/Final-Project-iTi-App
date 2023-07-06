@@ -190,7 +190,7 @@ export default function StartScreen({ navigation }) {
 
         <FlatList
           data={products}
-          renderItem={({ item }) => <TopRatedProducts item={item} />}
+          renderItem={({ item }) => <TopRatedProducts product={item} />}
           pagingEnabled
           horizontal
           showsHorizontalScrollIndicator={false}

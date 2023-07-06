@@ -262,16 +262,16 @@ export default function Blogs({ navigation }) {
           top: 0,
           right: 0,
           left: 0,
-          backgroundColor: '#76005e45',
+          backgroundColor: '#76005e1b',
           width: Dimensions.get('screen').width,
-          height: Dimensions.get('screen').height * 0.26,
+          height: Dimensions.get('screen').height * 0.3,
           zIndex: 9999,
           borderBottomLeftRadius: 90,
           borderBottomRightRadius: 0,
         }} ></View>
-        <Image source={require('../assets/images/lucas-margoni-nWbJlwIrmT8-unsplash.jpg')} style={styles.header_Image}></Image>
+        <Image source={require('../assets/images/Blogs.png')} style={styles.header_Image}></Image>
         <View
-          style={styles.header_text}><Text style={{ fontSize: 25, color: '#fff' }}>اهلا بكِ Emma</Text>
+          style={styles.header_text}><Text style={{ fontSize: 25, color: '#76005f' }}>اهلا بكِ في المدونة</Text>
         </View>
         <TouchableOpacity style={styles.header_button} onPress={toggleModal}>
           <Text style={{ fontSize: 18, color: '#fff' }}>اضيفي منشوراً</Text>
@@ -345,13 +345,15 @@ const styles = StyleSheet.create({
   },
   header_Image: {
     width: Dimensions.get('screen').width,
-    height: Dimensions.get('screen').height * 0.26,
+    height: Dimensions.get('screen').height * 0.3,
     borderBottomLeftRadius: 90,
     borderBottomRightRadius: 0,
+    borderBottomColor:'#76005f',
+    borderWidth:1
   },
   header_text: {
     position: 'absolute',
-    top: 50,
+    top: 8,
     right: 10,
   },
   header_button: {
