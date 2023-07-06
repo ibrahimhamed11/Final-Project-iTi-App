@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList,Dimensions } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, FlatList, Dimensions } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeFromCart, decrementQuantity, incrementQuantity } from '../Redux/Slices/ProductSlice';
 import ip from '../ipConfig'
@@ -81,8 +81,8 @@ const Cart = () => {
         <>
           <Text style={styles.title}>أضيفي منتجات لعربة التسوق</Text>
           <Image source={require('../assets/images/add_Cart.png')} style={{
-            width: Dimensions.get('window').width*1.2,
-            height:Dimensions.get('window').height*0.85
+            width: Dimensions.get('window').width * 1.2,
+            height: Dimensions.get('window').height * 0.85
           }}></Image>
         </>
       ) : (
@@ -111,7 +111,7 @@ const Cart = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 0.9,
     // padding: 10,
     backgroundColor: '#ffffff',
 

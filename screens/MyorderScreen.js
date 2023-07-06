@@ -23,7 +23,7 @@ const MyOrdersScreen = () => {
                 const userId = await AsyncStorage.getItem('userId');
 
                 // Make API request to fetch user orders based on the user ID
-                const response = await fetch(`${ip}/orders/user/64930dc141ad98cd4739b12c`);
+                const response = await fetch(`${ip}/orders/user/${userId}`);
                 const data = await response.json();
                 console.log(data);
 
@@ -53,7 +53,7 @@ const MyOrdersScreen = () => {
             await axios.patch(`${ip}/orders/${orderId}/checkRate`, { checkRate: true });
 
             // Refresh the order list to reflect the updated checkRate value
-            const response = await fetch(`${ip}/orders/user/64930dc141ad98cd4739b12c`);
+            const response = await fetch(`${ip}/orders/user/${userId}`);
             const data = await response.json();
             setOrders(data);
         } catch (error) {
