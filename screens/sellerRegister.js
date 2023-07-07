@@ -13,7 +13,6 @@ import { passwordValidator } from '../helpers/passwordValidator';
 import { phoneValidator, nameValidator, addressValidator, usernameValidator } from '../helpers/dataValidator';
 
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
-// import { faCircle, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import * as Font from 'expo-font';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import * as ImagePicker from 'expo-image-picker';
@@ -33,20 +32,19 @@ export default function SellerRegister({ navigation }) {
     const [isFontLoaded, setIsFontLoaded] = useState(false);
     const [imageUri, setImageUri] = useState('');
 
-
     const handleImageUpload = async () => {
         const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (permissionResult.granted === false) {
-            alert('Permission to access camera roll is required!');
+            alert('Permission to access the camera roll is required!');
             return;
         }
-
 
         const imageResult = await ImagePicker.launchImageLibraryAsync();
         if (!imageResult.cancelled) {
             setSelectedImage(imageResult.uri);
         }
     };
+
     // Font
     useEffect(() => {
         const loadFont = async () => {
@@ -58,56 +56,6 @@ export default function SellerRegister({ navigation }) {
 
         loadFont();
     }, []);
-
-    // const onSignUpPressed = async () => {
-    //     const nameError = nameValidator(name.value);
-    //     const emailError = emailValidator(email.value);
-    //     const passwordError = passwordValidator(password.value);
-    //     const phoneError = phoneValidator(phone.value);
-    //     const addressError = addressValidator(address.value);
-    //     const usernameError = usernameValidator(username.value);
-
-    //     if (emailError || passwordError || nameError || phoneError || addressError) {
-    //         setName({ ...name, error: nameError });
-    //         setEmail({ ...email, error: emailError });
-    //         setPassword({ ...password, error: passwordError });
-    //         setPhone({ ...phone, error: phoneError });
-    //         setAddress({ ...address, error: addressError });
-    //         setUsername({ ...username, error: usernameError });
-
-    //         return;
-    //     }
-
-    //     try {
-    //         const response = await axios.post(`${ip}/user/register`, {
-    //             name: name.value,
-    //             email: email.value,
-    //             password: password.value,
-    //             phone: phone.value,
-    //             address: address.value,
-    //             username: username.value,
-    //             image: selectedImage,
-    //             role: 'seller'
-
-    //         });
-
-    //         // Handle the response from the server
-    //         console.log(response.data); // You can customize this based on your backend API response
-    //         navigation.reset({
-    //             index: 0,
-    //             routes: [{ name: 'Home' }],
-    //         });
-    //     } catch (error) {
-    //         // Handle error
-    //         console.log(error);
-    //     }
-    // };
-
-
-
-
-
-
 
     const sendDataToBackend = async () => {
         try {
@@ -127,9 +75,7 @@ export default function SellerRegister({ navigation }) {
 
             const response = await axios.post(`${ip}/user/register`, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
-
             });
-
 
             // Handle the response from the server
             console.log('user add ', response.data); // You can customize this based on your backend API response
@@ -142,7 +88,6 @@ export default function SellerRegister({ navigation }) {
             console.log(error);
         }
     };
-
 
     const onSignUpPressed = () => {
         const nameError = nameValidator(name.value);
@@ -162,15 +107,7 @@ export default function SellerRegister({ navigation }) {
             sendDataToBackend();
             return;
         }
-
-
     };
-
-
-
-
-
-
 
     const renderProgressBar = () => {
         return (
@@ -179,16 +116,15 @@ export default function SellerRegister({ navigation }) {
                     <FontAwesome5Icon
                         name={step >= 1 ? 'check-circle' : 'circle'}
                         size={30}
-                        style={styles.progressIcon}
+                        style={[styles.progressIcon, { color: step >= 1 ? theme.colors.primary : 'gray' }]}
                     />
-                    {/* <Text style={styles.stepNumber}>1</Text> */}
                 </View>
                 <View style={styles.progressLine} />
                 <View style={styles.progressStep}>
                     <FontAwesome5Icon
                         name={step >= 2 ? 'check-circle' : 'circle'}
                         size={30}
-                        style={styles.progressIcon}
+                        style={[styles.progressIcon, { color: step >= 2 ? theme.colors.primary : 'gray' }]}
                     />
                 </View>
                 <View style={styles.progressLine} />
@@ -196,27 +132,23 @@ export default function SellerRegister({ navigation }) {
                     <FontAwesome5Icon
                         name={step >= 3 ? 'check-circle' : 'circle'}
                         size={30}
-                        style={styles.progressIcon}
+                        style={[styles.progressIcon, { color: step >= 3 ? theme.colors.primary : 'gray' }]}
                     />
-                    {/* <Text style={styles.stepNumber}>3</Text> */}
                 </View>
             </View>
         );
     };
-
 
     if (!isFontLoaded) {
         // Render a loading screen or placeholder while the font is loading
         return null;
     }
 
-
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <KeyboardAwareScrollView contentContainerStyle={styles.container}>
                 <Background>
                     <BackButton goBack={navigation.goBack} />
-                    {/* <Logo /> */}
                     <SellerLogo />
                     <Header style={[styles.arabicText, { fontFamily: 'Droid', fontSize: 20 }]}>
                         استمارة التسجيل للبائع
@@ -293,7 +225,6 @@ export default function SellerRegister({ navigation }) {
                             />
                             {/* Add any additional fields for step 2 */}
                         </View>
-
                     )}
                     {step === 3 && (
                         <View style={styles.imageContainer}>
@@ -307,19 +238,15 @@ export default function SellerRegister({ navigation }) {
                         </View>
                     )}
 
-
                     <Button
                         mode="contained"
                         onPress={step < 3 ? () => setStep(step + 1) : onSignUpPressed}
-                        style={{ marginTop: 24 }}
+                        style={{ marginTop: 24, backgroundColor: theme.colors.primary, borderRadius: 8 }}
                     >
-                        <Text style={[styles.link, { fontFamily: 'Droid', color: 'white' }]}>
+                        <Text style={[styles.buttonText, { color: theme.colors.surface }]}>
                             {step < 3 ? 'التالي' : 'التسجيل'}
                         </Text>
                     </Button>
-
-
-
 
                     {step > 1 && (
                         <TouchableOpacity onPress={() => setStep(step - 1)} style={{ marginTop: 8 }}>
@@ -341,9 +268,7 @@ export default function SellerRegister({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-
     container: {
-
         marginTop: 30
     },
     row: {
@@ -354,50 +279,40 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: theme.colors.primary,
     },
-
     progressBar: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: 32, // Increase the margin-top value
-        marginBottom: 30, // Increase the margin-bottom value
-        fontSize: 50
+        marginTop: 32,
+        marginBottom: 30,
     },
     progressStep: {
         alignItems: 'center',
     },
     progressIcon: {
-        fontSize: 60, // Increase the font size to make the icon bigger
-        color: theme.colors.primary,
-
-    },
-    stepNumber: {
-        fontFamily: 'Droid',
-        fontSize: 20, // Increase the font size for the step number
-        marginTop: 8, // Increase the margin-top value
+        fontSize: 60,
     },
     progressLine: {
         flex: 1,
-        height: 4, // Increase the height of the progress line
+        height: 4,
         backgroundColor: theme.colors.primary,
         alignSelf: 'center',
-        marginHorizontal: 12, // Increase the margin-horizontal value
+        marginHorizontal: 12,
     },
     input: {
-        width: 300, // Set your desired fixed width here
+        width: 300,
     },
-
     imageContainer: {
         alignItems: 'center',
         justifyContent: 'center',
         width: 150,
         height: 150,
-        borderRadius: 75, // Half the width and height to create a circular shape
+        borderRadius: 75,
         backgroundColor: 'lightgray',
     },
     image: {
         width: 150,
         height: 150,
-        borderRadius: 75, // Half the width and height to maintain the circular shape
+        borderRadius: 75,
     },
     uploadButton: {
         alignItems: 'center',
@@ -408,5 +323,9 @@ const styles = StyleSheet.create({
     uploadButtonText: {
         fontSize: 16,
         color: 'white',
+    },
+    buttonText: {
+        fontFamily: 'Droid',
+        fontSize: 16,
     },
 });
