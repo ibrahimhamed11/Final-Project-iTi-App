@@ -62,7 +62,7 @@ export default function App() {
   }, []);
 
 
-// to show on boarding pages
+  // to show on boarding pages
 
   useEffect(async () => {
     const appData = await AsyncStorage.getItem('isAppFirstLaunched');
@@ -85,7 +85,7 @@ export default function App() {
   function DrawerNavigator() {
     const nav = useNavigation()
 
-        // Notification icon 
+    // Notification icon 
 
     const NotificationIcon = ({ notification }) => (
       <View style={{ marginRight: 30 }}>
@@ -123,7 +123,7 @@ export default function App() {
         }}
       >
         <Drawer.Screen
-        
+
           name="الرئيسية"
           component={TabBar}
           options={{
@@ -144,9 +144,9 @@ export default function App() {
 
             },
             headerTintColor: '#ffffff',
-            drawerActiveBackgroundColor:'#76005e50' ,
-            drawerActiveTintColor:'#ffffff',
-            
+            drawerActiveBackgroundColor: '#76005e50',
+            drawerActiveTintColor: '#ffffff',
+
           }}
         />
 
@@ -159,8 +159,8 @@ export default function App() {
             drawerIcon: ({ color, size }) => (
               <FontAwesome name="phone" color={color} size={size} style={{ marginRight: 10 }} />
             ),
-            drawerActiveBackgroundColor:'#76005e50' ,
-            drawerActiveTintColor:'#ffffff',
+            drawerActiveBackgroundColor: '#76005e50',
+            drawerActiveTintColor: '#ffffff',
             headerShown: true,
             headerStyle: {
               backgroundColor: '#76005f',
@@ -183,9 +183,9 @@ export default function App() {
               backgroundColor: '#76005f',
             },
             headerTintColor: 'white',
-            drawerActiveBackgroundColor:'#76005e50' ,
-            drawerActiveTintColor:'#ffffff',
-            
+            drawerActiveBackgroundColor: '#76005e50',
+            drawerActiveTintColor: '#ffffff',
+
           })}
         />
 
@@ -196,20 +196,20 @@ export default function App() {
           component={myorders}
           options={({ navigation }) => ({
             drawerIcon: ({ color, size }) => (
-              <FontAwesome name="market" color={color} size={size} style={{ marginRight: 10 }} />
+              <FontAwesome name="shopping-cart" color={color} size={size} style={{ marginRight: 10 }} />
             ),
             headerShown: true,
             headerStyle: {
               backgroundColor: '#76005f',
             },
             headerTintColor: 'white',
-            drawerActiveBackgroundColor:'#76005e50' ,
-            drawerActiveTintColor:'#ffffff',
-            
+            drawerActiveBackgroundColor: '#76005e50',
+            drawerActiveTintColor: '#ffffff',
+
           })}
         />
 
-        <Drawer.Screen
+        {/* <Drawer.Screen
           name="الدفع"
           component={CheckoutScreen}
           options={({ navigation }) => ({
@@ -221,18 +221,18 @@ export default function App() {
               backgroundColor: '#76005f',
             },
             headerTintColor: 'white',
-            drawerActiveBackgroundColor:'#76005e50' ,
-            drawerActiveTintColor:'#ffffff',
-            
+            drawerActiveBackgroundColor: '#76005e50',
+            drawerActiveTintColor: '#ffffff',
+
           })}
-        />
+        /> */}
 
 
       </Drawer.Navigator>
 
     );
   }
-  
+
 
 
   return (
@@ -285,7 +285,7 @@ export default function App() {
                   <Ionicons name="arrow-back" size={24} color="white" />
                 </TouchableOpacity>
               ),
-              
+
             })}
           />
         </Stack.Navigator>

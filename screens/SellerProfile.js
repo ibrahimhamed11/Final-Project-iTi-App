@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
 import { IconButton } from 'react-native-paper';
 import ip from '../ipConfig';
+import { DataTable } from 'react-native-paper';
 
 const SellerProfileScreen = () => {
     const [orderModalVisible, setOrderModalVisible] = useState(false);
@@ -337,6 +338,14 @@ const SellerProfileScreen = () => {
     };
 
 
+    // Function to calculate the total price from an array of products
+    const calculateTotalPrice = (products) => {
+        let totalPrice = 0;
+        products.forEach((product) => {
+            totalPrice += product.price * product.qty;
+        });
+        return totalPrice;
+    };
 
 
     const profilePhoto = require('../assets/homeimages/james-wheeler-RRZM3cwS1DU-unsplash.jpg');
@@ -475,13 +484,39 @@ const SellerProfileScreen = () => {
                         <Text style={styles_order.modalTitle}>تفاصيل الطلب</Text>
                         {selectedOrder && (
                             <View>
-                                <Text style={styles_order.text}>المنتج: {selectedOrder.productName}</Text>
-                                <Text style={styles_order.text}>اسم العميل: {selectedOrder.user.name}</Text>
-                                <Text style={styles_order.text}>بريد العميل: {selectedOrder.user.email}</Text>
-                                <Text style={styles_order.text}>رقم موبايل العميل: {selectedOrder.phoneNumber}</Text>
+                                <DataTable>
+                                    <DataTable.Header style={{ fontFamily: 'Droid' }}>
+                                        <DataTable.Title>رقم المنتج</DataTable.Title>
+                                        <DataTable.Title>المنتج</DataTable.Title>
+                                        <DataTable.Title>الكمية</DataTable.Title>
+                                        <DataTable.Title>السعر</DataTable.Title>
+                                    </DataTable.Header>
+
+                                    {selectedOrder.products.map((product, index) => (
+                                        <DataTable.Row key={index}>
+                                            <DataTable.Cell>{index + 1}</DataTable.Cell>
+                                            <DataTable.Cell>{product.name}</DataTable.Cell>
+                                            <DataTable.Cell>{product.qty}</DataTable.Cell>
+                                            <DataTable.Cell>{product.price}</DataTable.Cell>
+                                        </DataTable.Row>
+                                    ))}
+                                </DataTable>
+
+                                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
+                                    <FontAwesome name="money" style={{ color: 'green', marginRight: 10 }} size={20} />
+                                    <Text style={[styles_order.text, { fontFamily: 'Droid', color: 'green', fontWeight: 'bold' }]}>
+                                        <FontAwesome name="check" style={{ color: 'green', marginRight: 5 }} /> السعر الإجمالي:
+                                        {calculateTotalPrice(selectedOrder.products)}
+                                    </Text>
+                                </View>
+
+                                <Text style={[styles_order.text, { fontWeight: 'bold' }]}>اسم العميل: {selectedOrder.user.name}</Text>
+                                <Text style={[styles_order.text, { fontWeight: 'bold' }]}>بريد العميل: {selectedOrder.user.email}</Text>
+                                <Text style={[styles_order.text, { fontWeight: 'bold' }]}>رقم موبايل العميل: {selectedOrder.phoneNumber}</Text>
+
                                 {selectedOrder.shippingAddress && (
                                     <View>
-                                        <Text style={styles_order.text}>عنوان التوصيل:</Text>
+                                        <Text style={[styles_order.text, { fontWeight: 'bold' }]}>عنوان التوصيل:</Text>
                                         <Text style={styles_order.text}>
                                             الشارع: {selectedOrder.shippingAddress.street}
                                         </Text>
@@ -496,6 +531,7 @@ const SellerProfileScreen = () => {
                                         </Text>
                                     </View>
                                 )}
+
                                 <View style={styles_order.statusContainer}>
                                     <FontAwesome
                                         name={renderOrderStatusIcon(selectedOrder.delStatus)}
@@ -507,6 +543,7 @@ const SellerProfileScreen = () => {
                                 </View>
                             </View>
                         )}
+
                         <Button
                             onPress={handleCloseModal}
                             style={[styles_order.button, { backgroundColor: 'red', width: 100 }]}

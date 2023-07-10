@@ -11,6 +11,11 @@ const RateProductModal = ({ productId, visible, closeModal }) => {
     const handleRating = async (newRating) => {
         try {
             setRating(newRating);
+
+            // console.log('ssssssssssssss', productId)
+            //to change stat of add rate status in same time when user add product rate 
+            await axios.patch(`${ip}/orders/${productId}/checkRate`, { checkRate: true });
+            //To push rate of product to array
             const response = await axios.patch(`${ip}/products/${productId}/addrate`, {
                 rate: newRating,
             });

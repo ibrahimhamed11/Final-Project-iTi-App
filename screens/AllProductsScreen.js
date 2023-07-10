@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import ip from '../ipConfig';
 
@@ -34,11 +35,21 @@ const ProductList = () => {
             setSelectedImage(imageResult.uri);
         }
     };
-
+    const getUserId = async () => {
+        try {
+            const sellerId = await AsyncStorage.getItem('userId');
+            return sellerId;
+        } catch (error) {
+            console.log('Error retrieving ID:', error);
+            return null;
+        }
+    };
     const handleAddProduct = async () => {
         try {
             const formData = new FormData();
+
             formData.append('name', name);
+            formData.append('seller', '64a7dcc2e97308af1971cbed'); // Assuming getUserId is a function that returns the sellerId
             formData.append('price', parseFloat(price));
             formData.append('description', description);
             formData.append('category', category);
@@ -53,6 +64,7 @@ const ProductList = () => {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
 
+            console.log(formData.seller)
             console.log('Product added:', response.data);
 
             // Reset form and state
