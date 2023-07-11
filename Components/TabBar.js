@@ -13,6 +13,8 @@ import * as Font from 'expo-font';
 import MotherProfile from '../screens/ProfileScreen'
 import Sellerprofile from '../screens/SellerProfile'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import AllProductsScreen from '../screens/AllProductsScreen'
+
 
 
 const TabBar = () => {
@@ -31,10 +33,7 @@ const TabBar = () => {
     };
     loadFonts();
 
-    
-
     getRole();
-    // getRole()
   }, []);
 
   const styles = StyleSheet.create({
@@ -69,6 +68,8 @@ const getRole = async () => {
     return null; // Render null or a loading indicator while the font is loading
   }
 
+if(role=="mother")
+{
   return (
     <Tab.Navigator
 
@@ -130,7 +131,70 @@ const getRole = async () => {
       <Tab.Screen name='المتجر' component={Products} options={{ headerShown: false }} />
       <Tab.Screen name='السله' component={Cart} options={{ tabBarBadge: data.cart.length > 0 ? data.cart.length : null, headerShown: false }} />
     </Tab.Navigator>
-  );
+  );}
+
+
+ else
+{
+  return (
+    <Tab.Navigator
+
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ color, focused, size }) => {
+          let iconName;
+
+           if (route.name === 'المتجر') {
+            iconName = focused ? 'shopping-cart' : 'shopping-cart';
+          }else if (route.name === 'الملف الشخصي') {
+            iconName = focused ? 'user' : 'user';
+          }else if (route.name === 'منتجاتي') {
+            iconName = focused ? 'shopping-basket' : 'shopping-basket';
+          }
+
+          return <Icon name={iconName} color={color} size={size * 0.8} style={styles.customText} />;
+        },
+        tabBarActiveTintColor: '#761700',
+        tabBarInactiveTintColor: '#292726c2',
+        tabBarStyle: {
+          borderTopWidth: 1,
+          height: 60,
+          position: 'absolute',
+          bottom: 10,
+          left: 10,
+          right: 10,
+          borderRadius: 25,
+          paddingBottom: 5,
+          shadowColor: '#0b0323',
+          shadowOffset: {
+            width: 10,
+            height: 10
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.5,
+          elevation: 5,
+        },
+        tabBarLabelStyle: [styles.customText, { fontSize: 11 }],
+        tabBarIconStyle: {
+          marginTop: 5, // Adjust the margin as per your preference
+        },
+        tabBarActiveBackgroundColor: {}
+      })}
+      tabBarOptions={{
+
+      }}
+    >
+      {/* <Tab.Screen name='الرئيسيه' component={Home} options={{ headerShown: false }} /> */}
+      {/* <Tab.Screen name='المدونات' component={Blogs} options={{ headerShown: false }} /> */}
+      <Tab.Screen
+        name='الملف الشخصي'
+        component={role === 'mother' ? ProfileScreen : Sellerprofile}
+        options={{ headerShown: false }}
+      />
+      <Tab.Screen name='المتجر' component={Products} options={{ headerShown: false }} />
+      <Tab.Screen name='منتجاتي' component={AllProductsScreen} options={{ headerShown: false }} />
+      {/* <Tab.Screen name='السله' component={Cart} options={{ tabBarBadge: data.cart.length > 0 ? data.cart.length : null, headerShown: false }} /> */}
+    </Tab.Navigator>
+  );}
 };
 
 export default TabBar;

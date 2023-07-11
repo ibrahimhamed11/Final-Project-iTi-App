@@ -8,7 +8,7 @@ import {
   Text,
   Dimensions,
   ImageBackground,
-  
+
 } from "react-native";
 import Paragraph from '../Components/Paragraph';
 import Header from '../Components/Header';
@@ -105,20 +105,21 @@ export default function StartScreen({ navigation }) {
 
   ]);
   const [products, setProducts] = useState([]);
-  const [topProducts, setTopProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+
+ 
 
   useEffect(() => {
+    // setTimeout(() => {
+    // setIsLoading(false);
+    // }, 2000);
     axios
       .get(`${ip}/products/getAll`) // Update the API endpoint
       .then((response) => {
         console.log(response.data)
         setProducts(response.data); // Update the response handling
-        // const topProducts = products
-        // // .filter((product) => {
-        // //   if (product.rating >=4.5 && product.rating <=5){
-        // //       return true;
-        // // }})
-        // setTopProducts(topProducts)
+       
         console.log("start", products, "endddddddd");
 
       })
@@ -133,21 +134,29 @@ export default function StartScreen({ navigation }) {
 
     return (
 
-        <ImageBackground source={image} style={styles.blogImage}>
+      <ImageBackground source={image} style={styles.blogImage}>
         <View style={styles.ownerContainer}>
           <Paragraph style={styles.ownerName}>{owner.name}</Paragraph>
           <Image source={owner.photo} style={styles.ownerPhoto} />
         </View>
-          <View style={styles.blog_title}><Text style={{ fontSize: 21,fontWeight: 'bold',color:'#76005ee5',
-  }}>{title}</Text>
+        <View style={styles.blog_title}><Text style={{
+          fontSize: 21, fontWeight: 'bold', color: '#76005ee5',
+        }}>{title}</Text>
 
-        <Paragraph>{content}</Paragraph>
+          <Paragraph>{content}</Paragraph>
         </View>
-        </ImageBackground>
+      </ImageBackground>
 
     );
   };
-
+//  // Render a loading state while waiting for the data
+//  if (isLoading) {
+//   return (
+//     <View style={styles.con}>
+//       <Image style={{ width: 400, height: 400 }} source={require('../assets/loader.gif')} />
+//     </View>
+//   );
+// }
   return (
     // <Background>
     <ScrollView style={styles.con}>
@@ -222,7 +231,7 @@ export default function StartScreen({ navigation }) {
       ></View>
 
       <FlatList
-      
+
         data={blogs}
         renderItem={renderBlogCard}
         pagingEnabled
@@ -236,7 +245,7 @@ export default function StartScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   con: {
-    marginBottom:50
+    marginBottom: 50
   },
   container: {
     flex: 1,
@@ -282,44 +291,44 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 16,
     justifyContent: 'flex-end',
-    backgroundColor:'#ffffff82',
-    paddingHorizontal:20,
-    paddingVertical:5,
-    borderBottomLeftRadius:20
+    backgroundColor: '#ffffff82',
+    paddingHorizontal: 20,
+    paddingVertical: 5,
+    borderBottomLeftRadius: 20
   },
   ownerPhoto: {
     width: 40,
     height: 40,
     borderRadius: 20,
     marginRight: 8,
-    marginTop:10
+    marginTop: 10
   },
   blogImage: {
-    width: Dimensions.get('screen').width*0.85,
-    height: Dimensions.get('screen').height*0.4,
+    width: Dimensions.get('screen').width * 0.85,
+    height: Dimensions.get('screen').height * 0.4,
     marginBottom: 20,
     borderRadius: 20,
-    marginHorizontal:40,
+    marginHorizontal: 40,
     alignItems: 'flex-end',
     // borderBottomLeftRadius: 20,
     // borderBottomRightRadius: 20,
-    overflow: 'hidden',marginTop:10
+    overflow: 'hidden', marginTop: 10
   },
   ownerName: {
     fontSize: 16,
     fontWeight: 'bold',
     marginRight: 10,
-    color:'#070707'
+    color: '#070707'
   },
-  blog_title:{
-    position:'absolute',
-    bottom:0,
+  blog_title: {
+    position: 'absolute',
+    bottom: 0,
 
-   
-    width:'100%',
-    padding:10,
-  backgroundColor:'#ffffff69',
-  
+
+    width: '100%',
+    padding: 10,
+    backgroundColor: '#ffffff69',
+
   }
-  
+
 });

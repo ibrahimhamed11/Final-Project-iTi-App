@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TextInput, FlatList, Image, Button, ScrollView, TouchableOpacity, SafeAreaView, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, TextInput, FlatList, Image, Button, ScrollView, TouchableOpacity, SafeAreaView, Dimensions, ActivityIndicator } from 'react-native';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AsyncStorage } from 'react-native';
@@ -48,6 +48,23 @@ import * as Font from 'expo-font';
 
 export default function App() {
 
+  // get role
+  const [role, setRole] = useState(null); // Initialize role with null
+  // const [HeaderColor, setHeaderColor] = useState(''); // Initialize role with null
+  const getRole = async () => { 
+    try {
+    const storedRole = await AsyncStorage.getItem('role');
+      console.log('The role: ', storedRole);
+      console.log('The role before: ', storedRole);
+
+      setRole(storedRole); // Set the retrieved role  in the state
+      console.log('The role aFRTEE: ', storedRole);
+        
+    } catch (error) {
+      console.log('Error retrieving role:', error);
+    }
+  };
+
 
   //Font
   const loadFont = async () => {
@@ -57,12 +74,14 @@ export default function App() {
     setIsFontLoaded(true);
   };
 
+
+
   useEffect(() => {
     loadFont().then(() => setIsFontLoaded(true));
   }, []);
 
 
-// to show on boarding pages
+  // to show on boarding pages
 
   useEffect(async () => {
     const appData = await AsyncStorage.getItem('isAppFirstLaunched');
@@ -72,6 +91,8 @@ export default function App() {
     } else {
       setIsAppFirstLaunched(false);
     }
+    getRole()
+
   }, []);
 
 
@@ -85,17 +106,17 @@ export default function App() {
   function DrawerNavigator() {
     const nav = useNavigation()
 
-        // Notification icon 
-
+    // Notification icon 
+console.log(role,"lllllllllllllll")
     const NotificationIcon = ({ notification }) => (
       <View style={{ marginRight: 30 }}>
         <TouchableOpacity onPress={() => nav.navigate("الاشعارات")}>
-          <FontAwesome name="bell" size={20} color="#f7f6f1f3" />
+          <FontAwesome name="bell" size={20} color={'#000'} />
           {notification > 0 && (
-            <View
+            <View   
               style={{
-                position: 'absolute',
-                top: -8,
+                position: 'absolute', 
+                top: -8, 
                 right: 10,
                 backgroundColor: 'red',
                 borderRadius: 10,
@@ -105,7 +126,7 @@ export default function App() {
                 alignItems: 'center',
               }}
             >
-              <Text style={{ color: 'white', fontSize: 15 }}>{notification}</Text>
+              {/* <Text style={{ color: 'white', fontSize: 15 }}>{notification}</Text> */}
 
             </View>
           )}
@@ -123,7 +144,7 @@ export default function App() {
         }}
       >
         <Drawer.Screen
-        
+
           name="الرئيسية"
           component={TabBar}
           options={{
@@ -133,23 +154,22 @@ export default function App() {
             headerShown: true,
             headerTitle: () => (
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <FontAwesome name="" size={20} color="white" style={{ marginRight: '80%' }} />
+                <FontAwesome name="" size={20} color="#75000ea3" style={{ marginRight: '80%' }} />
                 <Text style={{ color: 'white', fontSize: 18 }}></Text>
               </View>
             ),
             headerStyle: {
-              backgroundColor: '#76005f',
-              height: Dimensions.get('screen').height * 0.09,
+              backgroundColor: '#ffffff',
+              height: Dimensions.get('screen').height * 0.1,
               // elevation:5
 
-            },
-            headerTintColor: '#ffffff',
-            drawerActiveBackgroundColor:'#76005e50' ,
-            drawerActiveTintColor:'#ffffff',
-            
+            }, 
+            headerTintColor: '#000',
+            drawerActiveBackgroundColor: '#750014a7',
+            drawerActiveTintColor: '#ffffff',
+
           }}
         />
-
 
 
         <Drawer.Screen
@@ -159,11 +179,11 @@ export default function App() {
             drawerIcon: ({ color, size }) => (
               <FontAwesome name="phone" color={color} size={size} style={{ marginRight: 10 }} />
             ),
-            drawerActiveBackgroundColor:'#76005e50' ,
-            drawerActiveTintColor:'#ffffff',
+            drawerActiveBackgroundColor: '#75002196',
+            drawerActiveTintColor: '#ffffff',
             headerShown: true,
             headerStyle: {
-              backgroundColor: '#76005f',
+              backgroundColor:  '#ffffff',
             },
             headerTintColor: 'white',
           }}
@@ -180,15 +200,14 @@ export default function App() {
             ),
             headerShown: true,
             headerStyle: {
-              backgroundColor: '#76005f',
-            },
-            headerTintColor: 'white',
-            drawerActiveBackgroundColor:'#76005e50' ,
-            drawerActiveTintColor:'#ffffff',
-            
+              backgroundColor:  '#ffffff',
+            }, 
+            headerTintColor: '#000000',
+            drawerActiveBackgroundColor: '#75002196',
+            drawerActiveTintColor: '#ffffff',
+
           })}
         />
-
 
 
         <Drawer.Screen
@@ -203,9 +222,9 @@ export default function App() {
               backgroundColor: '#76005f',
             },
             headerTintColor: 'white',
-            drawerActiveBackgroundColor:'#76005e50' ,
-            drawerActiveTintColor:'#ffffff',
-            
+            drawerActiveBackgroundColor: '#75002196',
+            drawerActiveTintColor: '#ffffff',
+
           })}
         />
 
@@ -221,9 +240,9 @@ export default function App() {
               backgroundColor: '#76005f',
             },
             headerTintColor: 'white',
-            drawerActiveBackgroundColor:'#76005e50' ,
-            drawerActiveTintColor:'#ffffff',
-            
+            drawerActiveBackgroundColor: '#76005e50',
+            drawerActiveTintColor: '#ffffff',
+
           })}
         />
 
@@ -232,10 +251,12 @@ export default function App() {
 
     );
   }
-  
+
 
 
   return (
+
+
     <Provider store={Store}>
 
 
@@ -273,9 +294,11 @@ export default function App() {
             component={ProductDetails}
             options={({ navigation }) => ({
               headerShown: true,
+
               headerStyle: {
                 backgroundColor: '#76005f',
               },
+
               headerTitle: '',
               headerLeft: () => (
                 <TouchableOpacity
@@ -285,7 +308,7 @@ export default function App() {
                   <Ionicons name="arrow-back" size={24} color="white" />
                 </TouchableOpacity>
               ),
-              
+
             })}
           />
         </Stack.Navigator>

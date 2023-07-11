@@ -8,6 +8,8 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'; // Import t
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../Redux/Slices/ProductSlice';
 import { Alert, Modal, Pressable } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import StarRating from '../Components/Rate';
 import ip from '../ipConfig'
 
@@ -15,26 +17,40 @@ import ip from '../ipConfig'
 
 const ProductCard = ({ product }) => {
   const [Rate, setRate] = useState(0);
-
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const [role, setRole] = useState(null); // Initialize role with null
+  const getRole = async () => {
+    try {
+      const storedRole = await AsyncStorage.getItem('role');
+      console.log('The role: ', storedRole);
+      console.log('The role before: ', storedRole);
 
-  
+      setRole(storedRole); // Set the retrieved role  in the state
+      console.log('The role aFRTEE: ', storedRole);
+      if (role == 'seller') {
+        setColour('#761700')
+      }
+    } catch (error) {
+      console.log('Error retrieving role:', error);
+    }
+  };
 
-    useEffect(() => {
-      axios.get(`${ip}/products/${product._id}/getrate`) // get product rate
+
+
+  useEffect(() => {
+    axios.get(`${ip}/products/${product._id}/getrate`) // get product rate
       .then((response) => {
         console.log(response.data)
         setRate(response.data.averageRate); // Update the response handling
-
+        getRole()
       })
       .catch((error) => {
         console.error(error);
       });
-        // calculateAverageRate()
-  
-    }, []);
+    // calculateAverageRate()
+  }, []);
   const handleAddToCart = () => {
 
     dispatch(addToCart(product));
@@ -74,27 +90,33 @@ const ProductCard = ({ product }) => {
 
 
 
-<TouchableOpacity onPress={() => navigation.navigate('ProductDetails', { product,Rate })}>
-      <Card style={styles.card} >
-        <Card.Cover style={styles.image} source={{ uri: `${ip}/${product?.image}` }} />
-        <Card.Content style={styles.content}>
-          <View style={styles.bottomContainer}>
-            <View style={styles.ratingContainer}>
-              <StarRating rating={Rate} />
-            </View>
-            <Text style={styles.title}>{product?.name}</Text>
-          </View>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={styles.price}>{product?.price}L.E</Text>
-            <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
-              <View style={styles.buttonContent}>
-                <FontAwesomeIcon name="shopping-cart" size={16} style={{ marginRight: 5, color: 'white' }} />
-                <Text style={[styles.addToCartButtonText, { fontFamily: 'Droid' }]}>اضف الي السله</Text>
+      <TouchableOpacity onPress={() => navigation.navigate('ProductDetails', { product, Rate })}>
+        <Card style={styles.card} >
+          <Card.Cover style={styles.image} source={{ uri: `${ip}/${product?.image}` }} />
+          <Card.Content style={styles.content}>
+            <View style={styles.bottomContainer}>
+              <View style={styles.ratingContainer}>
+                <StarRating rating={Rate} />
               </View>
-            </TouchableOpacity>
-          </View>
-        </Card.Content>
-      </Card>
+              <Text style={styles.title}>{product?.name}</Text>
+            </View>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={styles.price}>{product?.price}L.E</Text>
+             
+              {role=='mother'?<TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
+                <View style={styles.buttonContent}>
+                  <FontAwesomeIcon name="shopping-cart" size={16} style={{ marginRight: 5, color: 'white' }} />
+                  <Text style={[styles.addToCartButtonText, { fontFamily: 'Droid' }]}>اضف الي السله</Text>
+                </View>
+              </TouchableOpacity>:<TouchableOpacity style={styles.seeMoreButton} onPress={handleAddToCart}>
+                <View style={styles.buttonContent}>
+                  <FontAwesomeIcon name="info" size={16} style={{ marginRight: 5, color: 'white' }} />
+                  <Text style={[styles.addToCartButtonText, { fontFamily: 'Droid' }]}> تفاصيل </Text>
+                </View>
+              </TouchableOpacity>}
+            </View>
+          </Card.Content>
+        </Card>
       </TouchableOpacity>
     </>
   );
@@ -110,21 +132,38 @@ const CardScreen = () => {
 
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  // get role
+  const [role, setRole] = useState(null); // Initialize role with null
+  const [colour, setColour] = useState('')
+  const getRole = async () => {
+    try {
+      const storedRole = await AsyncStorage.getItem('role');
+      console.log('The role: ', storedRole);
+      console.log('The role before: ', storedRole);
 
- 
+      setRole(storedRole); // Set the retrieved role  in the state
+      console.log('The role aFRTEE: ', storedRole);
+      if (role == 'seller') {
+        setColour('#761700')
+      }
+    } catch (error) {
+      console.log('Error retrieving role:', error);
+    }
+  };
+
   useEffect(() => {
     axios
       .get(`${ip}/products/getAll`) // Update the API endpoint
       .then((response) => {
         console.log(response.data)
         setProducts(response.data); // Update the response handling
- 
+
       })
       .catch((error) => {
         console.error(error);
       });
-      // calculateAverageRate()
-
+    // calculateAverageRate()
+    getRole()
   }, []);
 
 
@@ -171,48 +210,65 @@ const CardScreen = () => {
 
   return (
     <View style={styles.container}>
-      <View style={{ marginBottom: 5 }}>
-        <Image
-          source={require('../assets/images/nav.jpg')}
-          style={styles.mainImage} />
-        <View style={{ position: 'absolute', top: 0, right: 0, paddingTop: 20, paddingRight: 10 ,alignItems:'flex-end'}}>
-          <Text style={{ fontSize: 24, fontWeight: 600, color: '#f8e7f4' }}>
+      <View style={{ marginBottom: 30 }}>
+
+        {role == 'mother' ? <Image
+          source={require('../assets/images/BabyProducts.png')}
+          style={styles.mainImage} /> : <Image
+          source={require('../assets/images/Babyshoes.png')}
+          style={styles.mainImage} />}
+        <View style={{ position: 'absolute', top: 0, right: 0, paddingTop: 20, paddingRight: 10, alignItems: 'flex-end' }}>
+          {role == 'mother' && <Text style={{ fontSize: 24, fontWeight: 600, color: '#322530'}}>
             اهلا بكم فى متجرنا للتسوق
-          </Text>
-          {/* <Text style={{ fontSize: 18, fontWeight: 600, color: '#e0e0e0', marginVertical: 10 }}>
-            سارة محمد احمد
-          </Text> */}
-          <Searchbar
-            placeholder="ابحث عن المنتج"
+          </Text>}
+
+          {role == 'mother' ? <Searchbar
+            placeholder="ابحث عن منتج"
             onChangeText={handleSearch}
             value={searchQuery}
-            style={{ backgroundColor: '#f8e7f4', marginVertical: 15, width: Dimensions.get('screen').width * 0.88, height:50 }}
-          />
+            placeholderTextColor={'#fff'}
+            iconColor='#fff'
+            inputStyle={{ color: '#fff' }}
+            style={{ backgroundColor: '#76005e66', marginVertical: 15, width: Dimensions.get('screen').width * 0.88, height: 50 }}
+          /> : <Searchbar
+            placeholder="ابحث عن مـنتـج"
+            onChangeText={handleSearch}
+            value={searchQuery}
+            style={{ backgroundColor: '#76180048', marginVertical: 15, width: Dimensions.get('screen').width * 0.88, height: 50, color: '#fff' }}
+            placeholderTextColor={'#fff'}
+            iconColor='#fff'
+            inputStyle={{ color: '#fff' }}
+          />}
         </View>
-        <View style={{ marginTop: 10, justifyContent: 'center' }} >
-          <ScrollView
+        <View style={{ marginTop: 10, justifyContent: 'center', position: 'absolute', top: 150 }} >
+          {role == 'mother' ? <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
           >
-            <Chip style={styles.chips} selectedColor='grey' textStyle={{ fontSize: 18, padding: 1, color: '#76005f' }} onPress={() => handleCategoryFilter('all')}>all</Chip>
-            <Chip style={styles.chips} textStyle={{ fontSize: 14, padding: 1, color: '#76005f' }} onPress={() => handleCategoryFilter('clothes')}>clothes</Chip>
-            <Chip style={styles.chips} textStyle={{ fontSize: 14, padding: 1, color: '#76005f' }} onPress={() => handleCategoryFilter('shoes')}>shoes</Chip>
-            <Chip style={styles.chips} textStyle={{ fontSize: 14, padding: 1, color: '#76005f' }} onPress={() => handleCategoryFilter('food')}>food</Chip>
-            <Chip style={styles.chips} textStyle={{ fontSize: 14, padding: 1, color: '#76005f' }} onPress={() => handleCategoryFilter('babycare')}>babycare</Chip>
+
+            <Chip style={[styles.chips, { backgroundColor: '#f8e7f4', }]} selectedColor='grey' textStyle={{ fontSize: 18, padding: 1, color: '#76005f' }} onPress={() => handleCategoryFilter('all')}>all</Chip>
+            <Chip style={[styles.chips, { backgroundColor: '#f8e7f4', }]} textStyle={{ fontSize: 14, padding: 1, color: '#76005f' }} onPress={() => handleCategoryFilter('clothes')}>clothes</Chip>
+            <Chip style={[styles.chips, { backgroundColor: '#f8e7f4', }]} textStyle={{ fontSize: 14, padding: 1, color: '#76005f' }} onPress={() => handleCategoryFilter('shoes')}>shoes</Chip>
+            <Chip style={[styles.chips, { backgroundColor: '#f8e7f4', }]} textStyle={{ fontSize: 14, padding: 1, color: '#76005f' }} onPress={() => handleCategoryFilter('food')}>food</Chip>
+            <Chip style={[styles.chips, { backgroundColor: '#f8e7f4', }]} textStyle={{ fontSize: 14, padding: 1, color: '#76005f' }} onPress={() => handleCategoryFilter('babycare')}>babycare</Chip>
+          </ScrollView> : <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+          >
+
+            <Chip style={[styles.chips, { backgroundColor: '#76180045', }]} selectedColor='grey' textStyle={{ fontSize: 18, padding: 1, color: '#761700' }} onPress={() => handleCategoryFilter('all')}>all</Chip>
+            <Chip style={[styles.chips, { backgroundColor: '#76180045', }]} textStyle={{ fontSize: 14, padding: 1, color: '#761700' }} onPress={() => handleCategoryFilter('clothes')}>clothes</Chip>
+            <Chip style={[styles.chips, { backgroundColor: '#76180045', }]} textStyle={{ fontSize: 14, padding: 1, color: '#761700' }} onPress={() => handleCategoryFilter('shoes')}>shoes</Chip>
+            <Chip style={[styles.chips, { backgroundColor: '#76180045', }]} textStyle={{ fontSize: 14, padding: 1, color: '#761700' }} onPress={() => handleCategoryFilter('food')}>food</Chip>
+            <Chip style={[styles.chips, { backgroundColor: '#76180045', }]} textStyle={{ fontSize: 14, padding: 1, color: '#761700' }} onPress={() => handleCategoryFilter('babycare')}>babycare</Chip>
           </ScrollView>
+          }
         </View>
       </View>
       <ScrollView
         showsVerticalScrollIndicator={false}
       >
-        {/* <FlatList
-          contentContainerStyle={styles.scrollViewContainer}
-          data={products}
-          renderItem={renderCard}
-          keyExtractor={(item, index) => index}
-          numColumns={2}
-        />
-         */}
+
 
         <FlatList
           contentContainerStyle={styles.scrollViewContainer}
@@ -230,7 +286,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    marginBottom:40
+    marginBottom: 40
   },
   scrollViewContainer: {
     flexGrow: 1,
@@ -252,26 +308,26 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   image: {
-    position:'absolute',
-    top:0,
-    right:0,
-    width:'100%',
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    width: '100%',
     height: 250,
     // borderTopLeftRadius: 10,
     // borderTopRightRadius: 10,
     // resizeMode: 'cover'
   },
   content: {
-    position:'absolute',
-    top:140,
-    right:0,
-    width:'100%',
+    position: 'absolute',
+    top: 140,
+    right: 0,
+    width: '100%',
     paddingHorizontal: 10,
     paddingVertical: 10,
     paddingBottom: 10,
-    backgroundColor:'#f4eeee7c',
-    borderBottomLeftRadius:10,
-    borderBottomRightRadius:10
+    backgroundColor: '#f4eeee7c',
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10
   },
   title: {
     width: '60%',
@@ -282,7 +338,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     textAlign: 'right'
   },
- 
+
   bottomContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -320,6 +376,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 0,
+    direction: 'rtl',
+  },
+  seeMoreButton:{
+    backgroundColor: '#761700',
+    borderRadius: 5,
+    marginTop: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 10,
     direction: 'rtl',
   },
   buttonContent: {
@@ -385,7 +450,7 @@ const styles = StyleSheet.create({
   },
   buttonClose: {
     backgroundColor: '#76005f',
-    marginTop:10
+    marginTop: 10
   },
   textStyle: {
     color: 'white',
@@ -394,16 +459,19 @@ const styles = StyleSheet.create({
   },
   chips: {
     marginHorizontal: 3,
-    backgroundColor: '#f8e7f4',
+
     flexDirection: 'column'
   },
   // nav style
   mainImage: {
     width: Dimensions.get('screen').width,
-    height: Dimensions.get('screen').height * 0.23,
+    height: Dimensions.get('screen').height * 0.25,
     position: 'relative',
     borderBottomLeftRadius: 90,
     paddingBottom: 10,
+    borderColor: '#000',
+    // borderWidth:1
+
   }
 });
 

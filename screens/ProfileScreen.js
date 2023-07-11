@@ -18,8 +18,10 @@ import DatePicker from 'react-native-datepicker';
 
 
 
-const ProfileScreen = () => {
+const ProfileScreen = ({}) => {
+  // const {baby}=route.params
   useEffect(() => {
+    // console.log(baby)
     const loadFont = async () => {
       await Font.loadAsync({
         Droid: require('../assets/fonts/Droid.ttf'),
@@ -36,15 +38,9 @@ const ProfileScreen = () => {
   const [name, setBabyName] = useState('');
   const [babyAge, setBabyAge] = useState(new Date());
   const [motherData, setMotherData] = useState({
-    name: '',
-    email: '',
-    age: 0,
-    phone: '',
-    image: '',
-  babyInfo: [] 
   });
 
-
+ let motherId;
   // Function to retrieve the ID from AsyncStorage
   const getUserId = async () => {
     try {
@@ -112,13 +108,15 @@ const ProfileScreen = () => {
 
   //Back End Connection
   useEffect(() => {
+     motherId =  getUserId();
+
     fetchMotherDetails()
       .then((data) => {
         setMotherData(data);
        
       })
       .catch((error) => {
-        console.error('Error fetching seller details:', error);
+        console.error('Error fetching mother details:', error);
       });
   }, []);
 
@@ -139,10 +137,10 @@ const ProfileScreen = () => {
         return motherData;
 
       } else {
-        throw new Error('Failed to fetch seller details');
+        throw new Error('Failed to fetch mother details');
       }
     } catch (error) {
-      throw new Error('Error fetching seller details: ' + error.message);
+      throw new Error('Error fetching mother details: ' + error.message);
     }
   };
 
@@ -198,8 +196,8 @@ const ProfileScreen = () => {
       const userId = await getUserId();
 
       const response = await axios.get(`${ip}/user/${userId}`);
-      console.log(response.data.data.babyInfo, "dataaaaaaaaaaaaaaaaaaaaa");
-      setBabies(response.data.data.babyInfo);
+      console.log(response.data.data.profile.babyInfo, "dataaaaaaaaaaaaaaaaaaaaa");
+      setBabies(response.data.data.profile.babyInfo);
     } catch (error) {
       console.error('Error fetching babies:', error);
     }
@@ -284,7 +282,7 @@ const ProfileScreen = () => {
                         <Text style={styles.modalText}>Email: {motherData.email}</Text>
                         <Text style={styles.modalText}>Age: {motherData.age}</Text>
                         <Text style={styles.modalText}>Phone: {motherData.phone}</Text>
-                        <Text style={styles.modalText}>Phone: {motherData.profile.babyinfo}</Text>
+                        <Text style={styles.modalText}>Phone: {motherData.profile.profile.babyInfo}</Text>
                     </View>
                 </Modal>
           Start Begain Mother's baby Section */}
@@ -336,7 +334,7 @@ const ProfileScreen = () => {
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
               <TouchableRipple
-                onPress={() => navigation.navigate('Vaccinations')}
+                onPress={() => navigation.navigate('Vaccinations', {motherData})}
                 rippleColor="rgba(0, 0, 0, .32)"
               >
                 <Image source={require('../assets/homeimages/vaccine.png')}

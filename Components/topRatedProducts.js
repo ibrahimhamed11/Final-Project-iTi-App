@@ -13,6 +13,7 @@ const TopRatedProducts = ({ product }) => {
   const dispatch = useDispatch();
   const [modalVisible, setModalVisible] = useState(false);
   const [Rate, setRate] = useState(0);
+  const [topProducts, setTopProducts] = useState([]);
 
   const handleAddToCart = () => {
 
@@ -25,7 +26,11 @@ const TopRatedProducts = ({ product }) => {
     .then((response) => {
       console.log(response.data)
       setRate(response.data.averageRate); // Update the response handling
-
+      // const topProducts = product.filter((product) => {
+      //   if (product.rating >=4 && product.rating <=5){
+      //       return true;
+      // }})
+      // // setTopProducts(topProducts)
     })
     .catch((error) => {
       console.error(error);
@@ -34,6 +39,11 @@ const TopRatedProducts = ({ product }) => {
 
   }, []);
   const navigation = useNavigation();
+
+
+  if (Rate<=4){
+    return ""
+  }
   return (
 
     //modal----------------------------------------------------------------------------------------------------------

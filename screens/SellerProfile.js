@@ -385,7 +385,7 @@ const SellerProfileScreen = () => {
                     </View>
                     <View style={{ marginTop: 10, alignSelf: 'center' }}>
                         <TouchableOpacity onPress={toggleModal} style={styles.profileDetailsButton}>
-                            <FontAwesome name="user-circle" size={20} color="#643f17" style={styles.icon} />
+                            <FontAwesome name="user-circle" size={20} color="#7618006d" style={styles.icon} />
                             <Text style={styles.buttonText}>معلومات حسابك</Text>
                         </TouchableOpacity>
                     </View>
@@ -395,19 +395,19 @@ const SellerProfileScreen = () => {
 
                 <View style={styles.statsContainer}>
                     <View style={styles.statsItem}>
-                        <FontAwesome name="shopping-bag" size={30} color="#cc8e489f" />
+                        <FontAwesome name="shopping-bag" size={30} color="#7618006d" />
                         <Text style={styles.statsLabel}> طلبات معلقه</Text>
                         <Text style={styles.statsNumber}>
                             {orders.filter((order) => order.delStatus === 'pending').length}
                         </Text>
                     </View>
                     <View style={styles.statsItem}>
-                        <FontAwesome name="shopping-cart" size={30} color="#cc8e489f" />
+                        <FontAwesome name="shopping-cart" size={30} color="#7618006d" />
                         <Text style={styles.statsLabel}>اجمالي الطلبات</Text>
                         <Text style={styles.statsNumber}>{orders.length}</Text>
                     </View>
                     <View style={styles.statsItem}>
-                        <FontAwesome name="check-circle" size={30} color="#cc8e489f" />
+                        <FontAwesome name="check-circle" size={30} color="#7618006d" />
                         <Text style={styles.statsLabel}> طلبات مكتمله</Text>
                         <Text style={styles.statsNumber}>
                             {orders.filter((order) => order.delStatus === 'delivered').length}
@@ -530,7 +530,7 @@ const styles = StyleSheet.create({
     userName: {
         fontSize: 18,
         fontWeight: 600,
-        color: '#522e059f',
+        color: '#761700',
     },
     userEmail: {
         fontSize: 13,
@@ -592,7 +592,7 @@ const styles = StyleSheet.create({
     statsLabel: {
         marginTop: 5,
         fontSize: 14,
-        color: '#513905',
+        color: '#761700',
         fontFamily: 'Droid',
 
     },
@@ -613,10 +613,10 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     ordersButton: {
-        backgroundColor: '#cc8e48b8',
+        backgroundColor: '#761700',
     },
     productsButton: {
-        backgroundColor: '#6f2f04ab',
+        backgroundColor: '#76180084',
     },
     orderList: {
         // flex: 1,

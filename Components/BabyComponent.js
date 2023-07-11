@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, Image ,TouchableOpacity} from 'react-native'
 import React, { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 let num =0
 const BabyComponent = ({ item }) => {
@@ -20,12 +21,19 @@ const BabyComponent = ({ item }) => {
         }
     }, [])
 
+
+    // set babyinfo in storage
+    const handleSetBaby=async(baby)=>{
+        const babyInfo=JSON.stringify(baby)
+        await AsyncStorage.setItem('baby', babyInfo);
+
+    }
     // send baby id
     const navigation = useNavigation();
 
 
         return (
-            <TouchableOpacity onPress={() => navigation.navigate('ProductDetails', { product,Rate })}>
+            <TouchableOpacity onPress={() => {handleSetBaby(item)}}>
         <View style={styles.container}>
 
             <View style={styles.box}>

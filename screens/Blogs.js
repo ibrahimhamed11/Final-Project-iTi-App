@@ -1,121 +1,76 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { View, Text, StyleSheet, Image, I18nManager, FlatList, TextInput, TouchableOpacity, ImageBackground, Dimensions } from 'react-native';
 import { DataTable, Button as PaperButton, Modal } from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
 import Header from '../Components/Header';
 import Paragraph from '../Components/Paragraph';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ScrollView } from 'react-native-gesture-handler';
 import axios from 'axios';
 import ip from '../ipConfig'
 
+
 export default function Blogs({ navigation }) {
   I18nManager.allowRTL(true); // Enable Right-to-Left layout for Arabic content
   // get all blogs
-  // useEffect(() => {
-  //   showBlogs();
-  // }, []);
+  useEffect(() => {
+    // setTimeout(() => {
+    //   setIsLoading(false);
+    //   }, 5000);
+    showBlogs();
+    // getAuthor();
+  }, []);
 
-  const [blogs, setBlogs] = useState([
+  const [blogs, setBlogs] = useState([]);
+  const [author, setAuthor] = useState('');
+  // const [ID, setUserId] = useState('');
+  const [authorimage, setAuthorImage] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
-    {
-      id: 1,
-      title: 'طعام صحي لطفلك',
-      content: " مع نمو طفلك إلى طفل صغير ، ينتقل إلى مرحلة من النمو البدني والعقلي السريع ويحتاج إلى نظام غذائي متوازن لضمان نمو وتطور صحي. تعرّفي أكثر على الغذاء الصحي للاطفال والأطعمة التي يجب تجنبها.  ",
-      image: require('../assets/images/feeding_baby.jpg'), // Replace with the actual path to the blog image
-      owner: {
-        photo: require('../assets/images/babies.jpg'),
-        name: 'Ibrahim Hamed',
-      },
-      comments: [
-        {
-          id: 2,
-          user: 'جين سميث',
-          photo: require('../assets/images/babies.jpg'), // Replace with the actual path to the owner's photo
-          comment: 'مدونة رائعة!',
-        },
-        {
-          id: 3,
-          user: 'مايكل جونسون',
-          photo: require('../assets/images/babies.jpg'), // Replace with the actual path to the owner's photo
-          comment: 'استمتعت بقراءة هذا.',
-        },
-      ],
-    },
-    {
-      id: 4,
-      title: 'عنوان المدونة 2',
-      content: 'هذا هو محتوى المدونة 2.',
-      image: require('../assets/images/babies.jpg'), // Replace with the actual path to the blog image
-      owner: {
-        name: 'جين سميث',
-        photo: require('../assets/images/babies.jpg'), // Replace with the actual path to the owner's photo
-      },
-      comments: [
-        {
-          id: 1,
-          user: 'جون دو',
-          photo: require('../assets/images/babies.jpg'), // Replace with the actual path to the owner's photo
-          comment: 'مكتوب بشكل جيد!',
-        },
-      ],
-    },
-    // Add more blog objects as needed
-    {
-      id: 5,
-      title: 'الالعاب المناسبة لطفلك',
-      content: " الألعاب من أهم الوسائل التربوية للمربي وهي في الوقت نفسه من أهم الأولويات عند الطفل وتُعد من وسائل النمو" ,
-         image: require('../assets/images/babies.jpg'), // Replace with the actual path to the blog image
-      owner: {
-        name: 'جين سميث',
-        photo: require('../assets/images/babies.jpg'), // Replace with the actual path to the owner's photo
-      },
-      comments: [
-        {
-          id: 1,
-          user: 'جون دو',
-          photo: require('../assets/images/babies.jpg'), // Replace with the actual path to the owner's photo
-          comment: 'مكتوب بشكل جيد!',
-        },
-      ],
-    },
+  let Authorimage = ""
+  let Author = ""
 
-    {
-      id: 6,
-      title: 'عنوان المدونة 2',
-      content: 'هذا هو محتوى المدونة 2.',
-      image: require('../assets/log.png'), // Replace with the actual path to the blog image
-      owner: {
-        name: 'جين سميث',
-        photo: require('../assets/log.png'), // Replace with the actual path to the owner's photo
-      },
-      comments: [
-        {
-          id: 1,
-          user: 'جون دو',
-          photo: require('../assets/log.png'), // Replace with the actual path to the owner's photo
-          comment: 'مكتوب بشكل جيد!',
-        },
-      ],
-    },
+  const showBlogs = async () => {
+    try {
+      const response = await axios.get(`${ip}/blogs/get`);
+      setBlogs(response.data);
+      // blogs.map(async (blog) => {
+      //   const authorId = blog.user;
+      //   getAuthor(authorId)
+        // const authorResponse = await axios.get(`${ip}/users/${authorId}`);
+        // const authorData = authorResponse.data;
+        // console.log(authorResponse.data)
+        // console.log( blog.user, "dareee");
+        // return authorData;
+      // });
 
-  ]);
-  // const showBlogs = async () => {
+    } catch (error) {
+      console.error('Error fetching blogs:', error);
+    }
+  };
+
+
+  // get author data
+  // const getAuthor = async (ID) => {
   //   try {
-  //     const response = await axios.get(`${ip}/blogs/get`);
-  //     setBlogs(response.data);
-  //     // console.log(response.data);
+  //     const response = await axios.get(`${ip}/user/${ID}`);
+  //     console.log(ID, "didididiidididid");
+  //     console.log(response.data, "llllllll");
+  //     setAuthor(response.data.data.name);
+  //     setAuthorImage(response.data.data.image);
+  //     Authorimage = authorimage
+  //     Author = author
   //   } catch (error) {
-  //     console.error('Error fetching blogs:', error);
+  //     console.error('Error fetching author data:', error, userId);
   //   }
   // };
-
   // add post modal
   const [isModalVisible, setModalVisible] = useState(false);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [selectedImage, setSelectedImage] = useState(null);
- 
+
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
@@ -131,12 +86,24 @@ export default function Blogs({ navigation }) {
       setSelectedImage(imageResult.uri);
     }
   };
+  // Function to retrieve the ID from AsyncStorage
+  const getUserId = async () => {
+    try {
+      const userId = await AsyncStorage.getItem('userId');
+      return userId;
+    } catch (error) {
+      console.log('Error retrieving ID:', error);
+      return null;
+    }
+  };
 
   const handleAddPost = async () => {
     try {
+      const user = await getUserId();
       const formData = new FormData();
       formData.append('title', title);
       formData.append('content', content);
+      formData.append('author', user);
       formData.append('image', {
         uri: selectedImage,
         type: 'image/jpeg',
@@ -145,6 +112,8 @@ export default function Blogs({ navigation }) {
 
       const response = await axios.post(`${ip}/blogs/add`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
+
+
       });
 
       // console.log(' added:', response.data);
@@ -153,7 +122,9 @@ export default function Blogs({ navigation }) {
       setTitle('');
       setContent('');
       setSelectedImage(null);
-
+      // close modal and get all blogs 
+      toggleModal();
+      showBlogs();
     } catch (error) {
       console.error(error);
     }
@@ -188,17 +159,36 @@ export default function Blogs({ navigation }) {
     });
   };
 
-  const renderBlogCard = ({ item }) => {
-    const { id, title, content, image, owner, comments, commentInput } = item;
+ // get author data
+ const getAuthor = async (ID) => {
+  try {
+    const response = await axios.get(`${ip}/user/${ID}`);
+    console.log(ID, "didididiidididid");
+    console.log(response.data, "llllllll");
+    console.log(response.data.data.name);
+    // setAuthorImage(response.data.data.image);
+     Authorimage = response.data.data.image
 
+     Author = response.data.data.name
+  } catch (error) {
+    console.error('Error fetching author data:', error, userId);
+  }
+};
+
+  const renderBlogCard = ({ item }) => {
+    const { _id, user, title, content, image, comments, commentInput } = item;
+  
+    getAuthor(user)
+    console.log(Author , "Authorrrrrrrrrrrrrrr/rr")
+    console.log(Authorimage, "Authorrrrrrrrrrrrrrr/rr")
     return (
 
       <View style={styles.blogCard}>
         <View style={styles.ownerContainer}>
-          <Paragraph style={styles.ownerName}>{owner.name}</Paragraph>
-          <Image source={owner.photo} style={styles.ownerPhoto} />
+          <Paragraph style={styles.ownerName}>{Author}</Paragraph>
+          <Image source={{ uri: `${ip}/${Authorimage}` }} style={styles.ownerPhoto} />
         </View>
-        <ImageBackground source={image} style={styles.blogImage}>
+        <ImageBackground source={{ uri: `${ip}/${image}` }} style={styles.blogImage}>
           <Header>{title}</Header>
 
         </ImageBackground>
@@ -220,7 +210,7 @@ export default function Blogs({ navigation }) {
               justifyContent: 'space-between',
             }}
             renderItem={({ item }) => (
-              <View style={styles.commentContainer} key={item.id}>
+              <View style={styles.commentContainer} key={item._id}>
                 {/* <TouchableOpacity onPress={() => handleAddComment(id)} style={styles.deleteButton}>
                 <FontAwesomeIcon name="trash" size={12}  />
               </TouchableOpacity> */}
@@ -231,7 +221,7 @@ export default function Blogs({ navigation }) {
                 <Image source={item.photo} style={styles.commentPhoto} />
               </View>
             )}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => item._id}
           />
 
           <View style={styles.addCommentContainer}>
@@ -240,7 +230,7 @@ export default function Blogs({ navigation }) {
                 style={styles.commentInput}
                 placeholder="أضف تعليقًا"
                 value={commentInput}
-                onChangeText={(text) => handleCommentChange(text, id)}
+                onChangeText={(text) => handleCommentChange(text, _id)}
               />
               <TouchableOpacity onPress={() => handleAddComment(id)} style={styles.addButton}>
                 <FontAwesomeIcon name="comment" size={20} color={'#ffffffb8'} />
@@ -253,7 +243,14 @@ export default function Blogs({ navigation }) {
       </View>
     );
   };
-
+  // // Render a loading state while waiting for the data
+  // if (isLoading) {
+  //   return (
+  //     <View style={styles.con}>
+  //       <Image style={{ width: 400, height: 400 }} source={require('../assets/loader.gif')} />
+  //     </View>
+  //   );
+  // }
   return (
     <>
       <ScrollView>
@@ -273,22 +270,17 @@ export default function Blogs({ navigation }) {
         <View
           style={styles.header_text}><Text style={{ fontSize: 25, color: '#76005f' }}>اهلا بكِ في المدونة</Text>
         </View>
-        <TouchableOpacity style={styles.header_button} onPress={toggleModal}>
+        <TouchableOpacity style={styles.header_button} onPress={toggleModal} >
           <Text style={{ fontSize: 18, color: '#fff' }}>اضيفي منشوراً</Text>
         </TouchableOpacity>
         <View style={styles.container}>
           <FlatList
             data={blogs}
             renderItem={renderBlogCard}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => item._id}
           />
         </View>
       </ScrollView>
-      <TouchableOpacity onPress={toggleModal} >
-        <View style={styles.floating_Button}>
-          <FontAwesomeIcon name="plus" size={26} color={'#fff'} />
-        </View>
-      </TouchableOpacity>
       <Modal visible={isModalVisible} onDismiss={toggleModal} contentContainerStyle={styles.modalContainer}>
 
         <View style={styles.modalContent}>
@@ -329,6 +321,11 @@ export default function Blogs({ navigation }) {
           </View>
         </View>
       </Modal>
+      <TouchableOpacity style={styles.floating_Button} onPress={toggleModal} >
+        <View >
+          <FontAwesomeIcon name="plus" size={26} color={'#fff'} />
+        </View>
+      </TouchableOpacity>
     </>
   );
 }
@@ -348,8 +345,8 @@ const styles = StyleSheet.create({
     height: Dimensions.get('screen').height * 0.3,
     borderBottomLeftRadius: 90,
     borderBottomRightRadius: 0,
-    borderBottomColor:'#76005f',
-    borderWidth:1
+    borderBottomColor: '#76005f',
+    borderWidth: 1
   },
   header_text: {
     position: 'absolute',
@@ -490,7 +487,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderColor: '#d862c1e5',
     borderStyle: 'solid',
-    borderWidth: 1
+    borderWidth: 1,
+    marginBottom: 100
   },
   modalContent: {
     alignItems: 'center',

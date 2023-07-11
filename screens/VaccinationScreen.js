@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useLayoutEffect } from 'react'
 import randomColor from 'randomcolor';
 import { View, StyleSheet, FlatList, ScrollView, Image, Text, Dimensions, TouchableOpacity, ImageBackground } from 'react-native'
 // import Icon from 'react-native-vector-icons/Ionicons'
 import { Checkbox, Divider } from 'react-native-paper';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import ip from '../ipConfig'
 
-const VaccinationScreen = ({ motherId }) => {
+const VaccinationScreen = ({ route }) => {
+    const motherId=route.params.motherData._id
     // set age averages 
     const [vaccinationAge, setvaccinationAge] = useState([
         { min: 0, max: 2, by: 'mo .' },
@@ -25,7 +28,23 @@ const VaccinationScreen = ({ motherId }) => {
 
     // make random colors to vaccine cards 
     const [itemColors, setItemColors] = useState([]);
+    const [baby, setBaby] = useState({});
+    // get baby
+    const getBaby = async () => {
+        const babyData = await AsyncStorage.getItem('baby');
+        console.log('babyData')
+        const data = JSON.parse(babyData)
+        console.log(data)
+        setBaby(data)
+        setArr(data.vaccination)
+        console.log(arr)
 
+    }
+
+
+    // useLayoutEffect(() => {
+    //     getBaby()
+    // }, []);
     useEffect(() => {
         const colors = [];
         for (let i = 0; i < arr.length; i++) {
@@ -33,47 +52,47 @@ const VaccinationScreen = ({ motherId }) => {
             colors.push(color);
         }
         setItemColors(colors);
+        getBaby()
+
     }, [arr]);
     // get vaccination data according to pressed age 
-    const [arr, setArr] = useState([
-        { name: 'جدرى', status: 'complete', date: '16 jun 2023' },
-        { name: 'جدرى', status: 'complete', date: '16 jun 2023' },
-        { name: 'جدرى', status: 'complete', date: '16 jun 2023' },
-        { name: 'جدرى', status: 'complete', date: '16 jun 2023' },]);
+    const [arr, setArr] = useState([]);
 
     const showVaccines = (min, max) => {
-        axios.get(`${ip}vaccination/user/${motherId}`, { min, max }).then(res => {
+        axios.get(`${ip}/vaccination/user/${motherId}`, { min, max }).then(res => {
 
             // console.log(res.data)
             setArr([...res.data.vaccinations]);
         }).catch(err => console.log(err));
     }
-    const [status,setStatus]=useState('completed')
+    const [status, setStatus] = useState(false)
     const toggleStatus = (index) => {
-        if(status=='completed')
-        setStatus('uncompleted');
-        else 
-        setStatus('completed');
+        if (status == false)
+            setStatus(true);
+        else
+            setStatus(false);
         handleCompletedVaccine(index)
+        console.log(index)
 
-      };
+    };
     const handleCompletedVaccine = (index) => {
         const updatedVaccinations = [...arr];
         updatedVaccinations[index].status = status;
-       
-        setArr(updatedVaccinations);
-    
-        axios.put(`${ip}vaccination/${updatedVaccinations[index]._id}`,{ status: 'completed' }
-          ).then((res) => {
-            console.log(res.data);
-          })
-          .catch((err) => console.log(err));
-      };
+
+        
+        axios.put(`${ip}/vaccination/${updatedVaccinations[index]._id}`, { status: true }
+        ).then((res) => {
+            console.log(res.data,"updat responee");
+            console.log(updatedVaccinations[index]," responee");
+            setArr(updatedVaccinations);
+        })
+            .catch((err) => console.log("Error updating vaccines",err));
+    };
 
 
     return (
-        <View style={{backgroundColor:'#ffffff'}}>
-            <View style={{ height: Dimensions.get('screen').height * 0.35,backgroundColor: '#d4bdd0b3', borderBottomLeftRadius: 90 }}>
+        <View style={{ backgroundColor: '#ffffff' }}>
+            <View style={{ height: Dimensions.get('screen').height * 0.35, backgroundColor: '#d4bdd0b3', borderBottomLeftRadius: 90 }}>
                 <View style={styles.header_con}>
                     {/* <Image source={require('../assets/images/Untitled design.png')} style={{ width: 100 }}></Image> */}
                     <Text style={styles.title}>التـطعيـمـــات</Text>
@@ -81,7 +100,7 @@ const VaccinationScreen = ({ motherId }) => {
                 </View>
 
                 <FlatList
-                style={{marginLeft:2}}
+                    style={{ marginLeft: 2 }}
                     horizontal
                     data={vaccinationAge}
                     key={(item) => item.age}
@@ -112,17 +131,17 @@ const VaccinationScreen = ({ motherId }) => {
                         renderItem={({ item, index }) => {
                             return (
                                 <View style={styles.progress_container}>
-                                    <TouchableOpacity onPress={() => {  toggleStatus(index) }} style={{ elevation: 5 }}>
-                                        <View style={[styles.vaccine_box, { backgroundColor: item.status === 'completed' ? '#3d0a31' : itemColors[index] }]}>
+                                    <TouchableOpacity onPress={() => { toggleStatus(index) }} style={{ elevation: 5 }}>
+                                        <View style={[styles.vaccine_box, { backgroundColor: item.status ===true ? '#3d0a31' : itemColors[index] }]}>
                                             <View style={{ flexDirection: 'column' }}>
-                                                <Text style={{ fontSize: 20, paddingHorizontal: 10,  color: item.status === 'completed' ? '#f2eef1' : '#3d0a31' ,textDecorationLine:item.status === 'completed' ?'line-through' :'none' }}>{item.name}</Text>
+                                                <Text style={{ fontSize: 20, paddingHorizontal: 10, color: item.status ===true ? '#f2eef1' : '#3d0a31', textDecorationLine: item.status ===true ? 'line-through' : 'none' }}>{item.name}</Text>
                                                 <Text style={{ fontSize: 15, padding: 10, color: '#722d6d' }}>{item.date}</Text>
                                             </View>
                                         </View>
                                     </TouchableOpacity>
                                     <View style={{ flexDirection: 'column', alignItems: 'center', width: 10 }}>
                                         <View style={styles.circle}>
-                                            {item.status == 'completed' && <View style={styles.inside_circle}></View>}
+                                            {item.status ==true && <View style={styles.inside_circle}></View>}
                                         </View>
                                         <View style={styles.line}></View>
                                     </View>

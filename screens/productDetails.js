@@ -1,11 +1,8 @@
 import { useState } from 'react';
-
 import React, { useRef } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, Dimensions, SafeAreaView } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../Redux/Slices/ProductSlice';
-import { Rating } from 'react-native-ratings';
-import Swiper from 'react-native-swiper';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome'; // Import the FontAwesome icon
 import { faCartPlus } from '@fortawesome/free-solid-svg-icons';
 import StarRating from '../Components/Rate';

@@ -185,7 +185,7 @@ const ProductList = () => {
                             style={styles.editButton}
                             onPress={() => handleEdit(product)}
                         >
-                            <Text style={[styles.buttonText, { fontFamily: 'Droid' }]}>تعديل</Text>
+                            <Text style={[styles.buttonText, { fontFamily: 'Droid',color:'#7618006d' }]}>تعديل</Text>
                         </Button>
                         <Button
                             mode="contained"
@@ -215,7 +215,7 @@ const ProductList = () => {
                 <View style={styles.header}>
                     <Text style={styles.headerText}>قائمة منتجاتك</Text>
                     <TouchableOpacity onPress={() => setModalVisible(true)}>
-                        <Icon name="plus-circle" size={50} color="green" />
+                        <Icon name="plus-circle" size={50} color="#761800ce" />
                     </TouchableOpacity>
                 </View>
 
@@ -308,6 +308,7 @@ const styles = StyleSheet.create({
     },
     searchBar: {
         marginBottom: 20,
+        backgroundColor:'#76180015'
     },
     header: {
         flexDirection: 'row',
@@ -340,12 +341,14 @@ const styles = StyleSheet.create({
         marginRight: 10,
         marginLeft: 10,
         fontFamily: 'Droid',
+        borderColor:'#761800ff',
+        
 
     },
     deleteButton: {
         flex: 1,
         marginLeft: 10,
-        backgroundColor: 'red',
+        backgroundColor: '#761800ff',
         fontFamily: 'Droid',
 
     },
@@ -390,7 +393,7 @@ const styles = StyleSheet.create({
     },
     uploadButton: {
         padding: 10,
-        backgroundColor: '#ccc',
+        backgroundColor: '#cccccc',
         borderRadius: 5,
     },
     uploadButtonText: {
@@ -406,14 +409,14 @@ const styles = StyleSheet.create({
     },
     addButton: {
         marginRight: 10,
-        backgroundColor: 'green',
+        backgroundColor: '#7618006d',
 
     },
     cancelButton: {
         marginRight: 10,
         flex: 1,
         marginLeft: 10,
-        backgroundColor: 'red',
+        backgroundColor: '#761800ff',
     },
 
 });
