@@ -108,7 +108,7 @@ export default function StartScreen({ navigation }) {
   const [isLoading, setIsLoading] = useState(true);
 
 
- 
+
 
   useEffect(() => {
     // setTimeout(() => {
@@ -117,10 +117,10 @@ export default function StartScreen({ navigation }) {
     axios
       .get(`${ip}/products/getAll`) // Update the API endpoint
       .then((response) => {
-        console.log(response.data)
+        // console.log(response.data)
         setProducts(response.data); // Update the response handling
-       
-        console.log("start", products, "endddddddd");
+
+        // console.log("start", products, "endddddddd");
 
       })
       .catch((error) => {
@@ -149,14 +149,14 @@ export default function StartScreen({ navigation }) {
 
     );
   };
-//  // Render a loading state while waiting for the data
-//  if (isLoading) {
-//   return (
-//     <View style={styles.con}>
-//       <Image style={{ width: 400, height: 400 }} source={require('../assets/loader.gif')} />
-//     </View>
-//   );
-// }
+  //  // Render a loading state while waiting for the data
+  //  if (isLoading) {
+  //   return (
+  //     <View style={styles.con}>
+  //       <Image style={{ width: 400, height: 400 }} source={require('../assets/loader.gif')} />
+  //     </View>
+  //   );
+  // }
   return (
     // <Background>
     <ScrollView style={styles.con}>
