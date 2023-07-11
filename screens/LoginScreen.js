@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Keyboard, TouchableOpacity, StyleSheet, View, TouchableWithoutFeedback } from 'react-native';
+import { Keyboard, TouchableOpacity, StyleSheet, View, TouchableWithoutFeedback, Alert, Dimensions } from 'react-native';
 import { Text } from 'react-native-paper';
 import Background from '../Components/Background';
 import Logo from '../Components/Logo';
@@ -56,7 +56,8 @@ export default function LoginScreen({ navigation }) {
 
         const storedToken = await AsyncStorage.getItem('token');
         const storedToken2 = await AsyncStorage.getItem('role');
-
+        const userid = await AsyncStorage.getItem('role');
+        console.log(userid)
         // Decode the token to retrieve its data
         const decodedToken = jwtDecode(storedToken);
 
@@ -66,7 +67,7 @@ export default function LoginScreen({ navigation }) {
         navigation.reset({
           index: 0,
           // routes: [{ name: storedToken2 == 'mother' ? 'Profile' : 'SellerProfile' }],
-          routes: [{ name: 'Home'}],
+          routes: [{ name: 'Home' }],
         });
       } else {
         throw new Error('Invalid email or password');
@@ -127,8 +128,9 @@ export default function LoginScreen({ navigation }) {
             </TouchableOpacity>
           </View>
 
-          <Button mode="contained" onPress={onLoginPressed}>
-            <Text style={[styles.link, { fontFamily: 'Droid', color: 'white' }]}>التسجيل</Text>
+
+          <Button mode="contained" onPress={onLoginPressed} style={styles.button}>
+            <Text style={[styles.link, { fontFamily: 'Droid', color: 'white' }]}>تسجيل الدخول</Text>
           </Button>
 
           <View style={[styles.row, styles.arabicText]}>
@@ -169,5 +171,17 @@ const styles = StyleSheet.create({
   arabicText: {
     fontFamily: 'Droid',
     textAlign: 'right',
+  },
+  button: {
+    fontWeight: 'bold',
+    fontSize: 18,
+    fontFamily: 'Droid',
+    color: 'white',
+    paddingHorizontal: 40,
+    paddingVertical: 10,
+    backgroundColor: '#76005f',
+    borderRadius: 8,
+    textAlign: 'center',
+    width: Dimensions.get('screen').width * 0.75,
   },
 });

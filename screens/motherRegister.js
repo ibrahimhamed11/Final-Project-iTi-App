@@ -21,6 +21,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 import ip from '../ipConfig';
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 
 export default function MotherRegister({ navigation }) {
     const [name, setName] = useState({ value: '', error: '' });
@@ -172,41 +173,35 @@ export default function MotherRegister({ navigation }) {
 
 
 
-
     const renderProgressBar = () => {
         return (
             <View style={styles.progressBar}>
                 <View style={styles.progressStep}>
-                    <FontAwesomeIcon
-                        icon={step >= 1 ? faCheckCircle : faCircle}
+                    <FontAwesome5Icon
+                        name={step >= 1 ? 'check-circle' : 'circle'}
                         size={30}
-                        style={styles.progressIcon}
+                        style={[styles.progressIcon, { color: step >= 1 ? theme.colors.primary : 'gray' }]}
                     />
-                    {/* <Text style={styles.stepNumber}>1</Text> */}
                 </View>
                 <View style={styles.progressLine} />
                 <View style={styles.progressStep}>
-                    <FontAwesomeIcon
-                        icon={step >= 2 ? faCheckCircle : faCircle}
+                    <FontAwesome5Icon
+                        name={step >= 2 ? 'check-circle' : 'circle'}
                         size={30}
-                        style={styles.progressIcon}
+                        style={[styles.progressIcon, { color: step >= 2 ? theme.colors.primary : 'gray' }]}
                     />
-                    {/* <Text style={styles.stepNumber}>2</Text> */}
                 </View>
                 <View style={styles.progressLine} />
                 <View style={styles.progressStep}>
-                    <FontAwesomeIcon
-                        icon={step >= 3 ? faCheckCircle : faCircle}
+                    <FontAwesome5Icon
+                        name={step >= 3 ? 'check-circle' : 'circle'}
                         size={30}
-
-                        style={styles.progressIcon}
+                        style={[styles.progressIcon, { color: step >= 3 ? theme.colors.primary : 'gray' }]}
                     />
-                    {/* <Text style={styles.stepNumber}>3</Text> */}
                 </View>
             </View>
         );
     };
-
 
     if (!isFontLoaded) {
         // Render a loading screen or placeholder while the font is loading
@@ -314,7 +309,7 @@ export default function MotherRegister({ navigation }) {
                     <Button
                         mode="contained"
                         onPress={step < 3 ? () => setStep(step + 1) : onSignUpPressed}
-                        style={{ marginTop: 24 }}
+                        style={{ marginTop: 24, backgroundColor: theme.colors.primary, borderRadius: 8 }}
                     >
                         <Text style={[styles.link, { fontFamily: 'Droid', color: 'white' }]}>
                             {step < 3 ? 'التالي' : 'التسجيل'}

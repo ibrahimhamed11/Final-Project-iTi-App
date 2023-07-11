@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Text, View } from 'react-native'
 
-export default class AddrateScreen extends Component {
+export class OrderForm extends Component {
     render() {
         return (
             <View>
@@ -10,3 +10,5 @@ export default class AddrateScreen extends Component {
         )
     }
 }
+
+export default OrderForm

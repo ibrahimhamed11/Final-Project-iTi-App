@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, FlatList, StyleSheet, TouchableOpacity, Text, Modal } from 'react-native';
-import { Searchbar, List, IconButton, Title } from 'react-native-paper';
+import { View, FlatList, ScrollView, StyleSheet, TouchableOpacity, Text, Modal } from 'react-native';
+import { Searchbar, List, IconButton, Title, Divider } from 'react-native-paper';
 import { FontAwesome } from 'react-native-vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import moment from 'moment';
+import 'moment/locale/ar'; // Import Arabic locale for moment.js
 import ip from '../ipConfig';
-import axios from 'axios';
 import RateProductScreen from './AddRateScreen';
 
 const MyOrdersScreen = () => {
@@ -21,9 +22,9 @@ const MyOrdersScreen = () => {
             try {
                 // Get user ID from AsyncStorage or any other storage mechanism
                 const userId = await AsyncStorage.getItem('userId');
-
+                // console.log('aaaaaaaaaaaaaaaaaaaaa', userId)
                 // Make API request to fetch user orders based on the user ID
-                const response = await fetch(`${ip}/orders/user/64930dc141ad98cd4739b12c`);
+                const response = await fetch(`${ip}/orders/user/${userId}`);
                 const data = await response.json();
                 console.log(data);
 
@@ -49,11 +50,12 @@ const MyOrdersScreen = () => {
         console.log(orderId);
 
         try {
+            const userId = await AsyncStorage.getItem('userId');
+
             // Make API request to update the product's checkRate field to true
-            await axios.patch(`${ip}/orders/${orderId}/checkRate`, { checkRate: true });
 
             // Refresh the order list to reflect the updated checkRate value
-            const response = await fetch(`${ip}/orders/user/64930dc141ad98cd4739b12c`);
+            const response = await fetch(`${ip}/orders/user/${userId}`);
             const data = await response.json();
             setOrders(data);
         } catch (error) {
@@ -67,38 +69,62 @@ const MyOrdersScreen = () => {
         setModalVisible(false); // Hide the modal
     };
 
-    const renderOrderItem = ({ item }) => (
-        <List.Item
-            title={item.productName}
-            description={`Status: ${item.delStatus}\nDate: ${item.date}`}
-            right={(props) => (
-                <>
-                    {item.checkRate === false && ( // Show the Add Rate icon if checkRate is false
+    const renderProductItem = ({ item }) => {
+        return (
+            <View style={styles.productItemContainer}>
+                <Text style={styles.productName}>{`اسم المنتج : ${item.productName}`}</Text>
+                <View style={styles.productItem}>
+                    {item.checkRate ? (
+                        <Text style={styles.productRate}>تم التقييم</Text>
+                    ) : (
                         <IconButton
-                            icon={({ size, color }) => (
-                                <FontAwesome name="star-o" size={size} color={color} />
-                            )}
-                            onPress={() => handleRating(item.productId, item._id)} // Pass both the product ID and order ID
+                            icon="star-outline"
+                            onPress={() => handleRating(item.productId, item._id)}
                         />
                     )}
-                    {item.checkRate === true && ( // Show the Rate is Done text if checkRate is true
-                        <Text>Rate is Done</Text>
-                    )}
-                </>
-            )}
-            left={(props) => (
-                <FontAwesome
-                    name={item.delStatus === 'delivered' ? 'check-circle' : 'circle-o'}
-                    size={24}
-                    color={item.delStatus === 'delivered' ? 'green' : 'gray'}
-                    style={styles.orderStatusIcon}
+                </View>
+            </View>
+        );
+    };
+
+    const renderOrderItem = ({ item }) => {
+        const formattedDate = moment(item.date).locale('ar').format('MMMM Do YYYY, h:mm:ss a');
+        const totalPrice = item.products.reduce((total, product) => total + product.price, 0);
+
+        return (
+            <View style={styles.orderItem}>
+                <View style={styles.orderStatusContainer}>
+                    <FontAwesome
+                        name={item.delStatus === 'delivered' ? 'check-circle' : 'circle-o'}
+                        size={24}
+                        color={item.delStatus === 'delivered' ? 'green' : 'gray'}
+                        style={styles.orderStatusIcon}
+                    />
+                    <Text style={styles.orderStatusText}>{item.delStatus}</Text>
+                </View>
+
+                <View style={styles.orderDetailsContainer}>
+                    <Text style={styles.orderIdText}>{`رقم الطلب :  ${item._id}`}</Text>
+                    <Text style={styles.orderDateText}>{`${formattedDate}`}</Text>
+                </View>
+
+                <FlatList
+                    data={item.products}
+                    renderItem={renderProductItem}
+                    keyExtractor={(product) => product._id}
+                    ItemSeparatorComponent={() => <Divider />}
                 />
-            )}
-        />
-    );
+
+                <View style={styles.totalPriceContainer}>
+                    <FontAwesome name="dollar" size={18} color="black" style={styles.priceIcon} />
+                    <Text style={styles.totalPriceText}>{`اجمالي السعر :${totalPrice}`}</Text>
+                </View>
+            </View>
+        );
+    };
 
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
             <Title style={styles.heading}>طلباتي</Title>
 
             <Searchbar
@@ -112,26 +138,22 @@ const MyOrdersScreen = () => {
                 data={orders}
                 renderItem={renderOrderItem}
                 keyExtractor={(item) => item._id}
-                contentContainerStyle={styles.listContainer}
+                ItemSeparatorComponent={() => <Divider />}
             />
 
             <Modal visible={modalVisible} onRequestClose={closeModal} transparent={true}>
                 <View style={styles.modalContainer}>
-                    <View style={styles.modalContent}>
-                        <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
-                            <Text style={styles.closeButtonText}>Close</Text>
-                        </TouchableOpacity>
-                        {selectedProductId && selectedOrderId && (
-                            <RateProductScreen
-                                productId={selectedProductId}
-                                orderId={selectedOrderId}
-                                closeModal={closeModal}
-                            />
-                        )}
-                    </View>
+                    <TouchableOpacity onPress={closeModal} style={styles.closeButton} />
+                    {selectedProductId && selectedOrderId && (
+                        <RateProductScreen
+                            productId={selectedProductId}
+                            orderId={selectedOrderId}
+                            closeModal={closeModal}
+                        />
+                    )}
                 </View>
             </Modal>
-        </View>
+        </ScrollView>
     );
 };
 
@@ -150,33 +172,77 @@ const styles = StyleSheet.create({
     },
     searchBar: {
         marginVertical: 10,
-        fontFamily: 'Droid ',
+        fontFamily: 'Droid',
         textAlign: 'right',
     },
-    listContainer: {
-        paddingBottom: 20,
+    orderItem: {
+        marginBottom: 20,
     },
-    ratingContainer: {
+    orderStatusContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-    },
-    starIcon: {
-        marginHorizontal: 2,
+        marginBottom: 10,
     },
     orderStatusIcon: {
         marginRight: 10,
+    },
+    orderStatusText: {
+        fontSize: 16,
+        fontFamily: 'Droid',
+    },
+    orderDetailsContainer: {
+        marginBottom: 10,
+    },
+    orderIdText: {
+        fontSize: 16,
+        fontFamily: 'Droid',
+    },
+    orderDateText: {
+        fontSize: 16,
+        fontFamily: 'Droid',
+        alignSelf: 'center'
+    },
+    productItemContainer: {
+        marginBottom: 10,
+    },
+    productName: {
+        marginRight: 10,
+        fontSize: 16,
+        textAlign: 'right',
+        fontFamily: 'Droid',
+    },
+    productItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 10,
+        paddingHorizontal: 16,
+    },
+    productRate: {
+        color: 'gray',
+        fontSize: 16,
+        textAlign: 'right',
+        fontFamily: 'Droid',
+    },
+    totalPriceContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 10,
+        alignSelf: 'center'
+    },
+    priceIcon: {
+        marginRight: 5,
+        color: 'green'
+    },
+    totalPriceText: {
+        fontSize: 15,
+        fontFamily: 'Droid',
+        color: 'green',
     },
     modalContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
-    },
-    modalContent: {
-        backgroundColor: 'white',
-        borderRadius: 10,
-        padding: 20,
-        width: '80%',
     },
     closeButton: {
         position: 'absolute',
@@ -185,6 +251,7 @@ const styles = StyleSheet.create({
     },
     closeButtonText: {
         fontSize: 16,
+        fontFamily: 'Droid',
     },
 });
 
