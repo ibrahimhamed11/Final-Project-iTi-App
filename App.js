@@ -99,7 +99,7 @@ export default function App() {
 
   //Drawer and stack Navigator
   const Stack = createNativeStackNavigator();
-  const Drawer = createDrawerNavigator();
+  const Drawer = createDrawerNavigator(); 
 
   // const  notification  = useSelector(state => state);
 
@@ -165,7 +165,7 @@ console.log(role,"lllllllllllllll")
               // elevation:5
 
             },
-            headerTintColor: '#ffffff',
+            headerTintColor: '#000000',
             drawerActiveBackgroundColor: '#76005e50',
             drawerActiveTintColor: '#ffffff',
 
