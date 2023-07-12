@@ -1,15 +1,24 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import randomColor from 'randomcolor';
-import { View, StyleSheet, FlatList, ScrollView, Image, Text, Dimensions, TouchableOpacity, ImageBackground } from 'react-native'
-// import Icon from 'react-native-vector-icons/Ionicons'
-import { Checkbox, Divider } from 'react-native-paper';
+import {
+    View,
+    StyleSheet,
+    FlatList,
+    ScrollView,
+    Image,
+    Text,
+    Dimensions,
+    TouchableOpacity,
+    ImageBackground,
+    Modal,
+} from 'react-native';
+import { Checkbox } from 'react-native-paper';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import ip from '../ipConfig'
+import ip from '../ipConfig';
 
 const VaccinationScreen = ({ route }) => {
-    // set age averages 
     const [vaccinationAge, setvaccinationAge] = useState([
         { min: 0, max: 2, by: 'mo .' },
         { min: 2, max: 4, by: 'mo .' },
@@ -25,170 +34,209 @@ const VaccinationScreen = ({ route }) => {
         { min: 22, max: 24, by: 'mo .' },
     ]);
 
-    // make random colors to vaccine cards 
     const [itemColors, setItemColors] = useState([]);
-    const [baby, setBaby] = useState({});
-    // get baby
-    const getBaby = async () => {
-        const babyData = await AsyncStorage.getItem('baby');
-        console.log('babyData')
-        const data = JSON.parse(babyData)
-        console.log(data)
-        setBaby(data)
-        setArr(data.vaccination)
-        console.log(arr)
+    const [babyList, setBabyList] = useState([]);
+    const [selectedBaby, setSelectedBaby] = useState(null);
+    const [vaccinations, setVaccinations] = useState([]);
+    const [modalVisible, setModalVisible] = useState(false);
 
-    }
-// Function to retrieve the ID from AsyncStorage
-const getUserId = async () => {
-    try {
-      const motherId = await AsyncStorage.getItem('userId');
-      return motherId;
-    } catch (error) {
-      console.log('Error retrieving ID:', error);
-      return null;
-    }
-  };
+    useEffect(() => {
+        const fetchBabyData = async () => {
+            try {
+                const motherId = await AsyncStorage.getItem('userId');
+                const response = await axios.get(`${ip}/user/${motherId}`);
+                const babyInfo = response.data.data.profile.babyInfo;
+                setBabyList(babyInfo);
+            } catch (error) {
+                console.log('Error fetching baby data:', error);
+            }
+        };
 
-    // useLayoutEffect(() => {
-    //     getBaby()
-    // }, []);
+        fetchBabyData();
+    }, []);
+
     useEffect(() => {
         const colors = [];
-        for (let i = 0; i < arr.length; i++) {
-            const color = randomColor({ format: 'rgba', hue: '#76005f', luminosity: 'light' });
+        for (let i = 0; i < vaccinations.length; i++) {
+            const color = randomColor({
+                format: 'rgba',
+                hue: '#76005f',
+                luminosity: 'light',
+            });
             colors.push(color);
         }
         setItemColors(colors);
-        getBaby()
+    }, [vaccinations]);
 
-    }, [arr]);
-    // get vaccination data according to pressed age 
-    const [arr, setArr] = useState([]);
-
-    const showVaccines = async () => {
-        const motherId = await getUserId();
-
-        axios.get(`${ip}/vaccination/${motherId}/${baby._id}`).then(res => {
-
-            console.log(res.data)
-            setArr([...res.data.vaccinations]);
-        }).catch(err => console.log(err));
-    }
-    const [status, setStatus] = useState(false)
-    const toggleStatus = (index) => {
-        if (status == false)
-            setStatus(true);
-        else
-            setStatus(false);
-        handleCompletedVaccine(index)
-        console.log(index)
-
-    };
-    const handleCompletedVaccine = (index) => {
-        const updatedVaccinations = [...arr];
-        updatedVaccinations[index].status = status;
-
-        
-        axios.put(`${ip}/vaccination/${updatedVaccinations[index]._id}`, { status: true }
-        ).then((res) => {
-            console.log(res.data,"updat responee");
-            console.log(updatedVaccinations[index]," responee");
-            setArr(updatedVaccinations);
-        })
-            .catch((err) => console.log("Error updating vaccines",err));
+    const getBabyVaccinations = async (babyId) => {
+        try {
+            const response = await axios.get(`${ip}/user/baby/vaccinations/${babyId}`);
+            setVaccinations(response.data.vaccinations);
+        } catch (error) {
+            console.log('Error fetching baby vaccinations:', error);
+        }
     };
 
+    const toggleStatus = async (vaccinationId, status) => {
+        try {
+            const response = await axios.put(`${ip}/vaccination/${vaccinationId}`, {
+                status: !status,
+            });
+            const updatedVaccination = response.data;
+            setVaccinations((prevVaccinations) =>
+                prevVaccinations.map((vaccination) =>
+                    vaccination._id === updatedVaccination._id ? updatedVaccination : vaccination
+                )
+            );
+        } catch (error) {
+            console.log('Error updating vaccine status:', error);
+        }
+    };
+
+    const updateVaccinationStatus = async (vaccinationId, babyId) => {
+        try {
+            const response = await axios.patch(
+                `${ip}/user/baby/${babyId}/vaccination/${vaccinationId}`,
+                {
+                    status: true,
+                }
+            );
+            // Handle success
+            console.log(response.data);
+        } catch (error) {
+            // Handle error
+            console.log(error);
+        }
+    };
 
     return (
         <View style={{ backgroundColor: '#ffffff' }}>
-            <View style={{ height: Dimensions.get('screen').height * 0.35, backgroundColor: '#d4bdd0b3', borderBottomLeftRadius: 90 }}>
+            <View
+                style={{
+                    height: Dimensions.get('screen').height * 0.35,
+                    backgroundColor: '#d4bdd0b3',
+                    borderBottomLeftRadius: 90,
+                }}
+            >
                 <View style={styles.header_con}>
-                    {/* <Image source={require('../assets/images/Untitled design.png')} style={{ width: 100 }}></Image> */}
                     <Text style={styles.title}>التـطعيـمـــات</Text>
-                    <Image source={require('../assets/images/feeding_baby.jpg')} style={styles.baby_photo}></Image>
                 </View>
 
                 <FlatList
                     style={{ marginLeft: 2 }}
                     horizontal
                     data={vaccinationAge}
-                    key={(item) => item.age}
+                    keyExtractor={(item, index) => index.toString()}
                     showsHorizontalScrollIndicator={false}
                     renderItem={({ item }) => {
                         return (
-                            <ImageBackground source={require('../assets/images/vaccine.jpg')} style={[styles.box, { flex: 1, borderRadius: 10, overflow: 'hidden', }]} >
-                                <TouchableOpacity onPress={() => { showVaccines(item.min, item.max) }} style={{
-                                    shadowColor: '#dcd9e0f8',
-                                    shadowOffset: { width: 1, height: 1 },
-                                    shadowOpacity: 0.6,
-                                    shadowRadius: 2
-                                }}>
-                                    <Text style={styles.age} >{item.min}-{item.max}</Text>
+                            <ImageBackground
+                                source={require('../assets/images/vaccine.jpg')}
+                                style={[
+                                    styles.box,
+                                    { flex: 1, borderRadius: 10, overflow: 'hidden' },
+                                ]}
+                            >
+                                <TouchableOpacity
+                                    onPress={() => getBabyVaccinations(selectedBaby?._id)}
+                                    style={{
+                                        shadowColor: '#dcd9e0f8',
+                                        shadowOffset: { width: 1, height: 1 },
+                                        shadowOpacity: 0.6,
+                                        shadowRadius: 2,
+                                    }}
+                                >
+                                    <Text style={styles.age}>
+                                        {item.min}-{item.max}
+                                    </Text>
                                     <Text style={styles.month}>{item.by}</Text>
                                 </TouchableOpacity>
-                            </ImageBackground >
-                        )
+                            </ImageBackground>
+                        );
                     }}
                 />
             </View>
             <ScrollView contentContainerStyle={{ paddingBottom: 300 }}>
-                <ImageBackground source={require('../assets/images/background.jpg')} >
-                    <FlatList
-                        style={{ height: Dimensions.get('screen').height, }}
-                        data={arr}
-                        key={(item) => item.name}
-                        renderItem={({ item, index }) => {
-                            return (
-                                <View style={styles.progress_container}>
-                                    <TouchableOpacity onPress={() => { toggleStatus(index) }} style={{ elevation: 5 }}>
-                                        <View style={[styles.vaccine_box, { backgroundColor: item.status ===true ? '#3d0a31' : itemColors[index] }]}>
-                                            <View style={{ flexDirection: 'column' }}>
-                                                <Text style={{ fontSize: 20, paddingHorizontal: 10, color: item.status ===true ? '#f2eef1' : '#3d0a31', textDecorationLine: item.status ===true ? 'line-through' : 'none' }}>{item.name}</Text>
-                                                <Text style={{ fontSize: 15, padding: 10, color: '#722d6d' }}>{item.date}</Text>
-                                            </View>
-                                        </View>
-                                    </TouchableOpacity>
-                                    <View style={{ flexDirection: 'column', alignItems: 'center', width: 10 }}>
-                                        <View style={styles.circle}>
-                                            {item.status ==true && <View style={styles.inside_circle}></View>}
-                                        </View>
-                                        <View style={styles.line}></View>
-                                    </View>
-                                </View>
-
-                            )
-                        }}
-                    />
+                <ImageBackground source={require('../assets/images/background.jpg')}>
+                    {babyList.map((baby) => (
+                        <TouchableOpacity
+                            key={baby._id}
+                            style={styles.babyContainer}
+                            onPress={() => {
+                                setSelectedBaby(baby);
+                                getBabyVaccinations(baby._id);
+                                setModalVisible(true);
+                            }}
+                        >
+                            <Text style={styles.babyName}>{baby.name}</Text>
+                            <Text style={styles.vaccineCount}>
+                                {baby.vaccination.length} التطعيمات
+                            </Text>
+                        </TouchableOpacity>
+                    ))}
                 </ImageBackground>
             </ScrollView>
-        </View >
-    )
-}
+
+            {/* Modal */}
+            <Modal
+                visible={modalVisible}
+                transparent
+                animationType="fade"
+                onRequestClose={() => setModalVisible(false)}
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalTitle}>التطعيمات</Text>
+                        {vaccinations.length > 0 ? (
+                            <FlatList
+                                data={vaccinations.filter((vaccine) => !vaccine.status)}
+                                keyExtractor={(item) => item._id}
+                                renderItem={({ item }) => (
+                                    <View style={styles.modalVaccineItem}>
+                                        <Text style={styles.modalVaccineName}>{item.name}</Text>
+                                        <Text style={styles.modalVaccineName}>{item.age}</Text>
+
+                                        <TouchableOpacity
+                                            style={styles.modalVaccineButton}
+                                            onPress={() =>
+                                                updateVaccinationStatus(item._id, selectedBaby?._id)
+                                            }
+                                        >
+                                            <Text style={styles.modalVaccineButtonText}>تم التطعيم</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                )}
+                            />
+                        ) : (
+                            <Text style={styles.vtextStyle}>لا يوجد تطعيم له </Text>
+                        )}
+
+                        <TouchableOpacity
+                            style={styles.modalCloseButton}
+                            onPress={() => setModalVisible(false)}
+                        >
+                            <Text style={styles.modalCloseButtonText}>اغلاق </Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
+        </View>
+    );
+};
+
 const styles = StyleSheet.create({
     header_con: {
         flexDirection: 'row',
         justifyContent: 'flex-end',
     },
-    baby_photo: {
-        width: 50,
-        height: 50,
-        borderRadius: 50,
-        marginTop: 20,
-        marginRight: 10,
-        marginLeft: 10
-    },
     title: {
         fontSize: 26,
-        fontWeight: 500,
+        fontWeight: '500',
         paddingVertical: 10,
         marginVertical: 10,
         color: '#76005f',
-        marginTop: 40
-    },
-    boxes_con: {
-        flexDirection: 'row',
-
+        marginTop: 40,
+        fontFamily: 'Droid',
     },
     box: {
         flexGrow: 1,
@@ -197,78 +245,109 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         width: 115,
         height: 100,
-        // backgroundColor: '#b802c5d3',
-        // borderRadius: 200,
         margin: 5,
         shadowColor: '#000000f8',
         shadowOffset: { width: 10, height: 10 },
         shadowOpacity: 1,
         shadowRadius: 1,
-        elevation: 5
+        elevation: 5,
     },
     age: {
         fontSize: 26,
         fontWeight: 'bold',
-        color: 'white'
+        color: 'white',
     },
     month: {
         color: 'white',
         fontSize: 20,
         fontWeight: 'bold',
-        marginLeft: 10
-
-    },
-    progress_container: {
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-        // alignItems: 'flex-end',
-    },
-    circle: {
-        width: 20,
-        height: 20,
-        marginHorizontal: 20,
-        borderRadius: 100,
-        backgroundColor: '#a10081',
-        alignItems: 'center',
-        justifyContent: 'center',
-        elevation: 5
-
-    },
-    inside_circle: {
-        width: 10,
-        height: 10,
-        borderRadius: 100,
-        backgroundColor: '#f6ca45fb',
-        // shadowColor: '#f4f41af8',
-        // shadowOffset: { width: 0, height: 0 },
-        // shadowOpacity: 0.8,
-        // shadowRadius: 3,
-        elevation: 5
-    },
-    line: {
-        width: 1,
-        height: 80,
-        // backgroundColor: 'black',
-        padding: 0.1,
-        borderStyle: 'dashed',
-        borderLeftColor: 'black',
-        borderLeftWidth: 1
-
-    },
-    vaccine_box: {
-        width: Dimensions.get('screen').width * 0.85,
-        height: 80,
-        marginRight: 10,
         marginLeft: 10,
-        marginTop: 10,
-        borderTopLeftRadius: 20,
-        borderBottomLeftRadius: 20,
-        borderBottomRightRadius: 20,
-        // flexDirection: 'row',
-        // alignItems: 'flex-end',
+    },
+    babyContainer: {
         paddingVertical: 10,
-        justifyContent: 'space-between',
+        paddingHorizontal: 20,
+        borderBottomColor: '#eee',
+        borderBottomWidth: 1,
+    },
+    babyName: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#76005f',
+        fontFamily: 'Droid',
+        alignSelf: 'center'
 
-    }
-})
+    },
+    vaccineCount: {
+        color: '#76005f',
+        fontFamily: 'Droid',
+
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContent: {
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        paddingHorizontal: 20,
+        paddingVertical: 30,
+        marginHorizontal: 20,
+        alignItems: 'center',
+        elevation: 5,
+        height: '40%',
+        minWidth: 200, // Set the minimum width value here
+    },
+    modalTitle: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        marginBottom: 20,
+        color: '#76005f',
+        fontFamily: 'Droid',
+    },
+    modalVaccineItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginVertical: 10,
+        width: '100%',
+    },
+    modalVaccineName: {
+        fontSize: 16,
+        color: '#76005f',
+        paddingHorizontal: 10,
+    },
+    modalVaccineButton: {
+        backgroundColor: '#76005f',
+        paddingHorizontal: 15,
+        paddingVertical: 10,
+        borderRadius: 10,
+    },
+    modalVaccineButtonText: {
+        fontSize: 14,
+        color: '#fff',
+        fontWeight: 'bold',
+    },
+    modalCloseButton: {
+        marginTop: 30,
+        backgroundColor: '#76005f',
+        paddingHorizontal: 15,
+        paddingVertical: 10,
+        borderRadius: 10,
+    },
+    modalCloseButtonText: {
+        fontSize: 18,
+        color: '#fff',
+        fontWeight: 'bold',
+    },
+    vtextStyle: {
+        fontFamily: 'Droid',
+        fontSize: 20,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        padding: 50,
+    },
+});
+
 export default VaccinationScreen;

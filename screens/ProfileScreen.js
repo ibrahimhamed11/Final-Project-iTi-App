@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, FlatList, Image, Modal, StyleSheet, Alert, ScrollView, Dimensions, TouchableOpacity, Button } from 'react-native';
+import { View, Text, TextInput, FlatList, Image, Modal, StyleSheet, Alert, ScrollView, Dimensions, TouchableOpacity, Button, RefreshControl } from 'react-native';
 import { DataTable, Button as PaperButton } from 'react-native-paper';
+
 import * as Font from 'expo-font';
 import { IconButton, Card, TouchableRipple } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -15,7 +16,6 @@ import axios from 'axios';
 import ip from '../ipConfig';
 // date picker
 import DatePicker from 'react-native-datepicker';
-
 
 const ProfileScreen = () => {
   useEffect(() => {
@@ -35,8 +35,8 @@ const ProfileScreen = () => {
   const [babies, setBabies] = useState([]);
   const [name, setBabyName] = useState('');
   const [birthDate, setBabyAge] = useState(new Date());
-  const [motherData, setMotherData] = useState({
-  });
+  const [motherData, setMotherData] = useState({});
+  const [refreshing, setRefreshing] = useState(false);
 
   let motherId;
 
@@ -49,7 +49,15 @@ const ProfileScreen = () => {
       return null;
     }
   };
+  const handleRefresh = () => {
+    setRefreshing(true);
 
+    // Perform the refresh action here
+    // This could be an API call or any other asynchronous operation
+
+    // After the refresh action is completed, set refreshing to false
+    setRefreshing(false);
+  };
   const handleLogout = () => {
     Alert.alert(
       'تسجيل الخروج',
@@ -142,10 +150,8 @@ const ProfileScreen = () => {
   const handleAddBaby = async () => {
     try {
       const userId = await getUserId();
-     
-      const response = await axios.patch(`${ip}/user/${userId}`,{birthDate,name});
+      const response = await axios.patch(`${ip}/user/${userId}`, { birthDate, name });
       // Reset form and state
-
       setBabyAge(new Date());
       setBabyName('');
       fetchBabies();
@@ -177,7 +183,12 @@ const ProfileScreen = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <ScrollView style={{ flex: 1, backgroundColor: '#ffffff' }}>
+      <ScrollView
+        style={{ flex: 1 }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+        }
+      >
         <View style={{ flex: 1, paddingHorizontal: 20, paddingBottom: 80 }}>
           <View style={{ marginBottom: 20, alignItems: 'center' }}>
             <View>
@@ -293,7 +304,6 @@ const ProfileScreen = () => {
           </View>
         </View>
       </ScrollView>
-
 
       <Modal visible={babyModal} animationType="slide" transparent={true} onRequestClose={() => setBabyModal(false)}>
         <View style={styles.modalContainer}>
