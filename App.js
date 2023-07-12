@@ -30,6 +30,10 @@ import CheckoutScreen from './screens/checkoutScreen';
 import AboutusScreen from './screens/AboutScreen';
 import addrate from './screens/AddRateScreen';
 import myorders from './screens/MyorderScreen';
+
+import { LogBox } from 'react-native';
+LogBox.ignoreAllLogs()
+
 //redux
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { Store } from './Redux/Store';

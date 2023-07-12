@@ -168,7 +168,7 @@ const ProfileScreen = () => {
     try {
       const userId = await getUserId();
       const response = await axios.get(`${ip}/user/${userId}`);
-      console.log(response.data.data.profile.babyInfo, "dataaaaaaaaaaaaaaaaaaaaa");
+      // console.log(response.data.data.profile.babyInfo, "dataaaaaaaaaaaaaaaaaaaaa");
       setBabies(response.data.data.profile.babyInfo);
     } catch (error) {
       console.error('Error fetching babies:', error);

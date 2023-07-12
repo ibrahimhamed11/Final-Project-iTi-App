@@ -197,7 +197,7 @@ const ProductList = () => {
                             style={styles.editButton}
                             onPress={() => handleEdit(product)}
                         >
-                            <Text style={[styles.buttonText, { fontFamily: 'Droid',color:'#7618006d' }]}>تعديل</Text>
+                            <Text style={[styles.buttonText, { fontFamily: 'Droid', color: '#7618006d' }]}>تعديل</Text>
                         </Button>
                         <Button
                             mode="contained"
@@ -320,7 +320,7 @@ const styles = StyleSheet.create({
     },
     searchBar: {
         marginBottom: 20,
-        backgroundColor:'#76180015'
+        backgroundColor: '#76180015'
     },
     header: {
         flexDirection: 'row',
@@ -353,8 +353,8 @@ const styles = StyleSheet.create({
         marginRight: 10,
         marginLeft: 10,
         fontFamily: 'Droid',
-        borderColor:'#761800ff',
-        
+        borderColor: '#761800ff',
+
 
     },
     deleteButton: {

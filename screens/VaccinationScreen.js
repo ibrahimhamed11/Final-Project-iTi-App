@@ -170,8 +170,8 @@ const VaccinationScreen = ({ route }) => {
                         >
                             <Text style={styles.babyName}>{baby.name}</Text>
                             <Text style={styles.vaccineCount}>
-                                {baby.vaccination.length} التطعيمات
-                            </Text>
+                                عدد التطعيمات :
+                                {baby.vaccination.length} </Text>
                         </TouchableOpacity>
                     ))}
                 </ImageBackground>
@@ -309,7 +309,7 @@ const styles = StyleSheet.create({
     modalVaccineItem: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'space-evenly',
         marginVertical: 10,
         width: '100%',
     },
@@ -317,9 +317,13 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#76005f',
         paddingHorizontal: 10,
+        fontFamily: 'Droid',
+        fontWeight: 'bold',
+ 
+
     },
     modalVaccineButton: {
-        backgroundColor: '#76005f',
+        backgroundColor: '#119F05',
         paddingHorizontal: 15,
         paddingVertical: 10,
         borderRadius: 10,
@@ -328,6 +332,8 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#fff',
         fontWeight: 'bold',
+        fontFamily: 'Droid',
+
     },
     modalCloseButton: {
         marginTop: 30,
@@ -340,6 +346,8 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: '#fff',
         fontWeight: 'bold',
+        fontFamily: 'Droid',
+
     },
     vtextStyle: {
         fontFamily: 'Droid',
