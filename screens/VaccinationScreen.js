@@ -9,7 +9,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ip from '../ipConfig'
 
 const VaccinationScreen = ({ route }) => {
-    const motherId=route.params.motherData._id
     // set age averages 
     const [vaccinationAge, setvaccinationAge] = useState([
         { min: 0, max: 2, by: 'mo .' },
@@ -40,7 +39,16 @@ const VaccinationScreen = ({ route }) => {
         console.log(arr)
 
     }
-
+// Function to retrieve the ID from AsyncStorage
+const getUserId = async () => {
+    try {
+      const motherId = await AsyncStorage.getItem('userId');
+      return motherId;
+    } catch (error) {
+      console.log('Error retrieving ID:', error);
+      return null;
+    }
+  };
 
     // useLayoutEffect(() => {
     //     getBaby()
@@ -58,10 +66,12 @@ const VaccinationScreen = ({ route }) => {
     // get vaccination data according to pressed age 
     const [arr, setArr] = useState([]);
 
-    const showVaccines = (min, max) => {
-        axios.get(`${ip}/vaccination/user/${motherId}`, { min, max }).then(res => {
+    const showVaccines = async () => {
+        const motherId = await getUserId();
 
-            // console.log(res.data)
+        axios.get(`${ip}/vaccination/${motherId}/${baby._id}`).then(res => {
+
+            console.log(res.data)
             setArr([...res.data.vaccinations]);
         }).catch(err => console.log(err));
     }
@@ -122,7 +132,7 @@ const VaccinationScreen = ({ route }) => {
                     }}
                 />
             </View>
-            <ScrollView contentContainerStyle={{ paddingBottom: 1 }}>
+            <ScrollView contentContainerStyle={{ paddingBottom: 300 }}>
                 <ImageBackground source={require('../assets/images/background.jpg')} >
                     <FlatList
                         style={{ height: Dimensions.get('screen').height, }}

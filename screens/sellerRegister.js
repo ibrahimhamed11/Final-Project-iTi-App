@@ -81,7 +81,7 @@ export default function SellerRegister({ navigation }) {
             console.log('user add ', response.data); // You can customize this based on your backend API response
             navigation.reset({
                 index: 0,
-                routes: [{ name: 'Home' }],
+                routes: [{ name: 'LoginScreen' }],
             });
         } catch (error) {
             // Handle error
@@ -269,7 +269,7 @@ export default function SellerRegister({ navigation }) {
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 30
+        // marginTop: 30
     },
     row: {
         flexDirection: 'row',
@@ -279,17 +279,18 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: theme.colors.primary,
     },
-    progressBar: {
+     progressBar: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: 32,
-        marginBottom: 30,
+        marginTop: 20, // Increase the margin-top value
+        marginBottom: 10, // Increase the margin-bottom value
+        fontSize: 50
     },
     progressStep: {
         alignItems: 'center',
     },
     progressIcon: {
-        fontSize: 60,
+        fontSize: 30,
     },
     progressLine: {
         flex: 1,

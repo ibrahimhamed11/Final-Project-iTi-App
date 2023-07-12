@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
-import { View, Text, StyleSheet, Image, I18nManager, FlatList, TextInput, TouchableOpacity, ImageBackground, Dimensions } from 'react-native';
+import {  TouchableWithoutFeedback, Keyboard,View, Text, StyleSheet, Image, I18nManager, FlatList, TextInput, TouchableOpacity, ImageBackground, Dimensions } from 'react-native';
 import { DataTable, Button as PaperButton, Modal } from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
 import Header from '../Components/Header';
@@ -7,6 +7,7 @@ import Paragraph from '../Components/Paragraph';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ScrollView } from 'react-native-gesture-handler';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import axios from 'axios';
 import ip from '../ipConfig'
 
@@ -281,7 +282,10 @@ export default function Blogs({ navigation }) {
           />
         </View>
       </ScrollView>
+
       <Modal visible={isModalVisible} onDismiss={toggleModal} contentContainerStyle={styles.modalContainer}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <KeyboardAwareScrollView contentContainerStyle={styles.container}>
 
         <View style={styles.modalContent}>
           <TextInput
@@ -320,6 +324,8 @@ export default function Blogs({ navigation }) {
             </TouchableOpacity>
           </View>
         </View>
+      </KeyboardAwareScrollView>
+      </TouchableWithoutFeedback>
       </Modal>
       <TouchableOpacity style={styles.floating_Button} onPress={toggleModal} >
         <View >
@@ -385,12 +391,12 @@ const styles = StyleSheet.create({
   },
   blogImage: {
     width: '100%',
-    height: 200,
+    height: 220,
     marginBottom: 16,
-    // borderRadius: 8,
+    borderRadius: 20,
     alignItems: 'flex-end',
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
+    // borderBottomLeftRadius: 20,
+    // borderBottomRightRadius: 20,
     overflow: 'hidden'
   },
   ownerName: {

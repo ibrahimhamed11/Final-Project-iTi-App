@@ -137,7 +137,7 @@ export default function MotherRegister({ navigation }) {
             console.log('user add ', response.data); // You can customize this based on your backend API response
             navigation.reset({
                 index: 0,
-                routes: [{ name: 'Home' }],
+                routes: [{ name: 'LoginScreen' }],
             });
         } catch (error) {
             // Handle error
@@ -342,7 +342,7 @@ const styles = StyleSheet.create({
 
     container: {
 
-        marginTop: 30
+        // marginTop: 100
     },
     row: {
         flexDirection: 'row',
@@ -356,15 +356,15 @@ const styles = StyleSheet.create({
     progressBar: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: 32, // Increase the margin-top value
-        marginBottom: 30, // Increase the margin-bottom value
+        marginTop: 20, // Increase the margin-top value
+        marginBottom: 10, // Increase the margin-bottom value
         fontSize: 50
     },
     progressStep: {
         alignItems: 'center',
     },
     progressIcon: {
-        fontSize: 60, // Increase the font size to make the icon bigger
+        fontSize: 30, // Increase the font size to make the icon bigger
         color: theme.colors.primary,
 
     },

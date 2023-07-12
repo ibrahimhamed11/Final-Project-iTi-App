@@ -36,7 +36,7 @@ const ProfileScreen = ({}) => {
   const [babyModal, setBabyModal] = useState(false);
   const [babies, setBabies] = useState([]);
   const [name, setBabyName] = useState('');
-  const [babyAge, setBabyAge] = useState(new Date());
+  const [birthDate, setBabyAge] = useState(new Date());
   const [motherData, setMotherData] = useState({
   });
 
@@ -172,10 +172,10 @@ const ProfileScreen = ({}) => {
    
       const userId = await getUserId();
      
-      const response = await axios.patch(`${ip}/user/${userId}`,{babyAge,name});
+      const response = await axios.patch(`${ip}/user/${userId}`,{birthDate,name});
       // Reset form and state
 
-      setBabyAge('');
+      setBabyAge(new Date());
       setBabyName('');
       // setSelectedImage(null);
 
@@ -334,7 +334,7 @@ const ProfileScreen = ({}) => {
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
               <TouchableRipple
-                onPress={() => navigation.navigate('Vaccinations', {motherData})}
+                onPress={() => navigation.navigate('Vaccinations')}
                 rippleColor="rgba(0, 0, 0, .32)"
               >
                 <Image source={require('../assets/homeimages/vaccine.png')}
@@ -377,8 +377,8 @@ const ProfileScreen = ({}) => {
               </View>
              <DatePicker
         style={{ width: 180}}
-        date={babyAge}
-        mode="date"
+        date={birthDate}
+        mode='date'
         placeholder="Select date"
         format="YYYY-MM-DD"
         minDate="1900-01-01" // optional

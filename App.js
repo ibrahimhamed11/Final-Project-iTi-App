@@ -111,11 +111,11 @@ console.log(role,"lllllllllllllll")
     const NotificationIcon = ({ notification }) => (
       <View style={{ marginRight: 30 }}>
         <TouchableOpacity onPress={() => nav.navigate("الاشعارات")}>
-          <FontAwesome name="bell" size={20} color={'#000'} />
+          <FontAwesome name="bell" size={20} color={ role=='mother'? '#761700':'#76005f'} />
           {notification > 0 && (
             <View   
               style={{
-                position: 'absolute', 
+                position: 'absolute',  
                 top: -8, 
                 right: 10,
                 backgroundColor: 'red',
@@ -165,7 +165,7 @@ console.log(role,"lllllllllllllll")
               // elevation:5
 
             },
-            headerTintColor: '#000000',
+            headerTintColor: '#76005f', 
             drawerActiveBackgroundColor: '#76005e50',
             drawerActiveTintColor: '#ffffff',
 

@@ -5,11 +5,11 @@ import { ImageBackground, StyleSheet, KeyboardAvoidingView } from 'react-native'
 export default function Background({ children }) {
   return (
     <ImageBackground
-      source={require('../assets/background_dot.png')}
-      resizeMode="repeat"
+      source={require('../assets/onboarding/basic.png')}
+      resizeMode='center'
       style={styles.background}
     >
-      <KeyboardAvoidingView style={styles.container} behavior="padding">
+      <KeyboardAvoidingView style={styles.container}>
         {children}
       </KeyboardAvoidingView>
     </ImageBackground>
