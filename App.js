@@ -244,7 +244,7 @@ export default function App() {
           <Stack.Screen name='RegisterScreen' component={RegisterScreen} options={{ headerShown: false }} />
           <Stack.Screen name='Blogs' component={Blogs} options={{ headerShown: false }} />
           <Stack.Screen name='Cart' component={cart} options={{ headerShown: false }} />
-          <Stack.Screen name='toDO' component={ToDo} options={{ headerShown: false }} />
+          <Stack.Screen name='toDO' component={ToDo} options={{ headerShown: true, headerTitle: '' }} />
           <Stack.Screen name='eachproduct' component={EachProduct} options={{ headerShown: false }} />
           <Stack.Screen name='moreDetails' component={MoreDetails} options={{ headerShown: false }} />
           <Stack.Screen name='Vaccinations' component={Vaccination} options={{ headerShown: false }} />
