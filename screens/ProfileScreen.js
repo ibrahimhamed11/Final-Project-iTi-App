@@ -10,7 +10,11 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
 import TabBar from '../Components/TabBar';
 import babysData from '../babysData';
 import BabyComponent from '../Components/BabyComponent';
+import moment from "moment";
+
 import axios from 'axios';
+import DateField from 'react-native-datefield';
+
 //ip 
 import ip from '../ipConfig';
 // date picker
@@ -34,9 +38,8 @@ const ProfileScreen = () => {
   const [babyModal, setBabyModal] = useState(false);
   const [babies, setBabies] = useState([]);
   const [name, setBabyName] = useState('');
-  const [birthDate, setBabyAge] = useState(new Date());
-  const [motherData, setMotherData] = useState({
-  });
+  const [babyAge, setBabyAge] = useState(null);
+  const [motherData, setMotherData] = useState({});
 
   let motherId;
 
@@ -143,6 +146,9 @@ const ProfileScreen = () => {
     try {
       const userId = await getUserId();
      
+      console.log(babyAge)
+      const birthDate=moment(babyAge, "YYYY/MM/DD").locale("en").format("YYYY/MM/DD")
+      console.log(moment(babyAge, "YYYY/MM/DD").locale("en").format("YYYY/MM/DD"));
       const response = await axios.patch(`${ip}/user/${userId}`,{birthDate,name});
       // Reset form and state
 
@@ -162,8 +168,8 @@ const ProfileScreen = () => {
     try {
       const userId = await getUserId();
       const response = await axios.get(`${ip}/user/${userId}`);
-      console.log(response.data.data.profile.babyInfo, "dataaaaaaaaaaaaaaaaaaaaa");
-      setBabies(response.data.data.profile.babyInfo);
+      console.log(response.data.data.babyInfo, "dataaaaaaaaaaaaaaaaaaaaa");
+      setBabies(response.data.data.babyInfo);
     } catch (error) {
       console.error('Error fetching babies:', error);
     }
@@ -307,19 +313,20 @@ const ProfileScreen = () => {
                 placeholderTextColor={'#000000'}
               />
             </View>
+            {/* <DateField onChange={(value) =>{setBabyAge((value)); console.log(value,"hhhhhh")}} /> */}
+
             <DatePicker
               style={{ width: 180 }}
-              date={birthDate}
+              date={babyAge}
               mode='date'
               placeholder="Select date"
-              format="YYYY-MM-DD"
+              // format="YYYY-MM-DD"
               minDate="1900-01-01" // optional
               maxDate="2100-12-31" // optional
               confirmBtnText="Confirm"
               cancelBtnText="Cancel"
-              useNativeDriver={true}
 
-              onDateChange={(date) => setBabyAge(date)}
+              onDateChange={(date) => { setBabyAge((date)) ; console.log(new Date(date),parseInt(date))}}
               customStyles={{
                 dateInput: { borderRadius: 10, borderColor: '#76005f', height: 30 },
                 dateIcon: { width: 30, height: 30 },
