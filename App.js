@@ -93,11 +93,11 @@ export default function App() {
     const NotificationIcon = ({ notification }) => (
       <View style={{ marginRight: 30 }}>
         <TouchableOpacity onPress={() => nav.navigate("الاشعارات")}>
-          <FontAwesome name="bell" size={20} color="#f7f6f1f3" />
+          <FontAwesome name="bell" size={20} color="#58564CF3" />
           {notification > 0 && (
             <View
               style={{
-                position: 'absolute', 
+                position: 'absolute',
                 top: -8,
                 right: 10,
                 backgroundColor: 'red',

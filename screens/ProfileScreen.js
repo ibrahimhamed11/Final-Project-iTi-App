@@ -11,11 +11,7 @@ import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
 import TabBar from '../Components/TabBar';
 import babysData from '../babysData';
 import BabyComponent from '../Components/BabyComponent';
-import moment from "moment";
-
 import axios from 'axios';
-import DateField from 'react-native-datefield';
-
 //ip 
 import ip from '../ipConfig';
 // date picker
@@ -38,14 +34,9 @@ const ProfileScreen = () => {
   const [babyModal, setBabyModal] = useState(false);
   const [babies, setBabies] = useState([]);
   const [name, setBabyName] = useState('');
-<<<<<<< HEAD
   const [birthDate, setBabyAge] = useState(new Date());
   const [motherData, setMotherData] = useState({});
   const [refreshing, setRefreshing] = useState(false);
-=======
-  const [babyAge, setBabyAge] = useState(null);
-  const [motherData, setMotherData] = useState({});
->>>>>>> 4d60aedd6840ec9825a3378a464987fd2642c05b
 
   let motherId;
 
@@ -159,15 +150,7 @@ const ProfileScreen = () => {
   const handleAddBaby = async () => {
     try {
       const userId = await getUserId();
-<<<<<<< HEAD
-      const response = await axios.patch(`${ip}/user/${userId}`, { birthDate, name });
-=======
-
-      console.log(babyAge)
-      const birthDate=moment(babyAge, "YYYY/MM/DD").locale("en").format("YYYY/MM/DD")
-      console.log(moment(babyAge, "YYYY/MM/DD").locale("en").format("YYYY/MM/DD"));
-      const response = await axios.patch(`${ip}/user/${userId}`,{birthDate,name});
->>>>>>> 4d60aedd6840ec9825a3378a464987fd2642c05b
+      const response = await axios.patch(`${ip}/user/${userId}`, { birthDate, name, age: 1 });
       // Reset form and state
       setBabyAge(new Date());
       setBabyName('');
@@ -185,8 +168,8 @@ const ProfileScreen = () => {
     try {
       const userId = await getUserId();
       const response = await axios.get(`${ip}/user/${userId}`);
-      console.log(response.data.data.babyInfo, "dataaaaaaaaaaaaaaaaaaaaa");
-      setBabies(response.data.data.babyInfo);
+      console.log(response.data.data.profile.babyInfo, "dataaaaaaaaaaaaaaaaaaaaa");
+      setBabies(response.data.data.profile.babyInfo);
     } catch (error) {
       console.error('Error fetching babies:', error);
     }
@@ -231,7 +214,6 @@ const ProfileScreen = () => {
               <IconButton icon="logout" onPress={handleLogout} style={{ color: '#7600gf', backgroundColor: 'white' }} />
             </View>
           </View>
-
           <View style={{ position: 'absolute', top: 20, right: 20 }}></View>
           <View style={styles.userInfo}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -335,20 +317,19 @@ const ProfileScreen = () => {
                 placeholderTextColor={'#000000'}
               />
             </View>
-            {/* <DateField onChange={(value) =>{setBabyAge((value)); console.log(value,"hhhhhh")}} /> */}
-
             <DatePicker
               style={{ width: 180 }}
-              date={babyAge}
+              date={birthDate}
               mode='date'
               placeholder="Select date"
-              // format="YYYY-MM-DD"
+              format="YYYY-MM-DD"
               minDate="1900-01-01" // optional
               maxDate="2100-12-31" // optional
               confirmBtnText="Confirm"
               cancelBtnText="Cancel"
+              useNativeDriver={true}
 
-              onDateChange={(date) => { setBabyAge((date)); console.log(new Date(date), parseInt(date)) }}
+              onDateChange={(date) => setBabyAge(date)}
               customStyles={{
                 dateInput: { borderRadius: 10, borderColor: '#76005f', height: 30 },
                 dateIcon: { width: 30, height: 30 },
