@@ -81,7 +81,7 @@ const Cart = () => {
       </View>
       <View style={styles.infoContainer}>
         <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.price}>{item.price} ر.س</Text>
+        <Text style={styles.price}>{item.price}  جنيه </Text>
         <View style={styles.quantityContainer}>
           <TouchableOpacity
             style={styles.quantityButton}
@@ -270,9 +270,7 @@ const Cart = () => {
             showsVerticalScrollIndicator={false}
           />
           <View style={styles.totalPriceContainer}>
-            <Text style={styles.totalPriceText}>
-              السعر الإجمالي: {calculateTotalPrice()} ر.س
-            </Text>
+            <Text style={styles.totalPriceText}> السعر الإجمالي: {calculateTotalPrice()} جنيه </Text>
           </View>
           <TouchableOpacity
             style={styles.completePaymentButton}
@@ -351,6 +349,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginHorizontal: 10,
   },
+  price: {
+
+    fontFamily: 'Droid',
+    color: 'green'
+  },
   removeButton: {
     backgroundColor: 'red',
     paddingHorizontal: 10,
@@ -358,7 +361,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginTop: 20,
     width: 100,
-    height: 30,
+    height: 40,
     fontWeight: 'bold',
     textAlign: 'center',
     alignSelf: 'center',
@@ -367,6 +370,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
+    fontFamily: 'Droid'
   },
   totalPriceContainer: {
     marginTop: 20,
@@ -376,6 +380,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     fontFamily: 'Droid'
+    , color: 'green'
   },
   completePaymentButton: {
     backgroundColor: '#76005f',
@@ -387,6 +392,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 60,
     alignItems: 'center',
     width: 200,
+    alignSelf: 'center'
+
   },
   completePaymentButtonText: {
     color: '#ffffff',

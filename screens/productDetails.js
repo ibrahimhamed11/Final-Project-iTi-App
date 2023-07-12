@@ -18,8 +18,8 @@ const ProductDetails = ({ route }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [value, setValue] = React.useState('');
   const nav = useNavigation();
- 
-  const {product ,Rate} = route.params;
+
+  const { product, Rate } = route.params;
   console.log(route.params)
   console.log(product)
   const dispatch = useDispatch();
@@ -76,12 +76,13 @@ const ProductDetails = ({ route }) => {
           {/* </TouchableRipple> */}
         </View>
         <View style={styles.productsDetails}>
-          <View style={{ backgroundColor: '#eed1f0', width: 60, padding: 8, borderRadius: 20, justifyContent: 'flex-start', flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ color: 'white', marginHorizontal:5, fontSize: 15 }} >{Rate}</Text>
+          <View style={{ backgroundColor: '#d084d7', width: 60, padding: 8, borderRadius: 20, justifyContent: 'flex-start', flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={{ color: 'white', marginHorizontal: 5, fontSize: 15 }} >{Rate}</Text>
+            {/* <StarRating rating={Rate} /> */}
             <Icon name='star' size={14} color={'white'} />
           </View>
-          <View style={{ alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', marginVertical: 20, marginHorizontal: 5 }}>
-            <Text style={styles.productPrice}> {product?.price} L.E</Text>
+          <View style={{ alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', marginVertical: 20, marginHorizontal: 10 }}>
+            <Text style={styles.productPrice}> {product?.price} جنيه </Text>
             <Text style={styles.productName}>{product?.name}</Text>
           </View>
 
@@ -118,19 +119,22 @@ const ProductDetails = ({ route }) => {
           </View>
           {/* <Divider /> */}
           <View style={styles.productDescription}>
-            <Text style={styles.title}>تفاصيل </Text>
+            <Text style={styles.title}>الوصف </Text>
             <View style={styles.description}>
               <Text style={styles.descriptionText}> {product?.description}</Text>
             </View>
-              <Text style={styles.descriptionText}>في المخزن:{product?.stock}</Text>
-              <Text style={styles.descriptionText}>عدد التقييمات:{product?.rate.length}</Text>
+            {/* <Text style={styles.descriptionText}>في المخزن:{product?.stock}</Text> */}
+            {/* <Text style={styles.descriptionText}>عدد التقييمات:{product?.rate.length}</Text> */}
 
           </View>
-            <View style={styles.addProduct}>
+          <View style={styles.addProduct}>
 
-              <Button mode="contained" style={{ backgroundColor: '#76005F' }} onPress={handleAddToCart} > <FontAwesome name="shopping-cart" size={20} color="#fbf9fa" style={{ marginRight:20 }} />
-                أضف لعربة التسوق</Button>
-            </View>
+            <Button mode="contained" style={{ backgroundColor: '#76005F' }} onPress={handleAddToCart} >
+              <FontAwesome name="shopping-cart" size={20} color="#fbf9fa" style={{ marginRight: 20 }} />
+              <Text style={{ fontFamily: 'Droid', color: '#fbf9fa' }}>أضف لعربة التسوق</Text>
+            </Button>
+
+          </View>
         </View>
       </View>
     </>
@@ -155,14 +159,16 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
     marginTop: 20,
     textAlign: 'center',
+    fontFamily: 'Droid',
   },
   price: {
     fontSize: 16,
     marginTop: 10,
     textAlign: 'center',
+    fontFamily: 'Droid'
   },
   rating: {
     marginTop: 10,
@@ -304,7 +310,8 @@ const styles = StyleSheet.create({
     marginTop: 15,
     borderBottomWidth: 1,
     borderBottomColor: '#eaeaea',
-    borderRadius: 3
+    borderRadius: 3,
+    fontFamily: 'Droid'
   },
   description: {
     marginHorizontal: 10,
@@ -314,11 +321,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 400,
     color: '#320053',
+    fontFamily: 'Droid'
     // margin: 5,
   },
-  productDescription:{
-alignItems:'flex-end',
-justifyContent:'flex-end'
+  productDescription: {
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end'
+
   }
 });
 

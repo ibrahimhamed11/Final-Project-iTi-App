@@ -14,7 +14,6 @@ import StarRating from '../Components/Rate';
 import ip from '../ipConfig'
 
 
-
 const ProductCard = ({ product }) => {
   const [Rate, setRate] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
@@ -39,10 +38,11 @@ const ProductCard = ({ product }) => {
 
 
 
+
   useEffect(() => {
     axios.get(`${ip}/products/${product._id}/getrate`) // get product rate
       .then((response) => {
-        console.log(response.data)
+        // console.log(response.data)
         setRate(response.data.averageRate); // Update the response handling
         getRole()
       })
@@ -52,12 +52,10 @@ const ProductCard = ({ product }) => {
     // calculateAverageRate()
   }, []);
   const handleAddToCart = () => {
-
     dispatch(addToCart(product));
     setModalVisible(true)
 
   };
-
   return (
 
     //modal----------------------------------------------------------------------------------------------------------
@@ -71,7 +69,6 @@ const ProductCard = ({ product }) => {
           setModalVisible(!modalVisible);
         }}
       >
-        {/* <Image source={{uri:'https://images.unsplash.com/photo-1575936123452-b67c3203c357?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D&w=1000&q=80'}} style={{width:60, height:60, borderRadius:20,}}/> */}
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <FontAwesomeIcon name="check" size={30} style={{ marginRight: 5, color: 'green' }} />
@@ -102,13 +99,13 @@ const ProductCard = ({ product }) => {
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <Text style={styles.price}>{product?.price}L.E</Text>
-             
-              {role=='mother'?<TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
+
+              {role == 'mother' ? <TouchableOpacity style={styles.addToCartButton} onPress={handleAddToCart}>
                 <View style={styles.buttonContent}>
                   <FontAwesomeIcon name="shopping-cart" size={16} style={{ marginRight: 5, color: 'white' }} />
                   <Text style={[styles.addToCartButtonText, { fontFamily: 'Droid' }]}>اضف الي السله</Text>
                 </View>
-              </TouchableOpacity>:<TouchableOpacity style={styles.seeMoreButton} onPress={handleAddToCart}>
+              </TouchableOpacity> : <TouchableOpacity style={styles.seeMoreButton} onPress={handleAddToCart}>
                 <View style={styles.buttonContent}>
                   <FontAwesomeIcon name="info" size={16} style={{ marginRight: 5, color: 'white' }} />
                   <Text style={[styles.addToCartButtonText, { fontFamily: 'Droid' }]}> تفاصيل </Text>
@@ -121,6 +118,7 @@ const ProductCard = ({ product }) => {
     </>
   );
 };
+
 
 
 
@@ -218,7 +216,7 @@ const CardScreen = () => {
           source={require('../assets/images/Babyshoes.png')}
           style={styles.mainImage} />}
         <View style={{ position: 'absolute', top: 0, right: 0, paddingTop: 20, paddingRight: 10, alignItems: 'flex-end' }}>
-          {role == 'mother' && <Text style={{ fontSize: 24, fontWeight: 600, color: '#322530'}}>
+          {role == 'mother' && <Text style={{ fontSize: 24, fontWeight: 600, color: '#322530', fontFamily: 'Droid', }}>
             اهلا بكم فى متجرنا للتسوق
           </Text>}
 
@@ -378,7 +376,7 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
     direction: 'rtl',
   },
-  seeMoreButton:{
+  seeMoreButton: {
     backgroundColor: '#761700',
     borderRadius: 5,
     marginTop: 10,
